@@ -2,3 +2,10 @@ admin:
     login - admin
     mail - admin@mail.ru
     password - admin
+
+diploma - основные настройки django
+ripc - часть которая присоединяется к diploma, логически наша основа сайта
+для отдельный сервисов (например сканер Ильи и Семы) делаем отдельную папку называем как хотим (service_name),
+ копируем структуру с ripc и в settings и urls diploma подключаем новый отдельный сервис(service_name)
+
+ Илья - гей
