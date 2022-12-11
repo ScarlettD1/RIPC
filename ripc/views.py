@@ -11,9 +11,7 @@ def is_not_expert(user):
 
 @login_required(login_url='/accounts/login/')
 def index(request):
-    latest_question_list = Expert.objects.order_by('-surname')[:5]
-    context = {'latest_question_list': latest_question_list}  # какие данные передаются в html
-    return render(request, 'ripc/index.html', context)
+    return render(request, 'ripc/index.html', )
 
 
 @user_passes_test(is_not_expert)  # проверка на права, для захода на страницу

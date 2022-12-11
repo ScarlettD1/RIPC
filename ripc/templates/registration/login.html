@@ -1,3 +1,5 @@
+{% extends "base_generic.html" %}
+{% block content %}
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
 <table>
@@ -16,3 +18,4 @@
 <input type="submit" value="login" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
+{% endblock %}

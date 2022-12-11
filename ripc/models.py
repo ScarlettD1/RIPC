@@ -1,7 +1,5 @@
-import datetime
-
+from django.conf import settings
 from django.db import models
-from django.utils import timezone
 
 
 class Subject(models.Model):
@@ -12,26 +10,29 @@ class Subject(models.Model):
 
 
 class Expert(models.Model):
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
-    second_name = models.CharField(max_length=30)
-    surname = models.CharField(max_length=30)
+    # name = models.CharField(max_length=30)
+    # second_name = models.CharField(max_length=30)
+    # surname = models.CharField(max_length=30)
     mail = models.CharField(max_length=50)
 
-    def __str__(self):
-        return self.second_name + self.second_name + self.surname
+    # def __str__(self):
+    #     return self.second_name + self.second_name + self.surname
 
 
 class Admin(models.Model):
-    name = models.CharField(max_length=30)
-    second_name = models.CharField(max_length=30)
-    surname = models.CharField(max_length=30)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # name = models.CharField(max_length=30)
+    # second_name = models.CharField(max_length=30)
+    # surname = models.CharField(max_length=30)
 
-    def __str__(self):
-        return self.second_name + self.second_name + self.surname
+    # def __str__(self):
+    #     return .second_name + self.second_name + self.surname
 
 
 class Event(models.Model):
+    name = models.CharField(max_length=300)
     date_begin = models.DateField
     deadline = models.DateField
 
