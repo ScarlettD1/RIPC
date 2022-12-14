@@ -9,3 +9,7 @@ ripc - часть которая присоединяется к diploma, лог
  копируем структуру с ripc и в settings и urls diploma подключаем новый отдельный сервис(service_name)
 
  Илья - гей
+
+ При изменении моделей:
+    python manage.py makemigrate
+    python manage.py migrate

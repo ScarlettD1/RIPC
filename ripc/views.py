@@ -11,7 +11,8 @@ def is_not_expert(user):
 
 @login_required(login_url='/accounts/login/')
 def index(request):
-    return render(request, 'ripc/index.html', )
+    context = {'user': request.user}
+    return render(request, 'ripc/index.html', context)
 
 
 @user_passes_test(is_not_expert)  # проверка на права, для захода на страницу
