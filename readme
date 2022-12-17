@@ -11,5 +11,10 @@ ripc - часть которая присоединяется к diploma, лог
  Илья - гей
 
  При изменении моделей:
-    python manage.py makemigrate
-    python manage.py migrate
+    python manage.py makemigrations - создать миграцию, если изменяли модельки
+    python manage.py migrate - применить миграцию, то есть обновить базу данных по моделькам
+
+    python -m pip install Django - шоб работали команды и сервер джанго
+    pip install psycopg2 - шоб база данных работала
+
+    python manage.py createsuperuser - создать админскую учетку, в начале редми просто мои данные для него
