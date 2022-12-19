@@ -18,3 +18,5 @@ ripc - часть которая присоединяется к diploma, лог
     pip install psycopg2 - шоб база данных работала
 
     python manage.py createsuperuser - создать админскую учетку, в начале редми просто мои данные для него
+
+    python manage.py flush - очистить бд
