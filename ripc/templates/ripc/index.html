@@ -1,1 +1,5 @@
- Hello {{ user.username }}
+{% extends "base_generic.html" %}
+{% block title %}index{% endblock %}
+{% block content %}
+Hello {{ path }}
+{% endblock %}
