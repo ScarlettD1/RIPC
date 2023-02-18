@@ -1,4 +1,5 @@
 {% extends "base_generic.html" %}
+{% block title %}Авторизация{% endblock %}
 {% block body_class %}login_page{% endblock %}
 {% load static %}
 {% block content %}
@@ -22,14 +23,14 @@
             </div>
             <div>
                 <label for="inputEmail">Логин</label>
-                <input class="form-control" name="username" id="inputEmail" required value="">
+                <input class="form-control" name="username" id="inputEmail" placeholder="Username" required value="">
             </div>
             <div>
                 <label for="inputPass">Пароль</label>
                 <input type="password" class="form-control" name="password" id="inputPass" required placeholder="Password">
             </div>
 
-            <input class="w-50 mt-4 btn btn-lg btn-primary" type="submit" value="login"/>
+            <input class="w-50 mt-4 btn btn-lg btn-primary" type="submit" value="Войти"/>
             <input type="hidden" name="next" value="{{ next }}"/>
         </form>
     </main>
