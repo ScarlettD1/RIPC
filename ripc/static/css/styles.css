@@ -1,6 +1,8 @@
 html,
 body {
   height: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 body.login_page {
@@ -34,5 +36,44 @@ body.login_page {
   border-top-right-radius: 0;
 }
 
+.page-content {
+  background: #F5F5F5;
+  height: 100%;
+}
+
+.menu {
+  background: white;
+  border-radius: 22px;
+  box-shadow: 0 4px 4px #00000004;
+  height: 100%;
+  padding:0;
+}
+
+
 .logo-img {
+  margin-top: 20px;
+  width: 80%;
+}
+
+.nav-user {
+  margin-top: 16px;
+  margin-left: 14px;
+  color: black;
+}
+
+.image-button {
+  border: none;
+  background: none;
+}
+
+.nav-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-inline: auto;
+  text-decoration: none;
+  width: 90%;
+}
+
+.nav-button img {
+  margin-right: 5px;
 }
