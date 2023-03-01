@@ -3,23 +3,33 @@
 {% block content %}
     <main class="page-content row">
         <div class="menu col-md-2 ">
-            <div class ="nav navbar-nav text-center">
-                <img class ="logo-img nav-logo mx-auto" src="{% static 'images/signin.png' %}" alt="">
+            <div class="nav navbar-nav text-center">
+                <img class="logo-img nav-logo mx-auto" src="{% static 'images/signin.png' %}" alt="">
                 <li class="nav-user nav-item">
                     <img class="d-inline" src="{% static 'images/user-logo.svg' %}" alt="">
-                    <p class="d-inline">user_name</p>
-                    <button class="d-inline image-button btn btn-sm btn-light" href="#">
+                    <p class="d-inline user_name">{{ user }}</p>
+                    <button class="d-inline image-button btn btn-sm btn-light exit_button" href="#">
                         <img style="" src="{% static 'images/logout.svg' %}" alt="">
                     </button>
                 </li>
                 <hr>
-                <li class ="nav-button nav-item nav-button btn btn-light" href="#">
-                    <img class="d-inline" src="{% static 'images/event.svg' %}" alt="">
-                    <p class="d-inline">Мероприятия</p>
+                <li class="nav-button nav-item nav-button btn btn-light">
+                    <a href="#">
+                        <img class="d-inline" src="{% static 'images/event.svg' %}" alt="">
+                        <p class="d-inline">Мероприятия</p>
+                    </a>
                 </li>
-                <li class ="nav-button nav-item nav-button btn btn-light" href="#">
-                    <img class="d-inline" src="{% static 'images/rate.svg' %}" alt="">
-                    <p class="d-inline">Оценка</p>
+                <li class="nav-button nav-item nav-button btn btn-light">
+                    <a href="#">
+                        <img class="d-inline" src="{% static 'images/rate.svg' %}" alt="">
+                        <p class="d-inline">Оценка</p>
+                    </a>
+                </li>
+                <li class="nav-button nav-item nav-button btn btn-light">
+                    <a href="/users">
+                        <img class="d-inline" src="{% static 'images/rate.svg' %}" alt="">
+                        <p class="d-inline">Сотрудники</p>
+                    </a>
                 </li>
             </div>
         </div>

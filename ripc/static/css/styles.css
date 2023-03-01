@@ -5,6 +5,11 @@ body {
   overflow: hidden;
 }
 
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
 body.login_page {
   display: flex;
   align-items: center;
@@ -43,12 +48,18 @@ body.login_page {
 
 .menu {
   background: white;
-  border-radius: 22px;
   box-shadow: 0 4px 4px #00000004;
   height: 100%;
   padding:0;
 }
 
+.user_name {
+  vertical-align: sub;
+}
+
+.exit_button {
+  padding-left: 15px;
+}
 
 .logo-img {
   margin-top: 20px;
