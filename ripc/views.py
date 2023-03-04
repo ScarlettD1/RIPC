@@ -31,6 +31,12 @@ def detail(request, question_id):
     return render(request, 'ripc/detail.html', {'name': expert_name})
 
 
+@login_required(login_url='/accounts/login/')
+def test(request):
+    context = {}
+    return render(request, 'main_pages/create_event.html', context)
+
+
 @user_passes_test(is_admin)
 @login_required(login_url='/accounts/login/')
 class RegisterUserView(CreateView):

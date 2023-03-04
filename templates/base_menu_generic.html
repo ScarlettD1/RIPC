@@ -2,29 +2,28 @@
 {% load static %}
 {% block content %}
     <main class="page-content row">
-        <div class="menu col-md-2 ">
-            <div class ="nav navbar-nav text-center">
+        <div class="menu col-md-2 gy-3">
+            <div class ="nav navbar-nav text-center position-fixed page-block">
                 <img class ="logo-img nav-logo mx-auto" src="{% static 'images/signin.png' %}" alt="">
                 <li class="nav-user nav-item">
-                    <img class="d-inline" src="{% static 'images/user-logo.svg' %}" alt="">
+                    <i class="fas fa-user-alt"></i>
                     <p class="d-inline">user_name</p>
                     <button class="d-inline image-button btn btn-sm btn-light" href="#">
-                        <img style="" src="{% static 'images/logout.svg' %}" alt="">
+                        <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </li>
                 <hr>
                 <li class ="nav-button nav-item nav-button btn btn-light" href="#">
-                    <img class="d-inline" src="{% static 'images/event.svg' %}" alt="">
+                    <i class="fas fa-clipboard-list"></i>
                     <p class="d-inline">Мероприятия</p>
                 </li>
                 <li class ="nav-button nav-item nav-button btn btn-light" href="#">
-                    <img class="d-inline" src="{% static 'images/rate.svg' %}" alt="">
+                    <i class="fas fa-calendar-check"></i>
                     <p class="d-inline">Оценка</p>
                 </li>
             </div>
         </div>
-        <div class="col-md-10 float-end">
-            <p>hasdasdas</p>
+        <div class="main_content col-md-10 float-end px-4 gy-4">
             {% block main_content %}{% endblock %}
         </div>
     </main>
