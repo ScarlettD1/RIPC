@@ -32,7 +32,7 @@ def detail(request, question_id):
 
 
 @login_required(login_url='/accounts/login/')
-def test(request):
+def create_event(request):
     context = {}
     return render(request, 'main_pages/create_event.html', context)
 

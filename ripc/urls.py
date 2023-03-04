@@ -6,5 +6,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:id>/', views.detail, name='detail'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('test', views.test, name='test'),
+    path('create_event', views.create_event, name='create_event'),
 ]
