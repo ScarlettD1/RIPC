@@ -48,29 +48,75 @@
                             </div>
                         </div>
                     </label>
-                    <label class="create-event-form" for="inputFiles">
+                    <label class="create-event-form" for="inputEventFiles">
                         Варианты работ:
                         <div class="file-loading">
-                            <input id="inp-theme-fa5-2" name="inp-theme-fa5-2[]" type="file" data-browse-on-zone-click="true" multiple required>
+                            <input id="inputEventFiles" name="inp-theme-fa5-2[]" type="file" data-browse-on-zone-click="true" multiple required>
                         </div>
                     </label>
                     <input class="w-25 mt-4 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
                 </form>
             </div>
-            <div class="col-12">
+            <div class="col-12 py-3">
                 <div>
                     <button class="d-inline image-button btn btn-sm btn-light">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <h5 class="align-middle d-inline">Настройка шаблонов заданий</h5>
                 </div>
+                <form method="post" action="#" class="px-3">
+                    <table class="table table-bordered">
+                        <thead class="create-event-table">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Предметная область</th>
+                                <th scope="col">Максимальный балл</th>
+                                <th scope="col">Название шаблона</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <select id="inputEventSubject" required>
+                                        <option disabled>Предметная область</option>
+                                    </select>
+                                </td>
+                                <td><input id="inputEventMaxScore" type="number" min="0" required></td>
+                                <td><input id="inputEventTemplateName" type="text" required></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="btn-toolbar justify-content-end mt-2">
+                        <button type="button" class="btn btn-primary">Добавить</button>
+                        <button type="button" class="btn btn-danger ms-2">Удалить</button>
+                    </div>
+                    <input class="w-25 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
+                </form>
             </div>
-            <div class="col-12">
+            <div class="col-12 py-3">
                 <div>
                     <button class="d-inline image-button btn btn-sm btn-light">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <h5 class="align-middle d-inline">Сопоставление заданий и шаблонов</h5>
+                    <div class="row px-3 py-3">
+                        <div class="col-8">
+                            <img class="w-100" id="templateImage" src="">
+                        </div>
+                        <div class="col-4">
+                            <form>
+                                <select id="inputTemplate" required>
+                                    <option disabled>Шаблон</option>
+                                </select>
+                                <div class="btn-toolbar mt-2">
+                                    <button type="button" class="btn btn-secondary">Назад</button>
+                                    <button type="button" class="btn btn-primary ms-2">Далее</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <input class="w-25 mx-3 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
                 </div>
             </div>
         </div>
@@ -85,7 +131,7 @@
         });
     </script>
     <script>
-        $("#inp-theme-fa5-2").fileinput({
+        $("#inputEventFiles").fileinput({
             theme: "fa5",
             language: "ru",
             uploadUrl: "/",

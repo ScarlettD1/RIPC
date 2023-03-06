@@ -102,3 +102,11 @@ body.login_page {
   display: block;
   margin-top: 5px;
 }
+
+.create-event-table {
+  background: rgb(233, 236, 239);
+}
+
+.table {
+  margin: 0;
+}
