@@ -2,7 +2,6 @@ html,
 body {
   height: 100%;
   max-width: 100%;
-  overflow: hidden;
 }
 
 a {
@@ -43,14 +42,18 @@ body.login_page {
 
 .page-content {
   background: #F5F5F5;
-  height: 100%;
+  height: auto;
+  width: 100%;
+  margin: 0;
 }
 
-.menu {
+.page-block {
   background: white;
   box-shadow: 0 4px 4px #00000004;
-  height: 100%;
-  padding:0;
+  height: auto;
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 2rem;
 }
 
 .user_name {
@@ -64,6 +67,11 @@ body.login_page {
 .logo-img {
   margin-top: 20px;
   width: 80%;
+}
+
+.nav {
+  width: inherit;
+  height: 100%;
 }
 
 .nav-user {
@@ -87,4 +95,21 @@ body.login_page {
 
 .nav-button img {
   margin-right: 5px;
+}
+
+.event-input {
+  border-color: rgb(18, 18, 18) rgb(133, 133, 133) rgb(133, 133, 133) rgb(18, 18, 18);
+  border-width: 2px;
+  height: 36px;
+}
+
+.calendar-input {
+  border-color: rgb(18, 18, 18) rgb(133, 133, 133) rgb(133, 133, 133) rgb(133, 133, 133);
+  border-width: 2px;
+  height: 36px;
+}
+
+.create-event-form {
+  display: block;
+  margin-top: 5px;
 }

@@ -1,0 +1,111 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+{% block main_content %}
+    <!-- load the CSS files in the right order -->
+    <link rel="stylesheet" href="{% static 'css/datepicker/bootstrap-datepicker3.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fileinput/fileinput.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fileinput/fileinput_theme.css' %}">
+
+    <!-- load the JS files in the right order -->
+    <script src="{% static 'js/datepicker/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'js/datepicker/bootstrap-datepicker.ru.min.js' %}"></script>
+    <script src="{% static 'js/fileinput/fileinput.js' %}"></script>
+    <script src="{% static 'js/fileinput/fileinput_theme.js' %}"></script>
+    <script src="{% static 'js/fileinput/fileinput_ru.js' %}"></script>
+
+    <header>
+        <h2>Создание мероприятия</h2>
+        <hr>
+    </header>
+    <main class="page-block">
+        <div class="row px-2 py-3">
+            <div class="col-12">
+                <div>
+                    <button class="d-inline image-button btn btn-sm btn-light">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <h5 class="align-middle d-inline">Основные настройки</h5>
+                </div>
+                <form method="post" action="#" class="px-3">
+                    <label class="create-event-form" for="inputEventName">
+                        Название:
+                        <input class="form-control w-50 event-input" name="event_name" id="inputEventName" placeholder="Мероприятие" required value="">
+                    </label>
+                    <label class="create-event-form" for="inputCalendar">
+                        Даты проведения:
+                        <div class="w-50" id="inputCalendar">
+                            <div class="input-daterange input-group w-20" id="datepicker">
+                                <label class="input-group-text calendar-input" style="border-left-color: rgb(18,18,18);" for="inputEventStartDate">c</label>
+                                <input type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01/12/2000" required/>
+                                <span class="input-group-text bg-white calendar-input">
+                                    <i class="fas fa-calendar-day"></i>
+                                </span>
+                                <label class="input-group-text px-3 calendar-input" for="inputEventEndDate">по</label>
+                                <input type="text" class="input-sm form-control calendar-input" id="inputEventEndDate" placeholder="01/12/2000" required/>
+                                <span class="input-group-text bg-white calendar-input">
+                                    <i class="fas fa-calendar-day"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="create-event-form" for="inputFiles">
+                        Варианты работ:
+                        <div class="file-loading">
+                            <input id="inp-theme-fa5-2" name="inp-theme-fa5-2[]" type="file" data-browse-on-zone-click="true" multiple required>
+                        </div>
+                    </label>
+                    <input class="w-25 mt-4 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
+                </form>
+            </div>
+            <div class="col-12">
+                <div>
+                    <button class="d-inline image-button btn btn-sm btn-light">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <h5 class="align-middle d-inline">Настройка шаблонов заданий</h5>
+                </div>
+            </div>
+            <div class="col-12">
+                <div>
+                    <button class="d-inline image-button btn btn-sm btn-light">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <h5 class="align-middle d-inline">Сопоставление заданий и шаблонов</h5>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        $('#inputCalendar .input-daterange').datepicker({
+            format: "dd/mm/yyyy",
+            language: "ru",
+            orientation: "bottom right",
+            autoclose: true,
+            todayHighlight: true
+        });
+    </script>
+    <script>
+        $("#inp-theme-fa5-2").fileinput({
+            theme: "fa5",
+            language: "ru",
+            uploadUrl: "/",
+            uploadAsync: true,
+            allowedFileExtensions: ["pdf"],
+            removeFromPreviewOnError: true,
+            browseClass: "btn btn-info",
+            mainClass: "d-grid w-75",
+            showClose: false,
+            showUpload: false,
+            enableResumableUpload: true,
+            initialPreviewAsData: true,
+            preferIconicPreview: true,
+            previewFileIcon: '<i class="fas fa-file"></i>',
+            previewFileIconSettings: {
+                'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+            },
+            fileActionSettings: {
+                showZoom: false
+            }
+        });
+    </script>
+{% endblock %}
