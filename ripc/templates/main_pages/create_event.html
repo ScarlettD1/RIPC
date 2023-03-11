@@ -1,126 +1,118 @@
 {% extends "base_menu_generic.html" %}
 {% load static %}
-{% block main_content %}
-    <!-- load the CSS files in the right order -->
+{% block head %}
     <link rel="stylesheet" href="{% static 'css/datepicker/bootstrap-datepicker3.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/fileinput/fileinput.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/fileinput/fileinput_theme.css' %}">
-
-    <!-- load the JS files in the right order -->
     <script src="{% static 'js/datepicker/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'js/datepicker/bootstrap-datepicker.ru.min.js' %}"></script>
     <script src="{% static 'js/fileinput/fileinput.js' %}"></script>
     <script src="{% static 'js/fileinput/fileinput_theme.js' %}"></script>
     <script src="{% static 'js/fileinput/fileinput_ru.js' %}"></script>
-
+{% endblock %}
+{% block main_content %}
     <header>
         <h2>Создание мероприятия</h2>
         <hr>
     </header>
     <main class="page-block">
-        <div class="row px-2 py-3">
-            <div class="col-12">
-                <div>
-                    <button class="d-inline image-button btn btn-sm btn-light">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <h5 class="align-middle d-inline">Основные настройки</h5>
-                </div>
-                <form method="post" action="#" class="px-3">
-                    <label class="create-event-form" for="inputEventName">
-                        Название:
-                        <input class="form-control w-50 event-input" name="event_name" id="inputEventName" placeholder="Мероприятие" required value="">
-                    </label>
-                    <label class="create-event-form" for="inputCalendar">
-                        Даты проведения:
-                        <div class="w-50" id="inputCalendar">
-                            <div class="input-daterange input-group w-20" id="datepicker">
-                                <label class="input-group-text calendar-input" style="border-left-color: rgb(18,18,18);" for="inputEventStartDate">c</label>
-                                <input type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01/12/2000" required/>
-                                <span class="input-group-text bg-white calendar-input">
-                                    <i class="fas fa-calendar-day"></i>
-                                </span>
-                                <label class="input-group-text px-3 calendar-input" for="inputEventEndDate">по</label>
-                                <input type="text" class="input-sm form-control calendar-input" id="inputEventEndDate" placeholder="01/12/2000" required/>
-                                <span class="input-group-text bg-white calendar-input">
-                                    <i class="fas fa-calendar-day"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </label>
-                    <label class="create-event-form" for="inputEventFiles">
-                        Варианты работ:
-                        <div class="file-loading">
-                            <input id="inputEventFiles" name="inp-theme-fa5-2[]" type="file" data-browse-on-zone-click="true" multiple required>
-                        </div>
-                    </label>
-                    <input class="w-25 mt-4 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
-                </form>
-            </div>
-            <div class="col-12 py-3">
-                <div>
-                    <button class="d-inline image-button btn btn-sm btn-light">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <h5 class="align-middle d-inline">Настройка шаблонов заданий</h5>
-                </div>
-                <form method="post" action="#" class="px-3">
-                    <table class="table table-bordered">
-                        <thead class="create-event-table">
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Предметная область</th>
-                                <th scope="col">Максимальный балл</th>
-                                <th scope="col">Название шаблона</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>
-                                    <select id="inputEventSubject" required>
-                                        <option disabled>Предметная область</option>
-                                    </select>
-                                </td>
-                                <td><input id="inputEventMaxScore" type="number" min="0" required></td>
-                                <td><input id="inputEventTemplateName" type="text" required></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="btn-toolbar justify-content-end mt-2">
-                        <button type="button" class="btn btn-primary">Добавить</button>
-                        <button type="button" class="btn btn-danger ms-2">Удалить</button>
+        <div>
+            <button class="d-inline image-button btn btn-sm btn-light">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <h5 class="align-middle d-inline">Основные настройки</h5>
+        </div>
+        <form method="post" action="#" class="px-3">
+            <label class="create-event-form" for="inputEventName">
+                Название:
+                <input class="form-control w-50 event-input" name="event_name" id="inputEventName" placeholder="Мероприятие" required value="">
+            </label>
+            <label class="create-event-form" for="inputCalendar">Даты проведения:
+                <div class="w-50" id="inputCalendar">
+                    <div class="input-daterange input-group" id="datepicker">
+                        <label class="input-group-text calendar-input" style="border-left-color: rgb(18,18,18);" for="inputEventStartDate">c</label>
+                        <input type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01/12/2000" required/>
+                        <span class="input-group-text bg-white calendar-input">
+                            <i class="fas fa-calendar-day"></i>
+                        </span>
+                        <label class="input-group-text px-3 calendar-input" for="inputEventEndDate">по</label>
+                        <input type="text" class="input-sm form-control calendar-input" id="inputEventEndDate" placeholder="01/12/2000" required/>
+                        <span class="input-group-text bg-white calendar-input">
+                            <i class="fas fa-calendar-day"></i>
+                        </span>
                     </div>
-                    <input class="w-25 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
-                </form>
+                </div>
+            </label>
+            <label class="create-event-form" for="inputCheckTime">Время для проверки заданий (часы):
+                <input class="form-control w-auto event-input"  type="number" min="1" name="check_time" id="inputCheckTime" placeholder="1" required value="1">
+            </label>
+            <label class="create-event-form" for="inputEventFiles">Варианты работ:</label>
+            <div class="file-loading">
+                <input id="inputEventFiles" name="inp-theme-fa5-2[]" type="file" accept="application/pdf" data-browse-on-zone-click="true" multiple required>
             </div>
-            <div class="col-12 py-3">
-                <div>
-                    <button class="d-inline image-button btn btn-sm btn-light">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <h5 class="align-middle d-inline">Сопоставление заданий и шаблонов</h5>
-                    <div class="row px-3 py-3">
-                        <div class="col-8">
-                            <img class="w-100" id="templateImage" src="">
+            <input class="mt-4 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
+        </form>
+        <div>
+            <button class="d-inline image-button btn btn-sm btn-light">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <h5 class="align-middle d-inline">Настройка шаблонов заданий</h5>
+        </div>
+        <form class="px-3 create-event-form" method="post" action="#">
+            <table class="table table-bordered">
+                <thead class="create-event-table">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Предметная область</th>
+                        <th scope="col">Максимальный балл</th>
+                        <th scope="col">Название шаблона</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input class="checkbox w-100" type="checkbox"></td>
+                        <td>
+                            <select class="w-100" id="inputEventSubject" required>
+                                <option disabled>Предметная область</option>
+                            </select>
+                        </td>
+                        <td><input class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
+                        <td><input class="w-100" id="inputEventTemplateName" type="text" required></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="btn-toolbar justify-content-end mt-2">
+                <button type="button" class="btn btn-primary">Добавить</button>
+                <button type="button" class="btn btn-danger ms-2">Удалить</button>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Сохранить и продолжить"/>
+        </form>
+        <div class="create-event-form">
+            <button class="d-inline image-button btn btn-sm btn-light">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <h5 class="align-middle d-inline">Сопоставление заданий и шаблонов</h5>
+            <div class="row px-3 py-3">
+                <div class="col-8">
+                    <img class="w-100" id="templateImage" src="">
+                </div>
+                <div class="col-4">
+                    <form>
+                        <select class="w-75" id="inputTemplate" required>
+                            <option disabled>Шаблон</option>
+                        </select>
+                        <div class="btn-toolbar mt-2">
+                            <button type="button" class="btn btn-secondary">Назад</button>
+                            <button type="button" class="btn btn-primary ms-2">Далее</button>
                         </div>
-                        <div class="col-4">
-                            <form>
-                                <select id="inputTemplate" required>
-                                    <option disabled>Шаблон</option>
-                                </select>
-                                <div class="btn-toolbar mt-2">
-                                    <button type="button" class="btn btn-secondary">Назад</button>
-                                    <button type="button" class="btn btn-primary ms-2">Далее</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <input class="w-25 mx-3 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
+                    </form>
                 </div>
             </div>
+            <input class="mx-3 btn btn-primary" type="submit" value="Сохранить и продолжить"/>
         </div>
     </main>
+{% endblock %}
+{% block scripts %}
     <script>
         $('#inputCalendar .input-daterange').datepicker({
             format: "dd/mm/yyyy",
@@ -129,8 +121,7 @@
             autoclose: true,
             todayHighlight: true
         });
-    </script>
-    <script>
+
         $("#inputEventFiles").fileinput({
             theme: "fa5",
             language: "ru",

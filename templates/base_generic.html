@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block head %}{% endblock %}
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
@@ -21,3 +22,4 @@
 </footer>
 </body>
 </html>
+{% block scripts %}{% endblock %}
