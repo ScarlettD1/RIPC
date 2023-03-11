@@ -34,7 +34,7 @@
                     <label class="create-event-form" for="inputCalendar">
                         Даты проведения:
                         <div class="w-50" id="inputCalendar">
-                            <div class="input-daterange input-group w-20" id="datepicker">
+                            <div class="input-daterange input-group" id="datepicker">
                                 <label class="input-group-text calendar-input" style="border-left-color: rgb(18,18,18);" for="inputEventStartDate">c</label>
                                 <input type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01/12/2000" required/>
                                 <span class="input-group-text bg-white calendar-input">
@@ -47,6 +47,10 @@
                                 </span>
                             </div>
                         </div>
+                    </label>
+                    <label class="create-event-form" for="inputCheckTime">
+                        Время для проверки заданий (часы):
+                        <input class="form-control w-auto event-input"  type="number" min="1" name="check_time" id="inputCheckTime" placeholder="1" required value="1">
                     </label>
                     <label class="create-event-form" for="inputEventFiles">
                         Варианты работ:
