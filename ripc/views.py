@@ -24,6 +24,12 @@ def index(request):
     return render(request, 'ripc/index.html', context)
 
 
+@login_required(login_url='/accounts/login')
+def rate(request):
+    context = {'user': request.user}
+    return render(request, 'ripc/rate.html', context)
+
+
 @user_passes_test(is_not_expert)  # проверка на права, для захода на страницу
 @login_required(login_url='/accounts/login/')
 def detail(request, question_id):
