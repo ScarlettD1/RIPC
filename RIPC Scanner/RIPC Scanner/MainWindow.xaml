@@ -1,0 +1,28 @@
+﻿<Window x:Class="RIPC_Scanner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RIPC_Scanner"
+        mc:Ignorable="d"
+        Title="RIPC. Сканирование" Height="280" Width="450" ResizeMode="CanMinimize">
+    <Grid x:Name="___Без_имени_" Background="WhiteSmoke">
+        <Label x:Name="sComboBoxLabel" Content="Выбранный сканер" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="16"/>
+        <ComboBox x:Name="sComboBox" HorizontalAlignment="Left" Margin="20,31,0,0" VerticalAlignment="Top" Width="355" FontSize="22" FontWeight="Bold"/>
+        <Button x:Name="updateSButton" Content="↻" HorizontalAlignment="Left" Margin="380,31,0,0" VerticalAlignment="Top" FontSize="18" Height="35" Width="35"/>
+        <CheckBox x:Name="sAutoFeederCheckBox" Content="Автоподача страниц" HorizontalAlignment="Left" Margin="20,79,0,0" VerticalAlignment="Top" IsChecked="True">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+            </CheckBox.LayoutTransform>
+        </CheckBox>
+        <CheckBox x:Name="sDuplexCheckBox" Content="Двухсторонее сканирование" HorizontalAlignment="Left" Margin="20,102,0,0" VerticalAlignment="Top">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+            </CheckBox.LayoutTransform>
+        </CheckBox>
+        <Button x:Name="startScanButton" Content="🖨 Сканировать" HorizontalAlignment="Center" Margin="0,0,0,38" VerticalAlignment="Bottom" FontSize="22" Background="#FF0D6EFD" Foreground="White" BorderBrush="#FF0D6EFD" Width="190" Height="50"/>
+        <Label x:Name="eventIDLabel" Content="ID мероприятия:" HorizontalAlignment="Left" Margin="2,0,0,0" Height="29" VerticalAlignment="Bottom"/>
+        <Label x:Name="eventIDNum" Content="000000" HorizontalAlignment="Left" Margin="100,0,0,0" VerticalAlignment="Bottom" Height="29"/>
+
+    </Grid>
+</Window>

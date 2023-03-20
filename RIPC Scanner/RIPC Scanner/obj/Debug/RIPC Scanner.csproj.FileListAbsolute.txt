@@ -1,0 +1,16 @@
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\bin\Debug\RIPC Scanner.exe.config
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\bin\Debug\RIPC Scanner.exe
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\bin\Debug\RIPC Scanner.pdb
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.AssemblyReference.cache
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.SuggestedBindingRedirects.cache
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\MainWindow.g.cs
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\App.g.cs
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner_MarkupCompile.cache
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner_MarkupCompile.lref
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\MainWindow.baml
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.g.resources
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC_Scanner.Properties.Resources.resources
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.GenerateResource.cache
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CoreCompileInputs.cache
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.exe
+C:\Users\iliab\Desktop\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.pdb
