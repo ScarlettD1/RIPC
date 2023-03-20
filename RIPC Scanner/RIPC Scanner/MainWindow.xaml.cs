@@ -13,10 +13,12 @@ namespace RIPC_Scanner
     {
         private DeviceManager deviceManager = new DeviceManager();
         private List<DeviceInfo> scanners = new List<DeviceInfo>();
+        private string[] parametrs = ((App)Application.Current).Parameters;
 
         public MainWindow()
         {
             InitializeComponent();
+            SetParametrs();
             GetScanners();
         }
 
@@ -115,7 +117,7 @@ namespace RIPC_Scanner
                         byteImage = (byte[])scanResult.FileData.get_BinaryData();
                     }
                 }
-                scanResult.SaveFile("file.png");
+                scanResult.SaveFile($"file_{DateTime.Now}.png");
             }
             catch (COMException ex)
             {
@@ -173,5 +175,11 @@ namespace RIPC_Scanner
                 MessageBox.Show("Сканер не подключен!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
             }
         }
+
+        private void SetParametrs()
+        {
+            eventIDNum.Content = parametrs[0];
+        }
+
     }
 }
