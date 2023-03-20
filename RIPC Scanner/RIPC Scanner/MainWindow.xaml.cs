@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
 using WIA;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+using System.Net;
 
 namespace RIPC_Scanner
 {
@@ -14,6 +18,8 @@ namespace RIPC_Scanner
         private DeviceManager deviceManager = new DeviceManager();
         private List<DeviceInfo> scanners = new List<DeviceInfo>();
         private string[] parametrs = ((App)Application.Current).Parameters;
+        private static readonly HttpClient client = new HttpClient();
+
 
         public MainWindow()
         {
@@ -107,17 +113,24 @@ namespace RIPC_Scanner
             try
             {
                 CommonDialogClass dlg = new CommonDialogClass();
-                var scanResult = (ImageFile)dlg.ShowTransfer(scannerItem, FormatID.wiaFormatPNG, true);
-                byte[] byteImage = (byte[])scanResult.FileData.get_BinaryData();
-                if (multiscan)
+                do
                 {
-                    while (true)
+                    // Считывание изображения
+                    var scanResult = (ImageFile)dlg.ShowTransfer(scannerItem, FormatID.wiaFormatPNG, true);
+                    byte[] byteImage = (byte[])scanResult.FileData.get_BinaryData();
+
+                    // Отправка изображения на сервер
+                    try
                     {
-                        scanResult = (ImageFile)dlg.ShowTransfer(scannerItem, FormatID.wiaFormatPNG, true);
-                        byteImage = (byte[])scanResult.FileData.get_BinaryData();
+                        // SendFile(byteImage);
+                        scanResult.SaveFile($"C:\\Ripc\\file_{DateTime.Now.ToString("MMddHHmmss")}.png");
                     }
-                }
-                scanResult.SaveFile($"file_{DateTime.Now}.png");
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка при отправке файла!\nПовторите сканирование позже.\n{ex}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
+                        return;
+                    }
+                } while (multiscan); 
             }
             catch (COMException ex)
             {
@@ -179,6 +192,28 @@ namespace RIPC_Scanner
         private void SetParametrs()
         {
             eventIDNum.Content = parametrs[0];
+        }
+
+        private async void SendFile(byte[] file)
+        {
+            var data = new
+            {
+                event_id = eventIDNum.Content,
+                byte_file = file
+            };
+
+            // Сериализуем данные в JSON строку
+            var json = JsonConvert.SerializeObject(data);
+
+            // Создаем HTTP клиент и отправляем POST запрос
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("", content);
+
+            // Проверяем ответ
+            if (!response.IsSuccessStatusCode) {
+                throw new Exception(response.StatusCode.ToString());
+            }
+            return;
         }
 
     }

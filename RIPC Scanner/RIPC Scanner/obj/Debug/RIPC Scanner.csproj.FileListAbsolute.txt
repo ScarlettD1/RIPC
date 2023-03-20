@@ -33,3 +33,6 @@ C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.pdb
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\Interop.WIA.dll
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.ResolveComReference.cache
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Interop.WIA.dll
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.dll
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.xml
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CopyComplete
