@@ -9,7 +9,7 @@
     <Grid x:Name="___Без_имени_" Background="WhiteSmoke">
         <Label x:Name="sComboBoxLabel" Content="Выбранный сканер" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="16"/>
         <ComboBox x:Name="sComboBox" HorizontalAlignment="Left" Margin="20,31,0,0" VerticalAlignment="Top" Width="355" FontSize="22" FontWeight="Bold"/>
-        <Button x:Name="updateSButton" Content="↻" HorizontalAlignment="Left" Margin="380,31,0,0" VerticalAlignment="Top" FontSize="18" Height="35" Width="35"/>
+        <Button x:Name="updateSButton" Content="↻" HorizontalAlignment="Left" Margin="380,31,0,0" VerticalAlignment="Top" FontSize="18" Height="35" Width="35" Click="updateSButton_Click"/>
         <CheckBox x:Name="sAutoFeederCheckBox" Content="Автоподача страниц" HorizontalAlignment="Left" Margin="20,79,0,0" VerticalAlignment="Top" IsChecked="True">
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
@@ -20,7 +20,7 @@
                 <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
             </CheckBox.LayoutTransform>
         </CheckBox>
-        <Button x:Name="startScanButton" Content="🖨 Сканировать" HorizontalAlignment="Center" Margin="0,0,0,38" VerticalAlignment="Bottom" FontSize="22" Background="#FF0D6EFD" Foreground="White" BorderBrush="#FF0D6EFD" Width="190" Height="50"/>
+        <Button x:Name="startScanButton" Content="🖨 Сканировать" HorizontalAlignment="Center" Margin="0,0,0,38" VerticalAlignment="Bottom" FontSize="22" Background="#FF0D6EFD" Foreground="White" BorderBrush="#FF0D6EFD" Width="190" Height="50" Click="startScanButton_Click"/>
         <Label x:Name="eventIDLabel" Content="ID мероприятия:" HorizontalAlignment="Left" Margin="2,0,0,0" Height="29" VerticalAlignment="Bottom"/>
         <Label x:Name="eventIDNum" Content="000000" HorizontalAlignment="Left" Margin="100,0,0,0" VerticalAlignment="Bottom" Height="29"/>
 
