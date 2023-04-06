@@ -1,0 +1,28 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+
+{% block main_content %}
+    <div class="container mt-3 pb-1">
+        <div class="row align-items-start table-naming">
+            <div class="col-4">Название</div>
+            <div class="col-3">Кол-во сотрудников</div>
+            <div class="col-3">Активные мероприятия</div>
+        </div>
+        {#        цикл          #}
+        <div class="row align-items-start py-2">
+            <div class="col-4"><a href="/personnel/regions/{{ region.id }}">fasd</a></div>
+            <div class="col-3">232</div>
+            <div class="col-3">33</div>
+        </div>
+    <div class="row align-items-start py-2">
+            <div class="col-4"><a href="/personnel/regions/{{ region.id }}">fasd</a></div>
+            <div class="col-3">232</div>
+            <div class="col-3">33</div>
+        </div>
+    <div class="row align-items-start py-2">
+            <div class="col-4"><a href="/personnel/regions/{{ region.id }}">fasd</a></div>
+            <div class="col-3">232</div>
+            <div class="col-3">33</div>
+        </div>
+    </div>
+{% endblock %}

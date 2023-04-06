@@ -37,6 +37,12 @@ def create_event(request):
     return render(request, 'main_pages/create_event.html', context)
 
 
+@login_required(login_url='/accounts/login/')
+def staff(request):
+    context = {}
+    return render(request, 'main_pages/staff.html', context)
+
+
 @user_passes_test(is_admin)
 @login_required(login_url='/accounts/login/')
 class RegisterUserView(CreateView):
@@ -53,3 +59,39 @@ class RegisterUserView(CreateView):
 
     def get_success_url(self):
         return self.success_url
+
+
+def regions(request):
+    return render(request, 'main_pages/region_list.html', )
+
+
+def regions_detail(request):
+    return None
+
+
+def regions_registration(request):
+    return None
+
+
+def organizations(request):
+    return None
+
+
+def organizations_detail(request):
+    return None
+
+
+def organizations_registration(request):
+    return None
+
+
+def users(request):
+    return None
+
+
+def user_reg(request):
+    return None
+
+
+def user_detail(request):
+    return None
