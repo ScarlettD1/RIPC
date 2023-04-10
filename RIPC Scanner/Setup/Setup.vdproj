@@ -21,13 +21,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_522E9DB09399F990517881D13C92E753"
+        "MsmKey" = "8:_5ED1CA9B293719342855976AB9ED319C"
         "OwnerKey" = "8:_3D6023D4CF3D459BA7289D608E3168AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5F6A46FF1BD18800C88E2571258FC1D3"
+        "MsmKey" = "8:_62AEE21F477C0C1DC17AC0B6EA4BAE4A"
         "OwnerKey" = "8:_3D6023D4CF3D459BA7289D608E3168AB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -39,12 +39,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F4842AD1DEABD51A6351D7DC84016966"
-        "OwnerKey" = "8:_522E9DB09399F990517881D13C92E753"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3D6023D4CF3D459BA7289D608E3168AB"
         "MsmSig" = "8:_UNDEFINED"
@@ -52,13 +46,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5F6A46FF1BD18800C88E2571258FC1D3"
+        "OwnerKey" = "8:_5ED1CA9B293719342855976AB9ED319C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_522E9DB09399F990517881D13C92E753"
+        "OwnerKey" = "8:_62AEE21F477C0C1DC17AC0B6EA4BAE4A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -124,6 +118,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -154,20 +156,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_522E9DB09399F990517881D13C92E753"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5ED1CA9B293719342855976AB9ED319C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Interop.WIA, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Saraff.Twain, Version=1.0.32.732, Culture=neutral, PublicKeyToken=467d7c56f22cafb6, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_522E9DB09399F990517881D13C92E753"
+                    "_5ED1CA9B293719342855976AB9ED319C"
                     {
-                    "Name" = "8:Interop.WIA.dll"
+                    "Name" = "8:Saraff.Twain.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Interop.WIA.dll"
+            "SourcePath" = "8:Saraff.Twain.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A29BCDB9720A4A59812AC576190A4B53"
@@ -185,14 +187,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5F6A46FF1BD18800C88E2571258FC1D3"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_62AEE21F477C0C1DC17AC0B6EA4BAE4A"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5F6A46FF1BD18800C88E2571258FC1D3"
+                    "_62AEE21F477C0C1DC17AC0B6EA4BAE4A"
                     {
                     "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
@@ -231,26 +233,6 @@
                 }
             "SourcePath" = "8:System.Net.Http.dll"
             "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_A29BCDB9720A4A59812AC576190A4B53"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F4842AD1DEABD51A6351D7DC84016966"
-            {
-            "SourcePath" = "8:wiaaut.dll"
-            "TargetName" = "8:wiaaut.dll"
             "Tag" = "8:"
             "Folder" = "8:_A29BCDB9720A4A59812AC576190A4B53"
             "Condition" = "8:"
@@ -324,7 +306,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RIPC Scanner"
         "ProductCode" = "8:{6A78C0E0-65D1-40AE-8662-4426D73B68B6}"
-        "PackageCode" = "8:{EFAA242E-FD16-4758-96EA-D92C38AA2855}"
+        "PackageCode" = "8:{0F9F1C0C-1FD3-4664-BCCB-3266EA259F6B}"
         "UpgradeCode" = "8:{E7C7470F-483E-411B-AFB7-609B136DDF7A}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -556,20 +538,6 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_3D6023D4CF3D459BA7289D608E3168AB"
             "Folder" = "8:_A29BCDB9720A4A59812AC576190A4B53"
-            "WorkingFolder" = "8:_A29BCDB9720A4A59812AC576190A4B53"
-            "Icon" = "8:"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_755749AAB1694DB991AFD84BDCB1E980"
-            {
-            "Name" = "8:RIPC. Сканирование"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_3D6023D4CF3D459BA7289D608E3168AB"
-            "Folder" = "8:_810D894993A84F06906825DB88442E4B"
             "WorkingFolder" = "8:_A29BCDB9720A4A59812AC576190A4B53"
             "Icon" = "8:"
             "Feature" = "8:"

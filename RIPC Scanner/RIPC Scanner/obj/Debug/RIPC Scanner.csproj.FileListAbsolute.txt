@@ -36,3 +36,24 @@ C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Interop.WIA.dll
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.dll
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.xml
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CopyComplete
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.AssemblyReference.cache
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.SuggestedBindingRedirects.cache
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\MainWindow.g.cs
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\App.g.cs
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner_MarkupCompile.cache
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner_MarkupCompile.lref
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.exe
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.pdb
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\RIPC Scanner.exe.config
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\RIPC Scanner.exe
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\RIPC Scanner.pdb
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.dll
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Saraff.Twain.dll
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.xml
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Saraff.Twain.xml
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\MainWindow.baml
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.g.resources
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC_Scanner.Properties.Resources.resources
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.GenerateResource.cache
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CoreCompileInputs.cache
+C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CopyComplete

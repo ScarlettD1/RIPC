@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
-using WIA;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Net;
+using Saraff.Twain;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace RIPC_Scanner
 {
@@ -15,182 +18,196 @@ namespace RIPC_Scanner
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DeviceManager deviceManager = new DeviceManager();
-        private List<DeviceInfo> scanners = new List<DeviceInfo>();
         private string[] parametrs = ((App)Application.Current).Parameters;
         private static readonly HttpClient client = new HttpClient();
-
+        private Twain32 twain = new Twain32();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Установка переданных параметров
             SetParametrs();
-            GetScanners();
+
+            // Обновление списка доступных сканеров
+            GetDevices();
+
         }
 
         private void updateSButton_Click(object sender, RoutedEventArgs e)
         {
-            GetScanners();
+            // Обновление списка доступных сканеров
+            GetDevices();
         }
+
 
         private void startScanButton_Click(object sender, RoutedEventArgs e)
         {
-            Item scannerItem;
+            // Создание сессии twain
+            twain.OpenDSM();
+
+            // Использование выбранного сканера
+            twain.SourceIndex = sComboBox.SelectedIndex;
+
             // Подключение к сканеру
             try
             {
-                var device = scanners[sComboBox.SelectedIndex].Connect();
-                scannerItem = device.Items[1];
+                twain.OpenDataSource();
             }
             catch
             {
-                GetScanners();
+                MessageBox.Show("Сканер занят или недоступен.\n" +
+                    "При многократной ошибке, попробуйте перезапустить компьютер и сканер.", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // Закрытие сессии twain
+                twain.CloseDataSource();
+                twain.CloseDSM();
                 return;
             }
 
-            // Настройка необходимых параметров сканера
-            scannerItem.Properties["6146"].set_Value(0);    // ЧБ цвет
+            // Установка необходимых параметров для сканирования
             try
             {
-                scannerItem.Properties["6147"].set_Value(300);    // DPI по горизонту
-                scannerItem.Properties["6148"].set_Value(300);    // DPI по вертикали
+                twain.SetCap(TwCap.IPixelType, TwPixelType.RGB);
+                twain.SetCap(TwCap.XResolution, 300);
+                twain.SetCap(TwCap.YResolution, 300);
             }
             catch
             {
-                MessageBox.Show("Сканер не удовлетовряет требованиям!\nDPI 300", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
+                MessageBox.Show($"Не возможно установить минимальные параметры для сканера.\n" +
+                    $"Требования: RGB, DPI 300", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // Закрытие сессии twain
+                twain.CloseDataSource();
+                twain.CloseDSM();
                 return;
-
             }
 
-            bool multiscan = false;
-            if (sAutoFeederCheckBox.IsChecked == true && sDuplexCheckBox.IsChecked == true)
-            {
-                try
-                {
-                    scannerItem.Properties["3088"].set_Value(5);    // Автоматическая подача документов + двухсторонее сканирование
-                    multiscan = true;
-                }
-                catch
-                {
-                    MessageBox.Show("Сканер не поддерживает автоматичичскую подачу или двухсторонее сканирование.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-                    return;
-                }
-            }
-            else if (sAutoFeederCheckBox.IsChecked == true)
-            {
-                try
-                {
-                    scannerItem.Properties["3088"].set_Value(4);    // Автоматическая подача документов
-                    multiscan = true;
-                }
-                catch
-                {
-                    multiscan = false;
-                    MessageBox.Show("Сканер не поддерживает автоматичичскую подачу.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-                    return;
-                }
-            }
-            else if (sDuplexCheckBox.IsChecked == true)
-            {
-                try
-                {
-                    scannerItem.Properties["3088"].set_Value(2);    // Двухсторонее сканирование документов
-                    multiscan = true;
-                }
-                catch
-                {
-                    multiscan = false;
-                    MessageBox.Show("Сканер не поддерживает двухсторонее сканирование.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-                    return;
-                }
-            }
-            if (multiscan)
-            {
-                scannerItem.Properties["3096"].set_Value(1);   // Сканирование по 1 странице
-            }
-
-            // Запуск сканирования с отображением статуса
+            // Включение автоматического сканирования
             try
             {
-                CommonDialogClass dlg = new CommonDialogClass();
-                do
-                {
-                    // Считывание изображения
-                    var scanResult = (ImageFile)dlg.ShowTransfer(scannerItem, FormatID.wiaFormatPNG, true);
-                    byte[] byteImage = (byte[])scanResult.FileData.get_BinaryData();
-
-                    // Отправка изображения на сервер
-                    try
-                    {
-                        // SendFile(byteImage);
-                        scanResult.SaveFile($"C:\\Ripc\\file_{DateTime.Now.ToString("MMddHHmmss")}.png");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Ошибка при отправке файла!\nПовторите сканирование позже.\n{ex}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
-                        return;
-                    }
-                } while (multiscan); 
+                // twain.SetCap(TwCap.FeederEnabled, sAutoFeederCheckBox.IsChecked);
+                twain.SetCap(TwCap.AutoFeed, sAutoFeederCheckBox.IsChecked);
             }
-            catch (COMException ex)
+            catch
             {
-                string msg = ex.Message;
-                if (msg.Contains("0x80210064"))
+                if (sAutoFeederCheckBox.IsChecked == true)
                 {
-                    MessageBox.Show("Сканирование было отменено.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+                    MessageBox.Show("Не возможно использовать автоматическое сканирование страниц.", "Ошибка!",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Закрытие сессии twain
+                    twain.CloseDataSource();
+                    twain.CloseDSM();
+                    return;
                 }
-                else if (msg.Contains("0x80210003") || msg.Contains("0x80210002"))
-                {
-                    MessageBox.Show($"Документы отсутсвуют!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-                }
-                else if (msg.Contains("0x80210016"))
-                {
-                    MessageBox.Show($"Один или несколько крышки устройства открыты!\n{ex.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
-                }
-                else if (msg.Contains("0x80210006") || msg.Contains("0x8021000D") || msg.Contains("0x8021000D") || msg.Contains("0x80210005") || msg.Contains("0x80210017"))
-                {
-                    MessageBox.Show($"Устройство занято!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
-                }
-                else if (msg.Contains("0x8021000A") || msg.Contains("0x80210015") || msg.Contains("0x80210008") || msg.Contains("0x80210009") || msg.Contains("E_FAIL"))
-                {
-                    MessageBox.Show($"Сканер не подключен!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
-                }
-                else if (msg.Contains("0x8021000E") || msg.Contains("0x8021000B") || msg.Contains("0x8021000C") || msg.Contains("0x8021000F") || msg.Contains("0x80210021") || msg.Contains("0x80210020") || msg.Contains("0x80210004"))
-                {
-                    MessageBox.Show($"Ошибка драйвера!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
-                }
-                else
-                {
-                    MessageBox.Show($"Не изветсная ошибка!\n{ex.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
-                }
-                return;
             }
+
+            // Включение двухсторонего сканирования
+            try
+            {
+                twain.SetCap(TwCap.DuplexEnabled, sDuplexCheckBox.IsChecked);
+            }
+            catch
+            {
+                if (sDuplexCheckBox.IsChecked == true)
+                {
+                    MessageBox.Show("Не возможно использовать двухсторонее сканирование страниц.", "Ошибка!",
+                                        MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    // Закрытие сессии twain
+                    twain.CloseDataSource();
+                    twain.CloseDSM();
+                    return;
+                }
+            }
+
+            // Отключение системного интерфейса
+            twain.ShowUI = false;
+
+            // Подписываемся на событие завершения сканирования страницы
+            twain.EndXfer += twain_EndXfer;
+
+            // Подписываемся на событие ошибки сканирования страницы
+            twain.AcquireError += twain_AcquireError;
+
+            // Запуск сканирования
+            twain.Acquire();
+
+            // Закрытие сессии twain
+            twain.CloseDataSource();
+            twain.CloseDSM();
             return;
         }
 
-        private void GetScanners()
+        private void twain_EndXfer(object sender, EventArgs e)
         {
-            deviceManager = new DeviceManager();
-            scanners.Clear();
+            // Получаем крайнее отсканированное изображение 
+            var scannedImage = twain.GetImage(twain.ImageCount - 1);
+
+            // Переводим изображение в байты
+            var byteImage = (byte[])(new ImageConverter()).ConvertTo(scannedImage, typeof(byte[]));
+
+            // Отправляем изображение на сервис
+            SendFile(byteImage);
+
+            // Сохраняем крайнюю страницу в файл
+            //string fileName = $"C:\\Ripc\\page_{twain.ImageCount}_{DateTime.Now.ToString("MMddHHmmss")}.png";
+            //twain.GetImage(twain.ImageCount - 1).Save(fileName, ImageFormat.Jpeg);
+        }
+
+        private void twain_AcquireError(object sender, EventArgs e)
+        {
+            MessageBox.Show("Не возможно использовать автоматическое сканирование страниц.", "Ошибка!",
+                             MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Закрытие сессии twain
+            twain.CloseDataSource();
+            twain.CloseDSM();
+            return;
+        }
+
+        private void GetDevices()
+        {
+            // Очистка текущего списка сканеров
             sComboBox.Items.Clear();
-            foreach (DeviceInfo device in deviceManager.DeviceInfos)
+
+            // Создание сессии twain
+            try { twain.OpenDSM(); } catch { }
+
+            // Закрытие сессии twain
+            twain.CloseDSM();
+
+            // Проход по найденым сканерам
+            for (int i = 0; i < twain.SourcesCount; i++)
             {
-                if (device.Type != WiaDeviceType.ScannerDeviceType)
-                {
-                    continue;
-                }
-                scanners.Add(device);
-                sComboBox.Items.Add(device.Properties["Name"].get_Value());
+                // Заполнение списка сканерами
+                sComboBox.Items.Add(twain.GetSourceProductName(i));
             }
-            sComboBox.SelectedIndex = 0;
-            if (scanners.Count == 0)
+
+            // Проверка наличия сканеров
+            if (sComboBox.Items.Count == 0)
             {
                 MessageBox.Show("Сканер не подключен!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
+
+                // Отключение кнопки сканирования
+                startScanButton.IsEnabled = false;
+
+                return;
             }
+
+            // Включение кнопки сканирования
+            startScanButton.IsEnabled = true;
+
+            // Установка изначального сканера
+            sComboBox.SelectedIndex = 0;
+
+            return;
         }
 
         private void SetParametrs()
         {
+            // Установка ID мероприятия
             eventIDNum.Content = parametrs[0];
         }
 
@@ -210,9 +227,20 @@ namespace RIPC_Scanner
             var response = await client.PostAsync("", content);
 
             // Проверяем ответ
-            if (!response.IsSuccessStatusCode) {
+            if (!response.IsSuccessStatusCode)
+            {
                 throw new Exception(response.StatusCode.ToString());
             }
+            return;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            // Закрытие сессии twain
+            twain.CloseDataSource();
+            twain.CloseDSM();
+
+            base.OnClosing(e);
             return;
         }
 
