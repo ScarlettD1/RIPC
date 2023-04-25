@@ -46,6 +46,13 @@ def view_event(request, event_id):
 
 
 @user_passes_test(is_admin)
+@login_required(login_url='/accounts/login')
+def admin_event(request):
+    contex = {}
+    return render(request, 'main_pages/admin_event.html', contex)
+
+
+@user_passes_test(is_admin)
 @login_required(login_url='/accounts/login/')
 class RegisterUserView(CreateView):
     form_class = RegisterUserForm
