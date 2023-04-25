@@ -18,4 +18,7 @@ urlpatterns = [
     path('personnel/organizations/', organization.organizations, name='orgs'),
     path('personnel/organizations/reg/', organization.organizations_registration, name='org_reg'),
     path('personnel/organizations/<int:id>', organization.organizations_detail, name='orgs_detail'),
+    path('create_event', views.create_event, name='create_event'),
+    path('event/<int:event_id>', views.view_event, name='view_event'),
+    path('admin_view', views.admin_event, name='admin_event')
 ]

@@ -1,0 +1,135 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+{% block main_content %}
+    <header>
+        <div class="row">
+            <div class="col-8">
+                <h4>{event_name}</h4>
+                <h6>{date_start} - {date_end}</h6>
+            </div>
+            <div class="col-4">
+                <h4>Кол-во участников: {num}</h4>
+                <h6>Завершено на: {num%}</h6>
+            </div>
+         </div>
+        <hr>
+    </header>
+    <main class="page-block">
+        <button class="btn btn-primary mt-3 ms-3" href="#">Скачать клиент сканирования</button>
+        <div class="not-recognized mt-2 ms-2">
+            <div class="head">
+                <button class="d-inline image-button btn btn-sm btn-light">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <h5 class="align-middle d-inline">Нераспознанные бланки: { len }</h5>
+            </div>
+            <div class="ms-4">
+{#                <button class="blank btn btn-danger icon-button" href="#" id="">#}
+{#                    <i class="bi bi-file-earmark-text-fill"></i>#}
+{#                </button>#}
+            </div>
+        </div>
+        <div class="additional mt-2 ms-2">
+            <div class="head">
+                <button class="d-inline image-button btn btn-sm btn-light">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <h5 class="align-middle d-inline">Дополнительные комплеткты</h5>
+            </div>
+            <div class="ms-4 row row-cols-4">
+                <div class="complect-list col" id="1">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="2">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-secondary icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-secondary num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="3">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-secondary icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-secondary num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="4">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-secondary icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-secondary num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </div>
+        <div class="recognized mt-2 ms-2 pb-3">
+            <div class="head">
+                <button class="d-inline image-button btn btn-sm btn-light">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <h5 class="align-middle d-inline">Основные комплекты</h5>
+            </div>
+            <input class="ms-4" type="checkbox" id="only_not_scan" name="scales">
+            <label for="only_not_scan">Только неотсканированные</label>
+            <div class="ms-4 row row-cols-4">
+                <div class="complect-list col" id="1">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="2">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="3">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="4">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
