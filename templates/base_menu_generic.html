@@ -2,11 +2,11 @@
 {% load static %}
 {% block content %}
     <main class="page-content row">
-        <div class="menu col-md-2 ">
-            <div class ="nav navbar-nav text-center">
+        <div class="menu col-md-2 gy-3">
+            <div class ="nav navbar-nav text-center position-fixed page-block">
                 <img class ="logo-img nav-logo mx-auto" src="{% static 'images/signin.png' %}" alt="">
                 <li class="nav-user nav-item">
-                    <img class="d-inline" src="{% static 'images/user-logo.svg' %}" alt="">
+                    <i class="fas fa-user-alt"></i>
                     <p class="d-inline">user_name</p>
                     <button class="d-inline image-button btn btn-sm btn-light" href="#">
                         <img style="" src="{% static 'images/logout.svg' %}" alt="">
@@ -20,6 +20,18 @@
                 <li class ="nav-button nav-item nav-button btn btn-light" href="#">
                     <img class="d-inline" src="{% static 'images/rate.svg' %}" alt="">
                     <p class="d-inline">Оценка</p>
+                </li>
+                <li>
+                    <button class="nav-button btn btn-toggle btn-light d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                     <i class="fas fa-handshake mx-2"></i> Структура
+                    </button>
+                    <div class="collapse" id="home-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal mx-3 pb-1 small">
+                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-globe"></i><a href="/personnel/regions/">Регионы</a></li>
+                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-university"></i><a href=".personnel/organizations/" class="">Организации</a></li>
+                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-graduation-cap"></i><a href="/personnel/users/">Эксперты</a></li>
+                      </ul>
+                    </div>
                 </li>
             </div>
         </div>

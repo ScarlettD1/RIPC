@@ -4,18 +4,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DeleteView, DetailView, CreateView
 from django.urls import reverse_lazy
 
-from .models import Expert
+from .logic.autorization import *
+from .models import *
 from .forms import RegisterUserForm
-
-
-def is_not_expert(user):
-    pass
-    # return user.role !== expert
-
-
-def is_admin(user):
-    pass
-    # return user.role !== expert
 
 
 @login_required(login_url='/accounts/login/')
@@ -53,3 +44,15 @@ class RegisterUserView(CreateView):
 
     def get_success_url(self):
         return self.success_url
+
+
+def users(request):
+    return None
+
+
+def user_reg(request):
+    return None
+
+
+def user_detail(request):
+    return None
