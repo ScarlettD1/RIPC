@@ -3,17 +3,18 @@
 {% block main_content %}
     <header>
         <h2>Мероприятия</h2>
-        <h5 class = "text-secondary">Тюменская область</h5>
+        <h5 class="text-secondary">Тюменская область</h5>
         <hr>
     </header>
     <main class="page-block">
-        <div class="btn-toolbar justify-content-end mb-2">
+        <div class="btn-toolbar justify-content-end mb-2 px-3">
             <button type="button" class="btn btn-primary mt-2">Создать</button>
-            <button type="button" class="btn btn-danger mt-2 ms-2 me-2">Удалить</button>
+            <button type="button" class="btn btn-danger mt-2 ms-2">Удалить</button>
         </div>
-        <table class="table-admin-view ps-2 table table-bordered table-hover">
-            <thead>
-                <tr class = "table-secondary text-center">
+        <div class="px-3">
+            <table class="table-admin-view table table-bordered table-hover">
+                <thead>
+                <tr class="table-secondary text-center">
                     <th scope="col"></th>
                     <th scope="col">Название</th>
                     <th scope="col">Дата начала</th>
@@ -21,50 +22,57 @@
                     <th scope="col">Кол-во организаций</th>
                     <th scope="col">%Выполнения</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <tr>
-                  <th scope="row"><input type="checkbox"></th>
-                  <th style="width: 50%"><a href="" class="link-primary text-start">10 класс. Русский язык</a></th>
-                  <td>01.12.2022</td>
-                  <td>25.12.2022</td>
-                  <td>5</td>
-                  <td><div class="badge bg-danger text-dark fs-6">10%</div></td>
+                    <td><input class="checkbox w-100" type="checkbox"></td>
+                    <th style="width: 50%"><a href="" class="link-primary text-start">10 класс. Русский язык</a></th>
+                    <td>01.12.2022</td>
+                    <td>25.12.2022</td>
+                    <td>5</td>
+                    <td>
+                        <div class="badge bg-danger text-dark fs-6">10%</div>
+                    </td>
                 </tr>
                 <tr>
-                  <th scope="row"><input type="checkbox"></th>
-                  <th><a href="" class="link-primary">10 класс. Английский язык</a></th>
-                  <td>01.12.2022</td>
-                  <td>25.12.2022</td>
-                  <td>5</td>
-                  <td><div class="badge bg-danger text-dark fs-6">10%</div></td>
+                    <td><input class="checkbox w-100" type="checkbox"></td>
+                    <th><a href="" class="link-primary">10 класс. Английский язык</a></th>
+                    <td>01.12.2022</td>
+                    <td>25.12.2022</td>
+                    <td>5</td>
+                    <td>
+                        <div class="badge bg-danger text-dark fs-6">10%</div>
+                    </td>
                 </tr>
                 <tr>
-                  <th scope="row"><input type="checkbox"></th>
-                  <th><a href="" class="link-primary">8 класс. География</a></th>
-                  <td>01.12.2022</td>
-                  <td>25.12.2022</td>
-                  <td>2</td>
-                  <td><div class="badge bg-warning text-dark fs-6">40%</div></td>
+                    <td><input class="checkbox w-100" type="checkbox"></td>
+                    <th><a href="" class="link-primary">8 класс. География</a></th>
+                    <td>01.12.2022</td>
+                    <td>25.12.2022</td>
+                    <td>2</td>
+                    <td>
+                        <div class="badge bg-warning text-dark fs-6">40%</div>
+                    </td>
                 </tr>
-              </tbody>
-        </table>
-        <nav class="pt-3 pb-2 ps-2" aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+                </tbody>
+            </table>
+            <nav class="pt-3 pb-2" aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </main>
 {% endblock %}
