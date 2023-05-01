@@ -16,28 +16,28 @@
         <hr>
     </header>
     <main class="page-block">
-        <div class="main-settings pt-3 ms-2" id="main-settings-head">
+        <div class="main-settings pt-3 ms-2">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <h5 class="align-middle d-inline">Основные настройки</h5>
             </div>
-            <form method="post" action="#" class="px-3">
+            <form id="main-settings-form" class="px-3">
                 <label class="create-event-form" for="inputEventName">
                     Название:
-                    <input class="form-control w-50 event-input" name="event_name" id="inputEventName" placeholder="Мероприятие" required value="">
+                    <input name="event_name" class="form-control w-50 event-input" id="inputEventName" placeholder="Мероприятие" required value="">
                 </label>
                 <label class="create-event-form" for="inputCalendar">Даты проведения:
                     <div class="w-50" id="inputCalendar">
                         <div class="input-daterange input-group" id="datepicker">
                             <label class="input-group-text calendar-input" style="border-left-color: rgb(18,18,18);" for="inputEventStartDate">c</label>
-                            <input type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01/12/2000" required/>
+                            <input name="start_date" type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01/12/2000" required/>
                             <span class="input-group-text bg-white calendar-input">
                                 <i class="fas fa-calendar-day"></i>
                             </span>
                             <label class="input-group-text px-3 calendar-input" for="inputEventEndDate">по</label>
-                            <input type="text" class="input-sm form-control calendar-input" id="inputEventEndDate" placeholder="01/12/2000" required/>
+                            <input name="end_date" type="text" class="input-sm form-control calendar-input" id="inputEventEndDate" placeholder="01/12/2000" required/>
                             <span class="input-group-text bg-white calendar-input">
                                 <i class="fas fa-calendar-day"></i>
                             </span>
@@ -49,12 +49,12 @@
                 </label>
                 <label class="create-event-form" for="inputEventFiles">Варианты работ:</label>
                 <div class="file-loading">
-                    <input id="inputEventFiles" name="inp-theme-fa5-2[]" type="file" accept="application/pdf" data-browse-on-zone-click="true" multiple required>
+                    <input name="files" id="inputEventFiles" type="file" accept="application/pdf" data-browse-on-zone-click="true" multiple required>
                 </div>
                 <input class="mt-4 btn btn-primary" type="submit" value="Продолжить"/>
             </form>
         </div>
-        <div class="templates-settings mt-2 ms-2" id="templates-settings-head">
+        <div class="templates-settings mt-2 ms-2" id="templates-settings-head" style="display: none;">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">
                     <i class="fas fa-chevron-down"></i>
@@ -91,7 +91,7 @@
                 <input class="btn btn-primary" type="submit" value="Продолжить"/>
             </form>
         </div>
-        <div class="matching-templates mt-2 ms-2 pb-3" id="matching-templates-head">
+        <div class="matching-templates mt-2 ms-2 pb-3" id="matching-templates-head" style="display: none;">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">
                     <i class="fas fa-chevron-down"></i>
