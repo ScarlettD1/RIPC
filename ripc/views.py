@@ -1,11 +1,15 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DeleteView, DetailView, CreateView
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
+from rest_framework.parsers import JSONParser
 
-from .models import Expert
+from .models import Expert, Subject
 from .forms import RegisterUserForm
+from .serializers import SubjectSerializer
 
 
 def is_not_expert(user):
@@ -61,3 +65,33 @@ class RegisterUserView(CreateView):
 
     def get_success_url(self):
         return self.success_url
+
+
+# Роуты базы данных
+@csrf_exempt
+@login_required(login_url='/accounts/login/')
+def subject_api(request, id=0):
+    if request.method == "GET":
+        subjects = Subject.objects.all()
+        subjects_serializer = SubjectSerializer(subjects, many=True)
+        return JsonResponse(subjects_serializer.data, status=200, safe=False)
+    # elif request.method == "POST":
+    #     subject_data = JSONParser().parse(request)
+    #     subjects_serializer = SubjectSerializer(data=subject_data)
+    #     if subjects_serializer.is_valid():
+    #         subjects_serializer.save()
+    #         return JsonResponse("OK", status=200, safe=False)
+    #     return JsonResponse("ERROR", status=400, safe=False)
+    # elif request.method == "PUT":
+    #     subject_data = JSONParser().parse(request)
+    #     subject = Subject.objects.get(id=subject_data['id'])
+    #     subjects_serializer = SubjectSerializer(subject, data=subject_data)
+    #     if subjects_serializer.is_valid():
+    #         subjects_serializer.save()
+    #         return JsonResponse("OK", status=200, safe=False)
+    #     return JsonResponse("ERROR", status=400, safe=False)
+    # elif request.method == "DELETE":
+    #     subject = Subject.objects.get(id=id)
+    #     subject.delete()
+    #     return JsonResponse("ERROR", status=400, safe=False)
+
