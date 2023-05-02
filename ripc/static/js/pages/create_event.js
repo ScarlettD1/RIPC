@@ -2,7 +2,9 @@ let subjects = {} // Данные учебных дисциплин
 let baseURL = "http://127.0.0.1:8000"
 
 $(document).ready(function(){
-
+    $('.page-block .main-settings .head .btn').click();
+    $('.page-block .main-settings #main-settings-form .btn').remove();
+    $('.page-block .templates-settings').show().trigger('show');
 });
 
 // Отслеживание нажатий на скрытие/показ
@@ -91,8 +93,8 @@ $("#main-settings-form").submit(function (e) {
 });
 
 
+// Заполнение предметных областей
 $('.page-block .templates-settings').on('show', function(){
-
     $.ajax({
         type: "GET",
         url: `${baseURL}/api/subject`,
@@ -102,11 +104,50 @@ $('.page-block .templates-settings').on('show', function(){
             // Заполнение полученными данными
             for (let i=0; i<response.length; i++){
                 subjects[response[i].id] = response[i].name
-                $('#inputEventSubject').append(`<option value=${response[i].id}>${response[i].name}</option>`)
+                $('.table #1 #inputEventSubject').append(`<option value=${response[i].id}>${response[i].name}</option>`)
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
+        }
+    });
+});
+
+// Добавление нового поля в настройке шаблонов
+$('.page-block .templates-settings .create-event-form .btn-toolbar .btn-primary').click(function(){
+    let table_rows = $(this).parent().parent().find('.table').find('tbody')
+    let count_rows = table_rows.children().length
+
+    // Заполнение предметных областей
+    let options = ''
+    for (let id in subjects){
+        options += `<option value=${id}>${subjects[id]}</option>`
+    }
+
+    // Добавление поля
+    table_rows.append(`
+        <tr id=${count_rows+1}>
+            <td><input class="checkbox w-100" type="checkbox"></td>
+            <td>
+                <select class="w-100" id="inputEventSubject" required>
+                    <option disabled>Предметная область</option>
+                    ${options}
+                </select>
+            </td>
+            <td><input class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
+            <td><input class="w-100" id="inputEventTemplateName" type="text" required></td>
+        </tr>
+    `)
+});
+
+// Удаление выделенных полей в настройке шаблонов
+$('.page-block .templates-settings .create-event-form .btn-toolbar .btn-danger').click(function(){
+    let table_rows = $(this).parent().parent().find('.table').find('tbody')
+    let rows = table_rows.children('tr')
+
+    $(rows).each(function (){
+        if ($(this).find('.checkbox').is(':checked')){
+            $(this).remove()
         }
     });
 });
