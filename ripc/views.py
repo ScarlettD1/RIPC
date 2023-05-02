@@ -8,18 +8,10 @@ from django.urls import reverse_lazy
 from rest_framework.parsers import JSONParser
 
 from .models import Expert, Subject
+from .logic.autorization import *
+from .models import *
 from .forms import RegisterUserForm
 from .serializers import SubjectSerializer
-
-
-def is_not_expert(user):
-    return True
-    # return user.role !== expert
-
-
-def is_admin(user):
-    return True
-    # return user.role !== expert
 
 
 @login_required(login_url='/accounts/login/')
@@ -33,7 +25,6 @@ def index(request):
 def detail(request, question_id):
     expert_name = get_object_or_404(Expert, pk=question_id)
     return render(request, 'ripc/detail.html', {'name': expert_name})
-
 
 @user_passes_test(is_admin)
 @login_required(login_url='/accounts/login/')
