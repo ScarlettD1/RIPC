@@ -3,6 +3,8 @@ from django.urls import path, re_path, include
 from . import views
 from .logic.region import region
 from .logic.organization import organization
+from .logic.event import event
+from .logic.subject import subject
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -17,7 +19,7 @@ urlpatterns = [
     path('personnel/organizations/', organization.organizations, name='orgs'),
     path('personnel/organizations/reg/', organization.organizations_registration, name='org_reg'),
     path('personnel/organizations/<int:id>', organization.organizations_detail, name='orgs_detail'),
-    path('create_event', views.create_event, name='create_event'),
-    path('event/<int:event_id>', views.view_event, name='view_event'),
-    re_path(r'api/subject/(<int:id>)?', views.subject_api, name='subject_api'),
+    path('create_event', event.create_event, name='create_event'),
+    path('event/<int:event_id>', event.view_event, name='view_event'),
+    re_path(r'api/subject/(<int:id>)?', subject.subject_api, name='subject_api'),
 ]
