@@ -1,3 +1,6 @@
+let subjects = {} // Данные учебных дисциплин
+let baseURL = "http://127.0.0.1:8000"
+
 $(document).ready(function(){
 
 });
@@ -9,11 +12,11 @@ $('.page-block .head .btn').click(function(){
 
     // Скрытие/показ детей
     if ($(mainChildren).is(':hidden')) {
-        mainChildren.show()
+        $(mainChildren).show()
         $(this).find('i').attr("class", "fas fa-chevron-down")
     }
     else {
-        mainChildren.hide()
+        $(mainChildren).hide()
         $(this).find('i').attr("class", "fas fa-chevron-right")
     }
 
@@ -76,13 +79,34 @@ $("#main-settings-form").submit(function (e) {
             console.log("Основные настройки отправлены!");
             $('.page-block .main-settings .head .btn').click();
             $('.page-block .main-settings #main-settings-form .btn').remove();
-            $('.page-block .templates-settings').show()
+            $('.page-block .templates-settings').show().trigger('show');
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
-            // $('.page-block .main-settings .head .btn').click();
-            // $('.page-block .main-settings #main-settings-form .btn').remove();
-            // $('.page-block .templates-settings').show()
+            $('.page-block .main-settings .head .btn').click();
+            $('.page-block .main-settings #main-settings-form .btn').remove();
+            $('.page-block .templates-settings').show().trigger('show');
+        }
+    });
+});
+
+
+$('.page-block .templates-settings').on('show', function(){
+
+    $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/subject`,
+        dataType: 'JSON',
+        success: function (response) {
+            console.log("Предметные области получены!")
+            // Заполнение полученными данными
+            for (let i=0; i<response.length; i++){
+                subjects[response[i].id] = response[i].name
+                $('#inputEventSubject').append(`<option value=${response[i].id}>${response[i].name}</option>`)
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
         }
     });
 });
