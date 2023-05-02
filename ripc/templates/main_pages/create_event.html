@@ -61,7 +61,7 @@
                 </button>
                 <h5 class="align-middle d-inline">Настройка шаблонов заданий</h5>
             </div>
-            <form class="px-3 create-event-form" method="post" action="#">
+            <form id="templates-settings-form" class="px-3 create-event-form" id="create-event-form" method="post" action="#">
                 <table class="table table-bordered">
                     <thead class="create-event-table">
                         <tr>
@@ -75,12 +75,12 @@
                         <tr id=1>
                             <td><input class="checkbox w-100" type="checkbox"></td>
                             <td>
-                                <select class="w-100" id="inputEventSubject" required>
+                                <select name="subject_id" class="w-100" id="inputEventSubject" required>
                                     <option disabled>Предметная область</option>
                                 </select>
                             </td>
-                            <td><input class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
-                            <td><input class="w-100" id="inputEventTemplateName" type="text" required></td>
+                            <td><input name="max_score" class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
+                            <td><input name="name" class="w-100" id="inputEventTemplateName" type="text" required></td>
                         </tr>
                     </tbody>
                 </table>

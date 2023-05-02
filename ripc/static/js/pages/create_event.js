@@ -1,11 +1,13 @@
 let subjects = {} // Данные учебных дисциплин
 let baseURL = "http://127.0.0.1:8000"
 
+
 $(document).ready(function(){
-    $('.page-block .main-settings .head .btn').click();
-    $('.page-block .main-settings #main-settings-form .btn').remove();
-    $('.page-block .templates-settings').show().trigger('show');
+    // $('.page-block .main-settings .head .btn').click();
+    // $('.page-block .main-settings #main-settings-form .btn').remove();
+    // $('.page-block .templates-settings').show().trigger('show');
 });
+
 
 // Отслеживание нажатий на скрытие/показ
 $('.page-block .head .btn').click(function(){
@@ -24,6 +26,7 @@ $('.page-block .head .btn').click(function(){
 
 });
 
+
 // Функция для календаря
 $('#inputCalendar .input-daterange').datepicker({
     format: "dd/mm/yyyy",
@@ -32,6 +35,7 @@ $('#inputCalendar .input-daterange').datepicker({
     autoclose: true,
     todayHighlight: true
 });
+
 
 // Функция для файлов
 $("#inputEventFiles").fileinput({
@@ -54,6 +58,7 @@ $("#inputEventFiles").fileinput({
         indicatorNew: ''
     }
 });
+
 
 // Отправка главных настроек
 $("#main-settings-form").submit(function (e) {
@@ -82,12 +87,14 @@ $("#main-settings-form").submit(function (e) {
             $('.page-block .main-settings .head .btn').click();
             $('.page-block .main-settings #main-settings-form .btn').remove();
             $('.page-block .templates-settings').show().trigger('show');
+            $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
-            $('.page-block .main-settings .head .btn').click();
-            $('.page-block .main-settings #main-settings-form .btn').remove();
-            $('.page-block .templates-settings').show().trigger('show');
+            // $('.page-block .main-settings .head .btn').click();
+            // $('.page-block .main-settings #main-settings-form .btn').remove();
+            // $('.page-block .templates-settings').show().trigger('show');
+            // $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
         }
     });
 });
@@ -113,6 +120,7 @@ $('.page-block .templates-settings').on('show', function(){
     });
 });
 
+
 // Добавление нового поля в настройке шаблонов
 $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-primary').click(function(){
     let table_rows = $(this).parent().parent().find('.table').find('tbody')
@@ -129,16 +137,17 @@ $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-primary'
         <tr id=${count_rows+1}>
             <td><input class="checkbox w-100" type="checkbox"></td>
             <td>
-                <select class="w-100" id="inputEventSubject" required>
+                <select name="subject_id" class="w-100" id="inputEventSubject" required>
                     <option disabled>Предметная область</option>
                     ${options}
                 </select>
             </td>
-            <td><input class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
-            <td><input class="w-100" id="inputEventTemplateName" type="text" required></td>
+            <td><input name="max_score" class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
+            <td><input name="name" class="w-100" id="inputEventTemplateName" type="text" required></td>
         </tr>
     `)
 });
+
 
 // Удаление выделенных полей в настройке шаблонов
 $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-danger').click(function(){
@@ -148,6 +157,44 @@ $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-danger')
     $(rows).each(function (){
         if ($(this).find('.checkbox').is(':checked')){
             $(this).remove()
+        }
+    });
+});
+
+// Отправка главных настроек
+$("#templates-settings-form").submit(function (e) {
+    e.preventDefault();
+    let form = $(this).serializeArray()
+    let data = []
+    for (let i=0; i<form.length; i+=3){
+        let temp = {}
+        temp[form[i].name] = form[i].value
+        temp[form[i+1].name] = form[i+1].value
+        temp[form[i+2].name] = form[i+2].value
+        data.push(temp);
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "https://webhook.site/728a2b8c-145f-4367-9de6-c647a227ea2d",
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function (jqXHR) {
+        // Если успешно - отправить на новый шаг
+            console.log("Настройки шаблонов отправлены!");
+            $('.page-block .templates-settings .head .btn').click();
+            $('.page-block .templates-settings #templates-settings-form .btn').remove();
+            $('.page-block .matching-templates').show().trigger('show');
+            $('.page-block .templates-settings #templates-settings-form').find('input').attr('readonly', true);
+            $('.page-block .templates-settings #templates-settings-form').find('select').attr('disabled', true);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+            // $('.page-block .templates-settings .head .btn').click();
+            // $('.page-block .templates-settings #templates-settings-form .btn').remove();
+            // $('.page-block .matching-templates').show().trigger('show');
+            // $('.page-block .templates-settings #templates-settings-form').find('input').attr('readonly', true);
+            // $('.page-block .templates-settings #templates-settings-form').find('select').attr('disabled', true);
         }
     });
 });
