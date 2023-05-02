@@ -39,3 +39,6 @@ gitignore не трогаем, пишем мне, лишнего не закид
     /venv
 
 docker run --name pg -p 5432:5432 -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=qwerty123 -d postgres
+
+В организациях и регионах, может быть несколько представителей
+Все по местоположению, только админы могут видеть все

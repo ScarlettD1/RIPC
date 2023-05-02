@@ -12,10 +12,11 @@ urlpatterns = [
     path('personnel/users/<int:id>', views.user_detail, name='user_page'),
     path('personnel/users/registration/', views.user_reg, name='user_reg'),
     path('personnel/regions/', region.regions, name='regions'),
-    path('personnel/regions/edit/', region.regions_edit, name='regions_edit'),
-    path('personnel/regions/<int:id>', region.regions_detail, name='regions_detail'),
+    path('personnel/regions/edit/<int:id>', region.regions_edit, name='regions_edit'),
+    path('personnel/regions/<int:reg>', region.regions_detail, name='regions_detail'),
     path('personnel/regions/reg', region.regions_reg, name='regions_reg'),
     path('personnel/organizations/', organization.organizations, name='orgs'),
     path('personnel/organizations/reg/', organization.organizations_registration, name='org_reg'),
+    path('personnel/organizations/edit/<int:id>', organization.organizations_edit, name='orgs_edit'),
     path('personnel/organizations/<int:id>', organization.organizations_detail, name='orgs_detail'),
 ]

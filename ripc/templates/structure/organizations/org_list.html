@@ -2,5 +2,32 @@
 {% load static %}
 
 {% block main_content %}
-
+    <div class="container mt-3 pb-1">
+        <h3 class="display-6 my-4 fw-normal">Организации</h3>
+        <div class="row align-items-start table-naming">
+            <div class="col-1">№</div>
+            <div class="col-4">Название организации</div>
+            <div class="col-3">Кол-во участников</div>
+            <div class="col-3">Активные мероприятия</div>
+        </div>
+        {% if orgs.count > 0 %}
+            <div class="rounded-3">
+                {% for org in orgs %}
+                    <div class="row align-items-start py-2">
+                        <div class="col-1">{{ org.id }}</div>
+                        <div class="col-4"><a href="/personnel/organization/{{ org.id }}">{{ org.name }}</a></div>
+                        <div class="col-3">232</div>
+                        <div class="col-3">33</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mt-2">Нет доступных организаций</p>
+        {% endif %}
+        <div class="flex-row d-flex justify-content-end w-90">
+            <a href="/personnel/organization/reg">
+                <button class="btn btn-primary rounded-pill px-3 my-3" type="button">Добавить организацию</button>
+            </a>
+        </div>
+    </div>
 {% endblock %}

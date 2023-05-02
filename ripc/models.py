@@ -17,6 +17,12 @@ class Region(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def create(cls, name):
+        region = cls(name=name)
+        region.save()
+        return region
+
 
 class Organization(models.Model):
     name = models.CharField(max_length=300)

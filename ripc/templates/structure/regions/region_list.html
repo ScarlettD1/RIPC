@@ -3,9 +3,7 @@
 
 {% block main_content %}
     <div class="container mt-3 pb-1">
-        <button class="btn btn-primary rounded-pill px-3 my-3" type="button" data-bs-toggle="modal"
-                data-bs-target="#RegionCreateModal">Добавить регион
-        </button>
+        <h3 class="display-6 my-4 fw-normal">Регионы</h3>
         <div class="row align-items-start table-naming">
             <div class="col-1">№</div>
             <div class="col-4">Название</div>
@@ -13,17 +11,24 @@
             <div class="col-3">Активные мероприятия</div>
         </div>
         {% if regions.count > 0 %}
-            {% for region in regions %}
-                <div class="row align-items-start py-2">
-                    <div class="col-1">1</div>
-                    <div class="col-4"><a href="/personnel/regions/{{ region.id }}">{{ region.name }}</a></div>
-                    <div class="col-3">232</div>
-                    <div class="col-3">33</div>
-                </div>
-            {% endfor %}
+            <div class="rounded-3">
+                {% for region in regions %}
+                    <div class="row align-items-start bg-light py-2">
+                        <div class="col-1">{{ region.id }}</div>
+                        <div class="col-4"><a href="/personnel/regions/{{ region.id }}">{{ region.name }}</a></div>
+                        <div class="col-3">232</div>
+                        <div class="col-3">33</div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
             <p class="mt-2">Нет доступных регионов</p>
         {% endif %}
+        <div class="flex-row d-flex justify-content-end w-90">
+            <button class="btn btn-primary rounded-pill px-3 my-4" type="button" data-bs-toggle="modal"
+                    data-bs-target="#RegionCreateModal">Добавить регион
+            </button>
+        </div>
     </div>
     <div class="modal fade" id="RegionCreateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -37,7 +42,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="region_name" class="col-form-label">Название:</label>
-                            <input type="text" class="form-control" id="region_name">
+                            <input type="text" class="form-control" id="region_name" name="region_name">
                         </div>
                     </div>
                     <div class="modal-footer">
