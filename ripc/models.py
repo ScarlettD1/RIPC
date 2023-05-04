@@ -63,6 +63,7 @@ class Variant(models.Model):
 
 
 class PatternTask(models.Model):
+    name = models.CharField(max_length=300)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     max_score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
 
