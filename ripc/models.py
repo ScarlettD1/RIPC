@@ -62,6 +62,11 @@ class Variant(models.Model):
     file_path = models.TextField(null=True)
 
 
+class VariantCropping(models.Model):
+    answer_coord = ArrayField(models.IntegerField())
+    task_file_path = models.TextField(null=True)
+
+
 class PatternTask(models.Model):
     name = models.CharField(max_length=300)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
@@ -71,8 +76,7 @@ class PatternTask(models.Model):
 class Task(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     pattern = models.ForeignKey(PatternTask, on_delete=models.CASCADE)
-    answer_coord = ArrayField(ArrayField(models.IntegerField()))
-    file_path = models.TextField(null=True)
+    cropping = models.ForeignKey(VariantCropping, on_delete=models.CASCADE)
 
 
 class TaskExpert(models.Model):
