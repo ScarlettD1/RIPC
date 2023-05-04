@@ -1,10 +1,8 @@
-import base64
 import time
 
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponse, FileResponse
+from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 
 from ripc.models import Variant
 from ripc.serializers import VariantSerializer
@@ -17,10 +15,10 @@ def variant_api_get(request, id=0):
         if id:
             variants = Variant.objects.get(id=id)
             variants_serializer = VariantSerializer(variants, many=False)
-            binary = variants_serializer['binary_file'].value
-            print(type(binary))
-            return FileResponse(variants_serializer['binary_file'].value, status=200)
-        print()
+            file_path = variants_serializer['file_path'].value
+            file_name = file_path.split('&&')[-1]
+            return FileResponse(open(file_path, "rb"), as_attachment=True, filename=file_name)
+
     return JsonResponse("ERROR", status=400, safe=False)
 
 
