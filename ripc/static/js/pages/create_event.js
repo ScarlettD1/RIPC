@@ -3,6 +3,8 @@ let baseURL = "http://127.0.0.1:8000"
 let eventID = 0
 let variantID = []
 let patternID = []
+let croppingID = []
+let croppingEnd = false
 
 $(document).ready(function(){
     // $('.page-block .main-settings .head .btn').click();
@@ -62,6 +64,27 @@ $("#inputEventFiles").fileinput({
 });
 
 
+// Функция запуска обрезки заданий
+async function startCropping() {
+    for (let i in variantID) {
+        let id = variantID[i]
+        $.ajax({
+            type: "GET",
+            url: `${baseURL}/api/start_cropping_variant/${id}`,
+            success: function (response) {
+                console.log(`Обрезка заданий для варианта [${id}] завершена!`)
+                for (let res_i in response)
+                    croppingID.push(response[res_i])
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(`ERROR: Ошибка при обрезки заданий для варианта [${id}]!`)
+            }
+        });
+    }
+    croppingEnd = true;
+}
+
+
 // Отправка главных настроек
 $("#main-settings-form").submit(function (e) {
     e.preventDefault();
@@ -102,7 +125,7 @@ $("#main-settings-form").submit(function (e) {
     });
 
     // Если все запросы выполнились - перейти на следующий шаг
-    $.when(res_event, res_files).done(function (data){
+    $.when(res_event, res_files).done(function (){
         eventID = res_event.responseJSON;
         variantID = res_files.responseJSON;
         console.log("ok: Основные настройки отправлены!");
@@ -110,7 +133,10 @@ $("#main-settings-form").submit(function (e) {
         $('.page-block .main-settings #main-settings-form .btn').remove();
         $('.page-block .templates-settings').show().trigger('show');
         $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
-    });
+
+        // Запуск обрезки заданий
+        startCropping()
+    })
 });
 
 

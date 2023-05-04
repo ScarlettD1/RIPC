@@ -37,12 +37,9 @@ def variant_api_post(request):
         for data in datas:
             variants_serializer = VariantSerializer(data=data)
             if not variants_serializer.is_valid():
-                print(len(data["file_path"]))
-                print(variants_serializer.errors)
                 return JsonResponse("ERROR", status=400, safe=False)
             variants_serializer.save()
             variant_ids.append(variants_serializer.data.get('id'))
-
-        print(variant_ids)
         return JsonResponse(variant_ids, status=200, safe=False)
+
     return JsonResponse("ERROR", status=400, safe=False)

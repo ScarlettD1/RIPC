@@ -7,6 +7,7 @@ from .logic.organization import organization
 from .logic.event import event
 from .logic.subject import subject
 from .logic.variant import variant
+from .logic.variant_cropping import variant_cropping
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -26,6 +27,7 @@ urlpatterns = [
     path('api/event', event.event_api_post, name='event_api_post'),
     path('api/variant/<id>', variant.variant_api_get, name='variant_api_get'),
     path('api/variant', variant.variant_api_post, name='variant_api_post'),
+    path(r'api/start_cropping_variant/<id>', variant_cropping.start_cropping_variant, name='start_cropping_variant'),
     re_path(r'api/pattern_task/(<int:id>)?', pattern_task.pattern_api_get, name='pattern_api_get'),
     path('api/pattern_task', pattern_task.pattern_api_post, name='pattern_api_post'),
 
