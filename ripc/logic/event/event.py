@@ -6,8 +6,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from ripc.models import Subject
-from ripc.serializers import SubjectSerializer, EventSerializer
+from ripc.models import Subject, Event
+from ripc.serializers import EventSerializer
 
 
 @login_required(login_url='/accounts/login/')
@@ -27,13 +27,13 @@ def view_event(request, event_id):
 def event_api_get(request, id=0):
     if request.method == "GET":
         if id:
-            subjects = Subject.objects.get(id=id)
-            subjects_serializer = SubjectSerializer(subjects, many=False)
+            events = Event.objects.get(id=id)
+            events_serializer = EventSerializer(events, many=False)
         else:
-            subjects = Subject.objects.all()
-            subjects_serializer = SubjectSerializer(subjects, many=True)
+            events = Subject.objects.all()
+            events_serializer = EventSerializer(events, many=True)
 
-        return JsonResponse(subjects_serializer.data, status=200, safe=False)
+        return JsonResponse(events_serializer.data, status=200, safe=False)
 
 
 @csrf_exempt

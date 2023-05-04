@@ -2,11 +2,12 @@ let subjects = {} // Данные учебных дисциплин
 let baseURL = "http://127.0.0.1:8000"
 let eventID = 0
 let variantID = []
+let patternID = []
 
 $(document).ready(function(){
-    // $('.page-block .main-settings .head .btn').click();
-    // $('.page-block .main-settings #main-settings-form .btn').remove();
-    // $('.page-block .templates-settings').show().trigger('show');
+    $('.page-block .main-settings .head .btn').click();
+    $('.page-block .main-settings #main-settings-form .btn').remove();
+    $('.page-block .templates-settings').show().trigger('show');
 });
 
 
@@ -174,7 +175,7 @@ $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-danger')
     });
 });
 
-// Отправка главных настроек
+// Отправка настроек шаблона
 $("#templates-settings-form").submit(function (e) {
     e.preventDefault();
     let form = $(this).serializeArray()
@@ -189,12 +190,13 @@ $("#templates-settings-form").submit(function (e) {
 
     $.ajax({
         type: "POST",
-        url: "https://webhook.site/728a2b8c-145f-4367-9de6-c647a227ea2d",
+        url: `${baseURL}/api/pattern_task`,
         data: JSON.stringify(data),
-        dataType: "json",
+        dataType: "JSON",
         success: function (jqXHR) {
         // Если успешно - отправить на новый шаг
             console.log("Настройки шаблонов отправлены!");
+            patternID = jqXHR
             $('.page-block .templates-settings .head .btn').click();
             $('.page-block .templates-settings #templates-settings-form .btn').remove();
             $('.page-block .matching-templates').show().trigger('show');
@@ -203,11 +205,6 @@ $("#templates-settings-form").submit(function (e) {
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
-            // $('.page-block .templates-settings .head .btn').click();
-            // $('.page-block .templates-settings #templates-settings-form .btn').remove();
-            // $('.page-block .matching-templates').show().trigger('show');
-            // $('.page-block .templates-settings #templates-settings-form').find('input').attr('readonly', true);
-            // $('.page-block .templates-settings #templates-settings-form').find('select').attr('disabled', true);
         }
     });
 });

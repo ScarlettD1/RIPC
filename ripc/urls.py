@@ -1,6 +1,7 @@
 from django.urls import path, re_path, include
 
 from . import views
+from .logic.pattern_task import pattern_task
 from .logic.region import region
 from .logic.organization import organization
 from .logic.event import event
@@ -25,6 +26,9 @@ urlpatterns = [
     path('api/event', event.event_api_post, name='event_api_post'),
     path('api/variant/<id>', variant.variant_api_get, name='variant_api_get'),
     path('api/variant', variant.variant_api_post, name='variant_api_post'),
+    re_path(r'api/pattern_task/(<int:id>)?', pattern_task.pattern_api_get, name='pattern_api_get'),
+    path('api/pattern_task', pattern_task.pattern_api_post, name='pattern_api_post'),
+
 
     # Страницы
     path('create_event', event.create_event, name='create_event'),
