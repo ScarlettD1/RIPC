@@ -1,6 +1,7 @@
 let subjects = {} // Данные учебных дисциплин
 let baseURL = "http://127.0.0.1:8000"
-
+let eventID = 0
+let variantID = []
 
 $(document).ready(function(){
     // $('.page-block .main-settings .head .btn').click();
@@ -63,39 +64,51 @@ $("#inputEventFiles").fileinput({
 // Отправка главных настроек
 $("#main-settings-form").submit(function (e) {
     e.preventDefault();
-    let formData = new FormData();
+    let formData = {}
+    let filesData = new FormData();
 
     // Получаем текстовые данные с формы
     $.each($(this).serializeArray(),function (key, value) {
-        formData.append(value.name, value.value);
+        formData[value.name] = value.value
     })
 
     // Получаем файлы с формы
     $.each($(this).find('#inputEventFiles')[0].files, function (key, value) {
-        formData.append("files[]", value, value.name);
+        filesData.append(value.name, value);
 	})
 
-    $.ajax({
+    // Запрос на создание МП
+    let res_event = $.ajax({
         type: "POST",
-        url: "https://webhook.site/728a2b8c-145f-4367-9de6-c647a227ea2d",
+        url: `${baseURL}/api/event`,
+        data: JSON.stringify(formData),
+        dataType: "json"
+    }).fail(function (){
+        console.log('error: Не удалось отправить основные настройки')
+    })
+
+    // Запрос на создание файлов варианта
+    let res_files = $.ajax({
+        type: "POST",
+        url: `${baseURL}/api/variant`,
+        enctype: 'multipart/form-data',
         processData: false,
         contentType: false,
-        data: formData,
-        success: function (jqXHR) {
-        // Если успешно - отправить на новый шаг
-            console.log("Основные настройки отправлены!");
-            $('.page-block .main-settings .head .btn').click();
-            $('.page-block .main-settings #main-settings-form .btn').remove();
-            $('.page-block .templates-settings').show().trigger('show');
-            $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log(textStatus, jqXHR.responseText);
-            // $('.page-block .main-settings .head .btn').click();
-            // $('.page-block .main-settings #main-settings-form .btn').remove();
-            // $('.page-block .templates-settings').show().trigger('show');
-            // $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
-        }
+        cache: false,
+        data: filesData
+    }).fail(function (){
+        console.log('error: Не удалось отправить файлы вариантов')
+    });
+
+    // Если все запросы выполнились - перейти на следующий шаг
+    $.when(res_event, res_files).done(function (data){
+        eventID = res_event.responseJSON;
+        variantID = res_files.responseJSON;
+        console.log("ok: Основные настройки отправлены!");
+        $('.page-block .main-settings .head .btn').click();
+        $('.page-block .main-settings #main-settings-form .btn').remove();
+        $('.page-block .templates-settings').show().trigger('show');
+        $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
     });
 });
 
