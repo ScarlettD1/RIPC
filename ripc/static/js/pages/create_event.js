@@ -5,9 +5,9 @@ let variantID = []
 let patternID = []
 
 $(document).ready(function(){
-    $('.page-block .main-settings .head .btn').click();
-    $('.page-block .main-settings #main-settings-form .btn').remove();
-    $('.page-block .templates-settings').show().trigger('show');
+    // $('.page-block .main-settings .head .btn').click();
+    // $('.page-block .main-settings #main-settings-form .btn').remove();
+    // $('.page-block .templates-settings').show().trigger('show');
 });
 
 
