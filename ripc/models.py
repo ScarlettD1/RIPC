@@ -59,8 +59,7 @@ class Event(models.Model):
 
 
 class Variant(models.Model):
-    file_link = models.TextField()
-    page_len = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    file_path = models.TextField(null=True)
 
 
 class PatternTask(models.Model):
@@ -72,7 +71,7 @@ class Task(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     pattern = models.ForeignKey(PatternTask, on_delete=models.CASCADE)
     answer_coord = ArrayField(ArrayField(models.IntegerField()))
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
 
 
 class TaskExpert(models.Model):
@@ -86,13 +85,13 @@ class Complect(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
 
 
 class Answer(models.Model):
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
     mark = models.CharField(max_length=10, null=True)
 
 
@@ -118,11 +117,11 @@ class OrganizationEvent(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
-    percent_status = models.CharField(max_length=3)
+    percent_status = models.TextField(max_length=3)
 
 
 class ScannedPage(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE, null=True)
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
