@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Subject, Event, Variant, PatternTask, VariantCropping
+from .models import Subject, Event, Variant, PatternTask, VariantCropping, Task
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -30,3 +30,9 @@ class PatternTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatternTask
         fields = ['id', 'name', 'max_score', 'subject']
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'variant', 'pattern', 'cropping']

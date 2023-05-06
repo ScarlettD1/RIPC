@@ -10,7 +10,7 @@ from ripc.serializers import VariantSerializer
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
-def variant_api_get(request, id=0):
+def variant_api_file(request, id=0):
     if request.method == "GET":
         if id:
             variants = Variant.objects.get(id=id)
@@ -24,7 +24,7 @@ def variant_api_get(request, id=0):
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
-def variant_api_post(request):
+def variant_api(request):
     if request.method == "POST":
         datas = []
         for name, file in request.FILES.items():

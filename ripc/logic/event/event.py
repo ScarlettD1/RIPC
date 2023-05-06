@@ -24,10 +24,13 @@ def view_event(request, event_id):
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
-def event_api_get(request, id=0):
+def event_api(request):
     if request.method == "GET":
-        if id:
-            events = Event.objects.get(id=id)
+        # Поиск query
+        ids = request.GET.get('id')
+
+        if ids:
+            events = Event.objects.get(id=ids)
             events_serializer = EventSerializer(events, many=False)
         else:
             events = Subject.objects.all()
@@ -35,10 +38,6 @@ def event_api_get(request, id=0):
 
         return JsonResponse(events_serializer.data, status=200, safe=False)
 
-
-@csrf_exempt
-@login_required(login_url='/accounts/login/')
-def event_api_post(request):
     if request.method == "POST":
         event_data = JSONParser().parse(request)
         if event_data.get('start_date'):

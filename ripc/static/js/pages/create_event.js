@@ -5,6 +5,8 @@ let variantID = []
 let patternID = []
 let croppingID = []
 let croppingEnd = false
+let matchingCropping = []
+let currentMatchingIndex = 0
 
 $(document).ready(function(){
     // $('.page-block .main-settings .head .btn').click();
@@ -67,17 +69,17 @@ $("#inputEventFiles").fileinput({
 // Функция запуска обрезки заданий
 async function startCropping() {
     for (let i in variantID) {
-        let id = variantID[i]
+        let v_id = variantID[i]
         $.ajax({
             type: "GET",
-            url: `${baseURL}/api/start_cropping_variant/${id}`,
+            url: `${baseURL}/api/cropping_variant/start/${v_id}`,
             success: function (response) {
-                console.log(`Обрезка заданий для варианта [${id}] завершена!`)
+                console.log(`Обрезка заданий для варианта [${v_id}] завершена!`)
                 for (let res_i in response)
-                    croppingID.push(response[res_i])
+                    croppingID.push([v_id , response[res_i]])
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.log(`ERROR: Ошибка при обрезки заданий для варианта [${id}]!`)
+                console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
             }
         });
     }
@@ -104,7 +106,7 @@ $("#main-settings-form").submit(function (e) {
     // Запрос на создание МП
     let res_event = $.ajax({
         type: "POST",
-        url: `${baseURL}/api/event`,
+        url: `${baseURL}/api/event/`,
         data: JSON.stringify(formData),
         dataType: "json"
     }).fail(function (){
@@ -114,7 +116,7 @@ $("#main-settings-form").submit(function (e) {
     // Запрос на создание файлов варианта
     let res_files = $.ajax({
         type: "POST",
-        url: `${baseURL}/api/variant`,
+        url: `${baseURL}/api/variant/`,
         enctype: 'multipart/form-data',
         processData: false,
         contentType: false,
@@ -177,7 +179,7 @@ $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-primary'
         <tr id=${count_rows+1}>
             <td><input class="checkbox w-100" type="checkbox"></td>
             <td>
-                <select name="subject_id" class="w-100" id="inputEventSubject" required>
+                <select name="subject" class="w-100" id="inputEventSubject" required>
                     <option disabled>Предметная область</option>
                     ${options}
                 </select>
@@ -216,7 +218,7 @@ $("#templates-settings-form").submit(function (e) {
 
     $.ajax({
         type: "POST",
-        url: `${baseURL}/api/pattern_task`,
+        url: `${baseURL}/api/pattern_task/`,
         data: JSON.stringify(data),
         dataType: "JSON",
         success: function (jqXHR) {
@@ -225,9 +227,154 @@ $("#templates-settings-form").submit(function (e) {
             patternID = jqXHR
             $('.page-block .templates-settings .head .btn').click();
             $('.page-block .templates-settings #templates-settings-form .btn').remove();
-            $('.page-block .matching-templates').show().trigger('show');
             $('.page-block .templates-settings #templates-settings-form').find('input').attr('readonly', true);
             $('.page-block .templates-settings #templates-settings-form').find('select').attr('disabled', true);
+            $('.page-block .matching-templates form .btn-toolbar .btn-secondary').prop('disabled', true)
+            $('.page-block .matching-templates #last-matching-submit').prop('disabled', true)
+
+            // Ожидание завершения обрезки заданий
+            while (croppingEnd !== true) {
+                setTimeout(function(){ console.log("Ожидание завершения обрезки заданий") },1000)
+            }
+
+            // Получить первое обрзанное задание
+            $('.page-block .matching-templates #templateImage').attr("src", `${baseURL}/api/cropping_variant/image/${croppingID[0][1]}`)
+            $('.page-block .matching-templates').show().trigger('show');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+        }
+    });
+});
+
+
+// Заполнение выбора шаблонов
+$('.page-block .matching-templates').on('show', function(){
+    $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/pattern_task/?id=${patternID}`,
+        success: function (response) {
+            console.log("Предметные области получены!")
+            // Заполнение полученными данными
+            if (response instanceof Array) {
+                for (let i=0; i<response.length; i++){
+                    $('.page-block .matching-templates #inputTemplate').append(`<option value=${response[i].id}>${response[i].name}</option>`)
+                }
+                return
+            }
+            $('.page-block .matching-templates #inputTemplate').append(`<option value=${response.id}>${response.name}</option>`)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+        }
+    });
+});
+
+
+// Переход на следующее изображение
+$('.page-block .matching-templates form .btn-toolbar .btn-primary').click(function(){
+    // Проверка на последнее сопоставление
+    if (currentMatchingIndex >= croppingID.length - 2) {
+        $(this).prop('disabled', true);
+        $('.page-block .matching-templates #last-matching-submit').prop('disabled', false)
+    }
+    $('.page-block .matching-templates form .btn-toolbar .btn-secondary').prop('disabled', false)
+
+    let old_info = croppingID[currentMatchingIndex]
+
+    currentMatchingIndex += 1;
+    let next_info = croppingID[currentMatchingIndex]
+    $('.page-block .matching-templates #templateImage').attr("src", `${baseURL}/api/cropping_variant/image/${next_info[1]}`)
+
+    // Проверка имеется ли уже инфомрация о значениях
+    let cropping = matchingCropping.map(matching => matching.cropping)
+    if (!cropping.includes(next_info[1])) { // Если нет
+        // Добавить новые значения
+        matchingCropping.push({
+            "variant": old_info[0],
+            "pattern": $('.page-block .matching-templates #inputTemplate').val(),
+            "cropping": old_info[1],
+        });
+        $(`.page-block .matching-templates #inputTemplate`).prop("selectedIndex", 1);
+        return
+    }
+
+    // Обновить старые значения
+    let old_cropping = matchingCropping[currentMatchingIndex]
+    matchingCropping[currentMatchingIndex-1] = {
+    "variant": old_info[0],
+    "pattern": $('.page-block .matching-templates #inputTemplate').val(),
+    "cropping": old_info[1],
+    };
+    $(`.page-block .matching-templates #inputTemplate option[value=${old_cropping.pattern}]`).prop('selected', true);
+
+});
+
+// Переход на предыдущее изображение
+$('.page-block .matching-templates form .btn-toolbar .btn-secondary').click(function(){
+    if (currentMatchingIndex <= 1) {
+        $(this).prop('disabled', true);
+    }
+    $('.page-block .matching-templates form .btn-toolbar .btn-primary').prop('disabled', false)
+    $('.page-block .matching-templates #last-matching-submit').prop('disabled', true)
+
+    let old_info = croppingID[currentMatchingIndex]
+    // Обновить старые значения
+    matchingCropping[currentMatchingIndex] = {
+        "variant": old_info[0],
+        "pattern": $('.page-block .matching-templates #inputTemplate').val(),
+        "cropping": old_info[1],
+    };
+
+    currentMatchingIndex -= 1;
+    let next_info = croppingID[currentMatchingIndex]
+    $('.page-block .matching-templates #templateImage').attr("src", `${baseURL}/api/cropping_variant/image/${next_info[1]}`)
+
+    // Заполнение текущими значениями
+    let old_cropping = matchingCropping[currentMatchingIndex]
+    $(`.page-block .matching-templates #inputTemplate option[value=${old_cropping.pattern}]`).prop('selected', true);
+
+});
+
+
+// Отправка настроек сопоставлений
+$(".page-block .matching-templates #last-matching-submit").click(function() {
+    // Проверка имеется ли уже инфомрация о последнем значении
+    let info = croppingID[currentMatchingIndex]
+    let cropping = matchingCropping.map(matching => matching.cropping)
+    if (!cropping.includes(info[1])) { // Если нет
+        // Добавить новые значения
+        matchingCropping.push({
+            "variant": info[0],
+            "pattern": $('.page-block .matching-templates #inputTemplate').val(),
+            "cropping": info[1],
+        });
+    }
+    else {
+        // Обновить значения
+        matchingCropping[currentMatchingIndex] = {
+            "variant": info[0],
+            "pattern": $('.page-block .matching-templates #inputTemplate').val(),
+            "cropping": info[1],
+        };
+    }
+
+
+    $.ajax({
+        type: "POST",
+        url: `${baseURL}/api/task/`,
+        data: JSON.stringify(matchingCropping),
+        dataType: "JSON",
+        success: function (jqXHR) {
+        // Если успешно - отправить на новый шаг
+            console.log("Настройки сопоставлений отправлены!");
+            patternID = jqXHR
+            $('.page-block .matching-templates .head .btn').click();
+            $('.page-block .matching-templates #last-matching-submit').remove();
+            $('.page-block .matching-templates form #inputTemplate').attr('disabled', true);
+
+            // Перейти на страницу добавления организаций
+
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
