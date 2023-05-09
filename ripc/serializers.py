@@ -1,5 +1,7 @@
+from django.template.defaulttags import register
 from rest_framework import serializers
-from .models import Subject, Event, Variant, PatternTask, VariantCropping, Task
+from .models import Subject, Event, Variant, PatternTask, VariantCropping, Task, OrganizationEvent, Organization, \
+    Region, EventStatus
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -36,3 +38,34 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ['id', 'variant', 'pattern', 'cropping']
+
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ['name']
+
+
+class OrganizationSerializer(serializers.ModelSerializer):
+    region = RegionSerializer(read_only=True)
+
+    class Meta:
+        model = Organization
+        fields = ['id', 'name', 'region']
+
+
+class EventStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventStatus
+        fields = ['name', 'color_hex']
+
+
+class OrganizationEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrganizationEvent
+        fields = ['id', 'event', 'event_status', 'organization', 'percent_status', 'number_participants']
+
+
+@register.filter()
+def to_int(value):
+    return int(value)

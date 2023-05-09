@@ -1,6 +1,7 @@
 from django.urls import path, re_path, include
 
 from . import views
+from .logic.event_organization import event_organization
 from .logic.pattern_task import pattern_task
 from .logic.region import region
 from .logic.organization import organization
@@ -31,8 +32,11 @@ urlpatterns = [
     path('api/cropping_variant/image/<int:id>', variant_cropping.cropping_variant_image, name='cropping_variant_image'),
     path('api/pattern_task/', pattern_task.pattern_api, name='pattern_api'),
     path('api/task/', task.task_api, name='task_api'),
+    path('api/organization/', organization.organizations_api, name='organizations_api'),
+    path('api/event_organization/', event_organization.event_organizations_api, name='event_organizations_api'),
 
     # Страницы
     path('create_event', event.create_event, name='create_event'),
     path('event/<int:event_id>', event.view_event, name='view_event'),
+    path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
 ]

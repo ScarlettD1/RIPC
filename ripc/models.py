@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
@@ -113,16 +113,15 @@ class ThirdMarkExpert(models.Model):
 
 class EventStatus(models.Model):
     name = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.name
+    color_hex = models.CharField(validators=[MinLengthValidator(6)], max_length=7)
 
 
 class OrganizationEvent(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
-    percent_status = models.TextField(max_length=3)
+    percent_status = models.TextField(max_length=3, null=True)
+    number_participants = models.TextField(max_length=5, null=True)
 
 
 class ScannedPage(models.Model):

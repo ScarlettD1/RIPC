@@ -229,12 +229,12 @@ body.login_page {
   height: 36px;
 }
 
-.create-event-form {
+.create-event-form, .organizations-event-form{
   display: block;
   margin-top: 5px;
 }
 
-.create-event-table {
+.create-event-table, .organizations-event-table{
   background: rgb(233, 236, 239);
 }
 
@@ -252,4 +252,43 @@ body.login_page {
   padding-bottom: 5px;
   background-color: rgba(15, 105, 197, 0.37);
   border-radius: 5px;
+}
+
+.table-filed-color {
+  text-align: center;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.modal-add-organization {
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1;
+  left: 30%;
+  top: 10%;
+  height: 200px;
+  width: 50%;
+}
+
+.modal-add-organization #inputOrganization {
+  background: #e7eaee;
+  height: 2rem;
+  border-radius: 6px;
+}
+
+.modal-add-organization .head button {
+  position: absolute ;
+  right: 15px;
+  top: 10px;
+}
+
+.block-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(38, 38, 38, 0.8);
 }

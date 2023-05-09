@@ -1,0 +1,89 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+{% block head %}
+{% endblock %}
+{% block main_content %}
+    <div id="startData">
+        <div id="organization">
+            {% for event_organization in event_organizations %}
+                <p>{{ event_organization.organization.id }}</p>
+            {% endfor %}
+        </div>
+        <p id="event_id">
+            {{ event.id }}
+        </p>
+    </div>
+
+    <header>
+        <h2>{{ event.name }}</h2>
+        <h5>{{ event.start_date }} - {{ event.end_date }}</h5>
+        <hr>
+    </header>
+    <main class="page-block">
+        <div class="organizations mt-2 ms-2 me-2">
+            <div class="head">
+            </div>
+            <div id="organizations-event" class="organizations-event-form px-3">
+                <div class="btn-toolbar justify-content-end mt-2 py-2">
+                    <button type="button" class="btn btn-primary">Добавить</button>
+                    <button type="button" class="btn btn-danger ms-2">Удалить</button>
+                </div>
+                <table class="table table-bordered">
+                    <thead class="organizations-event-table">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Кол-во участников</th>
+                            <th scope="col">Статус</th>
+                            <th scope="col">%Выполнения</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event_organization in event_organizations %}
+                            <tr id={{ event_organization.id }}>
+                                <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>
+                                <td class="organization w-50">{{ event_organization.organization.name }}</td>
+                                <td class="number_participants">{{ event_organization.number_participants }}</td>
+                                <td class="event_status">
+                                    <div class="table-filed-color" style="background-color: {{ event_organization.event_status.color_hex }}">{{ event_organization.event_status.name }}</div>
+                                </td>
+                                <td class="percent_status">
+                                    <div class="table-filed-color" style="background-color:
+                                            {% if event_organization.percent_status|to_int <= 25 %} #ff0000
+                                            {% elif event_organization.percent_status|to_int <= 50 %} #ffaa00
+                                            {% elif event_organization.percent_status|to_int <= 75 %} #ffd700
+                                            {% elif event_organization.percent_status|to_int <= 100 %} #b7ff00
+                                            {% endif %}">
+                                    {{ event_organization.percent_status }}%
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно добавления-->
+    <div class="block-page" style="display: none;">
+        <div id="modal-add-organization" class="modal-add-organization p-3" style="display: none;">
+            <div class="head">
+                <h4>Добавление организации</h4>
+                <button id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="{{ event.id }}">
+                <p>Выберите организацию:</p>
+                <select name="organization" class="w-100" id="inputOrganization" required>
+                    <option disabled>Организация</option>
+                </select>
+                <input class="btn btn-primary mt-2" type="submit" value="Продолжить"/>
+            </form>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/pages/event_organization.js' %}"></script>
+{% endblock %}

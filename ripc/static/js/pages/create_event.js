@@ -35,7 +35,7 @@ $('.page-block .head .btn').click(function(){
 
 // Функция для календаря
 $('#inputCalendar .input-daterange').datepicker({
-    format: "dd/mm/yyyy",
+    format: "dd-mm-yyyy",
     language: "ru",
     orientation: "bottom right",
     autoclose: true,

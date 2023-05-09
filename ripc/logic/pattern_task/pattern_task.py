@@ -10,26 +10,19 @@ from ripc.serializers import PatternTaskSerializer
 @login_required(login_url='/accounts/login/')
 def pattern_api(request):
     if request.method == "GET":
+        query = {}
         # Поиск query
         ids = request.GET.get('id')
         if ids and len(ids.split(',')) > 1:
             ids = ids.split(',')
 
-        # Если передан один id
-        if type(ids) is str:
-            patterns = PatternTask.objects.get(id=ids)
-            patterns_serializer = PatternTaskSerializer(patterns, many=False)
-            return JsonResponse(patterns_serializer.data, status=200, safe=False)
+        if ids:
+            query['id__in'] = ids
 
-        # Если передан лист id
-        if type(ids) is list:
-            patterns_data = []
-            for id in ids:
-                print(id)
-                patterns = PatternTask.objects.get(id=id)
-                patterns_serializer = PatternTaskSerializer(patterns, many=False)
-                patterns_data.append(patterns_serializer.data)
-            return JsonResponse(patterns_data, status=200, safe=False)
+        if query:
+            patterns = PatternTask.objects.filter(**query)
+            patterns_serializer = PatternTaskSerializer(patterns, many=True)
+            return JsonResponse(patterns_serializer.data, status=200, safe=False)
 
         # Если query нет
         patterns = PatternTask.objects.all()
