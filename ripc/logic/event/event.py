@@ -40,6 +40,10 @@ def event_api(request):
 
     if request.method == "POST":
         event_data = JSONParser().parse(request)
+        if event_data.get('start_date'):
+            event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%d.%m.%Y').date())
+        if event_data.get('end_date'):
+            event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%d.%m.%Y').date())
 
         events_serializer = EventSerializer(data=event_data)
         if not events_serializer.is_valid():
