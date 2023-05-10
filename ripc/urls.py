@@ -37,6 +37,6 @@ urlpatterns = [
 
     # Страницы
     path('create_event', event.create_event, name='create_event'),
-    path('event/<int:event_id>', event.view_event, name='view_event'),
+    path('event/<int:event_id>/', event.view_event, name='view_event'),
     path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
 ]

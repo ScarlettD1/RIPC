@@ -3,20 +3,21 @@
 {% block main_content %}
     <header>
         <div class="row">
-            <div class="col-8">
-                <h4>{event_name}</h4>
-                <h6>{date_start} - {date_end}</h6>
+            <div class="col-9">
+                <h2>{{ event.name }}</h2>
+                <h5>{{ event.start_date }} - {{ event.end_date }}</h5>
             </div>
-            <div class="col-4">
-                <h4>Кол-во участников: {num}</h4>
-                <h6>Завершено на: {num%}</h6>
+            <div class="col-3">
+                <h4>Кол-во участников: {{ event_organizations.number_participants }}</h4>
+                <h5>Завершено на: {{ event_organizations.percent_status }}%</h5>
             </div>
          </div>
         <hr>
     </header>
     <main class="page-block">
-        <button class="btn btn-primary mt-3 ms-3" href="#">Скачать клиент сканирования</button>
-        <div class="not-recognized mt-2 ms-2">
+        <button class="btn btn-success mt-3 ms-3" href="#">Скачать клиент сканирования</button>
+        <button class="btn btn-primary mt-3 ms-2" href="#">Открыть клиент сканирования</button>
+        <div class="not-recognized mt-3 ms-2">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">
                     <i class="fas fa-chevron-down"></i>
@@ -132,4 +133,7 @@
             </div>
         </div>
     </main>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/pages/view_event.js' %}"></script>
 {% endblock %}
