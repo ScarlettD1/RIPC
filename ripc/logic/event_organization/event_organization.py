@@ -110,10 +110,25 @@ def event_organizations_api(request):
             datas = event_organizations_data
 
         for data in datas:
-            event_organizations = OrganizationEvent.objects.get(id=data['id'])
+            if data.get('id'):
+                event_organizations = OrganizationEvent.objects.get(id=data['id'])
+            elif data.get('event') and data.get('organization'):
+                event_organizations = OrganizationEvent.objects.filter(event=data['event'], organization=data['organization'])[0]
+            else:
+                return JsonResponse("ERROR", status=400, safe=False)
+
+            data['id'] = event_organizations.id
+            data['event'] = event_organizations.event.id
+            data['organization'] = event_organizations.organization.id
+            data['event_status'] = data.get('event_status', event_organizations.event_status.id)
+            data['percent_status'] = data.get('percent_status', event_organizations.percent_status)
+            data['number_participants'] = data.get('number_participants', event_organizations.number_participants)
+
             event_organizations_serializer = OrganizationEventSerializer(event_organizations, data=data)
-            if event_organizations_serializer.is_valid():
-                event_organizations_serializer.save()
+            if not event_organizations_serializer.is_valid():
+                print(event_organizations_serializer.errors)
+                return JsonResponse("ERROR VALID", status=400, safe=False)
+            event_organizations_serializer.save()
         return JsonResponse("OK", status=200, safe=False)
 
     elif request.method == "DELETE":

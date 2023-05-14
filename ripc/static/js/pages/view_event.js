@@ -3,6 +3,7 @@ let event_id = 0
 let organization_id = 0
 let scannedData = {}
 let onlyNotScanned = false
+let numberParticipants = 0
 
 $(document).ready(function(){
     getStartData();
@@ -16,14 +17,18 @@ function getStartData() {
     $('#startData').remove();
 }
 
+// Обновления данных на странице
 async function updatePageData() {
-    // Обновляем процент завершения
-     $.ajax({
+    // Обновляем основную информацию
+     await $.ajax({
         type: "GET",
         url: `${baseURL}/api/event_organization/?event_id=${event_id}&organization_id=${organization_id}`,
         success: function (response) {
             let data = response[0]
             $('header #percent_status').text(`Завершено на: ${data['percent_status']}%`);
+            $('header #number_participants').text(`Кол-во участников: ${data['number_participants']}`);
+            numberParticipants = data['number_participants']
+            checkNumberParticipants()
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
@@ -131,6 +136,42 @@ async function updatePageData() {
         }
     });
 }
+
+
+// Проверка нужно ли указать кол-во участников
+function checkNumberParticipants() {
+   if (numberParticipants === '0') {
+        $('.block-page').show();
+        $('#modal-view-number-participants').show();
+        // Запуск генерации комплектов (Сёма)
+   }
+}
+
+// Обновить кол-во участников
+$('#modal-view-number-participants form').submit(function (e) {
+    e.preventDefault();
+    let number_participants = $(this).serializeArray()[0].value
+
+     let data = {
+        "event": event_id,
+        "organization": organization_id,
+        "number_participants": number_participants
+    }
+     $.ajax({
+         type: "PUT",
+         url: `${baseURL}/api/event_organization/`,
+         data: JSON.stringify(data),
+         dataType: "JSON",
+         success: function (jqXHR) {
+             console.log("Количество участников установлено")
+             $('.block-page').hide();
+             $('#modal-view-number-participants').hide();
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             console.log(textStatus, jqXHR.responseText);
+         }
+     });
+})
 
 // Отслеживание нажатий на скрытие/показ
 $('.page-block .head .btn').click(function(){

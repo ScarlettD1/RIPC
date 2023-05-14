@@ -1,5 +1,6 @@
 import io
 import os
+import tempfile
 
 import PyPDF2
 from django.contrib.auth.decorators import login_required
@@ -76,16 +77,17 @@ def scanned_api_file(request, id=0):
 def scanned_api_files(request, id=0):
     if request.method == "GET":
         if id:
-            pages = ScannedPage.objects.filter(complect=id)
+            pages = ScannedPage.objects.filter(complect=id).order_by('page_number')
             pages_serializer = ScannedPageSerializer(pages, many=True)
             pages_data = pages_serializer.data
             merger = PyPDF2.PdfMerger()
             for page in pages_data:
                 pdf = page['file_path']
                 merger.append(pdf)
-            pdf_bytes = io.BytesIO()
-            merger.write(pdf_bytes)
-            return FileResponse(pdf_bytes.getvalue(), as_attachment=False, filename=f"Комплект {id}.pdf")
+            tf = tempfile.NamedTemporaryFile(suffix='.pdf', delete=False)
+            file_path = tf.name
+            merger.write(file_path)
+            return FileResponse(open(file_path, "rb"), as_attachment=False, filename=f"Комплект {id}.pdf")
 
     return JsonResponse("ERROR", status=400, safe=False)
 

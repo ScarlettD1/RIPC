@@ -139,7 +139,7 @@ $("#main-settings-form").submit(function (e) {
         $('.page-block .templates-settings').show().trigger('show');
         $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
 
-        // Запуск обрезки заданий
+        // Запуск обрезки заданий (Сёма)
         startCropping()
     })
 });

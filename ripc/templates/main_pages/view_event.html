@@ -8,6 +8,9 @@
         <p id="organization_id">
             {{ event_organizations.organization }}
         </p>
+        <p id="number_participants">
+            {{ event_organizations.number_participants }}
+        </p>
     </div>
 
     <header>
@@ -17,7 +20,7 @@
                 <h5>{{ event.start_date }} - {{ event.end_date }}</h5>
             </div>
             <div class="col-3">
-                <h4>Кол-во участников: {{ event_organizations.number_participants }}</h4>
+                <h4 id="number_participants">Кол-во участников: {{ event_organizations.number_participants }}</h4>
                 <h5 id="percent_status">Завершено на: {{ event_organizations.percent_status }}%</h5>
             </div>
          </div>
@@ -160,12 +163,24 @@
                     <p>Если вы можете распознать номер бланка и страница является читаемой, заполните номер.</p>
                     <form>
                         <h6>Номер бланка:</h6>
-                        <input name="number" type="number" min="0" placeholder="00000000000000000" style="width: 100%" required value="">
-                        <button type="submit" class="btn btn-primary mt-2">Подтвердить</button>
+                        <input name="number" type="number" class="form-control event-input" min="0" placeholder="00000000000000000" style="width: 100%" required value="">
+                        <button type="submit" class="btn btn-primary mt-3">Подтвердить</button>
                     </form>
                     <p class="mt-4">Иначе, удалите отсканированную страницу и пересканируйте её.</p>
                     <button class="btn btn-danger">Удалить</button>
                 </div>
+            </div>
+
+        </div>
+        <div id="modal-view-number-participants" class="modal-view-number-participants p-3" style="display: none;">
+            <div class="head">
+                <h4>Количество участников:</h4>
+            </div>
+            <div style="height: 100%">
+                <form class="mt-2" href="#">
+                    <input name="number" class="form-control event-input" type="number" min="0" placeholder="0" style="width: 100%" required value="">
+                    <button type="submit" class="btn btn-primary mt-3">Подтвердить</button>
+                </form>
             </div>
 
         </div>

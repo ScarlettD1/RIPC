@@ -328,3 +328,16 @@ body.login_page {
   right: 10px;
   top: 5px;
 }
+
+
+.modal-view-number-participants{
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1;
+  left: 43%;
+  top: 20%;
+  height: 10rem;
+  width: 25rem;
+}
