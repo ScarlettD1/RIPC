@@ -6,6 +6,7 @@ from .logic.pattern_task import pattern_task
 from .logic.region import region
 from .logic.organization import organization
 from .logic.event import event
+from .logic.scanned_page import scanned_page
 from .logic.subject import subject
 from .logic.task import task
 from .logic.variant import variant
@@ -34,6 +35,10 @@ urlpatterns = [
     path('api/task/', task.task_api, name='task_api'),
     path('api/organization/', organization.organizations_api, name='organizations_api'),
     path('api/event_organization/', event_organization.event_organizations_api, name='event_organizations_api'),
+    path('api/complect_scan/', scanned_page.complect_scan_data, name='complect_scan_data'),
+    path('api/scanned_page/file/<int:id>', scanned_page.scanned_api_file, name='scanned_api_file'),
+    path('api/scanned_page/files/<int:id>', scanned_page.scanned_api_files, name='scanned_api_files'),
+    path('api/scanned_page/<int:id>', scanned_page.scanned_api, name='scanned_api'),
 
     # Страницы
     path('create_event', event.create_event, name='create_event'),

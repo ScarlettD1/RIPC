@@ -1,4 +1,5 @@
 import time
+import PyPDF2
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, FileResponse
@@ -31,7 +32,9 @@ def variant_api(request):
             file_path = f'File_Storage/variant/{time.time()}&&{name}'
             with open(file_path, "wb") as new_file:
                 new_file.write(file.read())
-                datas.append({"file_path": file_path})
+            # Считываем PDF для подсчёта страниц
+            reader = PyPDF2.PdfReader(file_path)
+            datas.append({"page_count": str(len(reader.pages)), "file_path": file_path})
 
         variant_ids = []
         for data in datas:

@@ -292,3 +292,39 @@ body.login_page {
   width: 100%;
   background: rgba(38, 38, 38, 0.8);
 }
+
+.modal-view-recognized {
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1;
+  left: 30%;
+  top: 2%;
+  height: 95%;
+  width: 45%;
+}
+
+.modal-view-recognized .head button {
+  position: absolute ;
+  right: 3px;
+  top: 0px;
+}
+
+.modal-view-not-recognized {
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1;
+  left: 30%;
+  top: 2%;
+  height: 95%;
+  width: 50%;
+}
+
+.modal-view-not-recognized .head button {
+  position: absolute ;
+  right: 10px;
+  top: 5px;
+}
