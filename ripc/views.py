@@ -8,7 +8,6 @@ from .models import *
 from .forms import RegisterUserForm
 
 
-<<<<<<<<< Temporary merge branch 1
 def is_not_expert(user):
     return True
     # return user.role !== expert
@@ -19,8 +18,6 @@ def is_admin(user):
     # return user.role !== expert
 
 
-=========
->>>>>>>>> Temporary merge branch 2
 @login_required(login_url='/accounts/login/')
 def index(request):
     context = {'user': request.user}
@@ -71,8 +68,6 @@ class RegisterUserView(CreateView):
 
     def get_success_url(self):
         return self.success_url
-<<<<<<<<< Temporary merge branch 1
-=========
 
 
 def users(request):
@@ -89,4 +84,3 @@ def user_reg(request):
 
 def user_detail(request):
     return None
->>>>>>>>> Temporary merge branch 2
