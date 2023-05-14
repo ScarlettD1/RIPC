@@ -1,8 +1,15 @@
 from django.urls import path, include
 
 from . import views
+from .logic.event_organization import event_organization
+from .logic.pattern_task import pattern_task
 from .logic.region import region
 from .logic.organization import organization
+from .logic.event import event
+from .logic.subject import subject
+from .logic.task import task
+from .logic.variant import variant
+from .logic.variant_cropping import variant_cropping
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -18,6 +25,21 @@ urlpatterns = [
     path('personnel/organizations/', organization.organizations, name='orgs'),
     path('personnel/organizations/reg/', organization.organizations_registration, name='org_reg'),
     path('personnel/organizations/<int:id>', organization.organizations_detail, name='orgs_detail'),
+    path('api/subject/', subject.subject_api, name='subject_api'),
+    path('api/event/', event.event_api, name='event_api'),
+    path('api/variant/', variant.variant_api, name='variant_api_post'),
+    path('api/variant/file/<int:id>', variant.variant_api_file, name='variant_api_file'),
+    path('api/cropping_variant/start/<int:id>', variant_cropping.start_cropping_variant, name='start_cropping_variant'),
+    path('api/cropping_variant/image/<int:id>', variant_cropping.cropping_variant_image, name='cropping_variant_image'),
+    path('api/pattern_task/', pattern_task.pattern_api, name='pattern_api'),
+    path('api/task/', task.task_api, name='task_api'),
+    path('api/organization/', organization.organizations_api, name='organizations_api'),
+    path('api/event_organization/', event_organization.event_organizations_api, name='event_organizations_api'),
+
+    # Страницы
+    path('create_event', event.create_event, name='create_event'),
+    path('event/<int:event_id>', event.view_event, name='view_event'),
+    path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
     path('create_event', views.create_event, name='create_event'),
     path('event/<int:event_id>', views.view_event, name='view_event'),
     path('admin_events', views.admin_event, name='admin_event')

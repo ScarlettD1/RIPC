@@ -3,12 +3,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DeleteView, DetailView, CreateView
 from django.urls import reverse_lazy
-
 from .logic.autorization import *
 from .models import *
 from .forms import RegisterUserForm
 
 
+<<<<<<<<< Temporary merge branch 1
 def is_not_expert(user):
     return True
     # return user.role !== expert
@@ -19,6 +19,8 @@ def is_admin(user):
     # return user.role !== expert
 
 
+=========
+>>>>>>>>> Temporary merge branch 2
 @login_required(login_url='/accounts/login/')
 def index(request):
     context = {'user': request.user}
@@ -69,9 +71,15 @@ class RegisterUserView(CreateView):
 
     def get_success_url(self):
         return self.success_url
+<<<<<<<<< Temporary merge branch 1
+=========
 
 
 def users(request):
+    return None
+
+
+def user_detail(request):
     return None
 
 
@@ -81,3 +89,4 @@ def user_reg(request):
 
 def user_detail(request):
     return None
+>>>>>>>>> Temporary merge branch 2

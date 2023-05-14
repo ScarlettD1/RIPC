@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
@@ -59,11 +59,16 @@ class Event(models.Model):
 
 
 class Variant(models.Model):
-    file_link = models.TextField()
-    page_len = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    file_path = models.TextField(null=True)
+
+
+class VariantCropping(models.Model):
+    answer_coord = ArrayField(models.IntegerField())
+    task_file_path = models.TextField(null=True)
 
 
 class PatternTask(models.Model):
+    name = models.CharField(max_length=300)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     max_score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
 
@@ -71,8 +76,7 @@ class PatternTask(models.Model):
 class Task(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     pattern = models.ForeignKey(PatternTask, on_delete=models.CASCADE)
-    answer_coord = ArrayField(ArrayField(models.IntegerField()))
-    file_link = models.TextField()
+    cropping = models.ForeignKey(VariantCropping, on_delete=models.CASCADE)
 
 
 class TaskExpert(models.Model):
@@ -86,13 +90,13 @@ class Complect(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
 
 
 class Answer(models.Model):
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
     mark = models.CharField(max_length=10, null=True)
 
 
@@ -109,20 +113,19 @@ class ThirdMarkExpert(models.Model):
 
 class EventStatus(models.Model):
     name = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.name
+    color_hex = models.CharField(validators=[MinLengthValidator(6)], max_length=7)
 
 
 class OrganizationEvent(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
-    percent_status = models.CharField(max_length=3)
+    percent_status = models.TextField(max_length=3, null=True)
+    number_participants = models.TextField(max_length=5, null=True)
 
 
 class ScannedPage(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE, null=True)
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
