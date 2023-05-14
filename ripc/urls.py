@@ -7,6 +7,7 @@ from .logic.region import region
 from .logic.organization import organization
 from .logic.event import event
 from .logic.scanned_page import scanned_page
+from .logic.scanner import scanner
 from .logic.subject import subject
 from .logic.task import task
 from .logic.variant import variant
@@ -44,4 +45,7 @@ urlpatterns = [
     path('create_event', event.create_event, name='create_event'),
     path('event/<int:event_id>/', event.view_event, name='view_event'),
     path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
+
+    # Скачивание Scanner
+    path('scanner/download/', scanner.scanner_download, name='scanner_download')
 ]
