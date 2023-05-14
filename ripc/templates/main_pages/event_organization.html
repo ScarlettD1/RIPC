@@ -42,7 +42,9 @@
                         {% for event_organization in event_organizations %}
                             <tr id={{ event_organization.id }}>
                                 <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>
-                                <td class="organization w-50">{{ event_organization.organization.name }}</td>
+                                <td class="organization w-50">
+                                    <a href="/event/{{ event.id }}/?organization_id={{ event_organization.organization.id }}">{{ event_organization.organization.name }}</a>
+                                </td>
                                 <td class="number_participants">{{ event_organization.number_participants }}</td>
                                 <td class="event_status">
                                     <div class="table-filed-color" style="background-color: {{ event_organization.event_status.color_hex }}">{{ event_organization.event_status.name }}</div>
@@ -54,7 +56,7 @@
                                             {% elif event_organization.percent_status|to_int <= 75 %} #ffd700
                                             {% elif event_organization.percent_status|to_int <= 100 %} #b7ff00
                                             {% endif %}">
-                                    {{ event_organization.percent_status }}%
+                                    {{ event_organization.percent_status }}
                                     </div>
                                 </td>
                             </tr>
@@ -79,10 +81,8 @@
                 </select>
                 <input class="btn btn-primary mt-2" type="submit" value="Продолжить"/>
             </form>
-        </form>
+        </div>
     </div>
-
-</div>
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'js/pages/event_organization.js' %}"></script>

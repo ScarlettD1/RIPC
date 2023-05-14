@@ -1,7 +1,7 @@
 from django.template.defaulttags import register
 from rest_framework import serializers
 from .models import Subject, Event, Variant, PatternTask, VariantCropping, Task, OrganizationEvent, Organization, \
-    Region, EventStatus
+    Region, EventStatus, ScannedPage, Complect
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class EventSerializer(serializers.ModelSerializer):
 class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant
-        fields = ['id', 'file_path']
+        fields = ['id', 'page_count', 'file_path']
 
 
 class VariantCroppingSerializer(serializers.ModelSerializer):
@@ -64,6 +64,18 @@ class OrganizationEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationEvent
         fields = ['id', 'event', 'event_status', 'organization', 'percent_status', 'number_participants']
+
+
+class ComplectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Complect
+        fields = ['id', 'organization', 'event', 'variant', 'file_path']
+
+
+class ScannedPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScannedPage
+        fields = ['id', 'organization', 'complect', 'page_number', 'file_path']
 
 
 @register.filter()

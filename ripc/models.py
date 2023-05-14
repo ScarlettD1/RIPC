@@ -59,6 +59,7 @@ class Event(models.Model):
 
 
 class Variant(models.Model):
+    page_count = models.CharField(max_length=2)
     file_path = models.TextField(null=True)
 
 
@@ -128,4 +129,5 @@ class ScannedPage(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE, null=True)
+    page_number = models.CharField(max_length=2, null=True)
     file_path = models.TextField(null=True)

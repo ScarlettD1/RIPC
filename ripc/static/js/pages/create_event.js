@@ -35,7 +35,7 @@ $('.page-block .head .btn').click(function(){
 
 // Функция для календаря
 $('#inputCalendar .input-daterange').datepicker({
-    format: "dd-mm-yyyy",
+    format: "dd.mm.yyyy",
     language: "ru",
     orientation: "bottom right",
     autoclose: true,
@@ -80,6 +80,7 @@ async function startCropping() {
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
+                alert(`Ошибка при обрезки заданий для варианта [${v_id}]!`)
             }
         });
     }
@@ -111,6 +112,7 @@ $("#main-settings-form").submit(function (e) {
         dataType: "json"
     }).fail(function (){
         console.log('error: Не удалось отправить основные настройки')
+        alert("Ошибка при отправке основных настроек!")
     })
 
     // Запрос на создание файлов варианта
@@ -124,6 +126,7 @@ $("#main-settings-form").submit(function (e) {
         data: filesData
     }).fail(function (){
         console.log('error: Не удалось отправить файлы вариантов')
+        alert("Ошибка при отправке файлов вариантов!")
     });
 
     // Если все запросы выполнились - перейти на следующий шаг
@@ -158,6 +161,7 @@ $('.page-block .templates-settings').on('show', function(){
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при получении предметных областей!")
         }
     });
 });
@@ -243,6 +247,7 @@ $("#templates-settings-form").submit(function (e) {
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при отправки шаблонов!")
         }
     });
 });
@@ -266,6 +271,7 @@ $('.page-block .matching-templates').on('show', function(){
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при получении предметных областей!")
         }
     });
 });
@@ -374,10 +380,14 @@ $(".page-block .matching-templates #last-matching-submit").click(function() {
             $('.page-block .matching-templates form #inputTemplate').attr('disabled', true);
 
             // Перейти на страницу добавления организаций
+            setTimeout(function(){
+                window.location.href = `${baseURL}/event_organization/${eventID}`;
+            }, 1000);
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при сопоставлении!")
         }
     });
 });
