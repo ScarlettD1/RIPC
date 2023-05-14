@@ -225,6 +225,34 @@ function view_recognized_modal() {
 }
 
 
+// Задать номер бланка
+$('#modal-view-not-recognized form').submit(function (e) {
+    e.preventDefault();
+    let number_blank = $(this).serializeArray()[0].value
+    let scan_id = $('.block-page #modal-view-not-recognized iframe').attr('id').split('-')[1]
+
+    let data = {
+        "event": event_id,
+        "organization": organization_id,
+        "number_blank": number_blank
+    }
+    $.ajax({
+         type: "PUT",
+         url: `${baseURL}/api/scanned_page/${scan_id}`,
+         data: JSON.stringify(data),
+         dataType: "JSON",
+         success: function (jqXHR) {
+             console.log("Номер бланка установлен")
+             $('.block-page').hide();
+             $('#modal-view-not-recognized').hide();
+             updatePageData();
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             console.log(textStatus, jqXHR.responseText);
+         }
+    });
+})
+
 // Удалить нераспознанную страницу
 $('#modal-view-not-recognized .btn-danger').click(function () {
     let scan_id = $('.block-page #modal-view-not-recognized iframe').attr('id').split('-')[1]

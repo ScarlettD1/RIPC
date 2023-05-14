@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
 
 from ripc.models import Complect, Variant, ScannedPage
 from ripc.serializers import ComplectSerializer, ScannedPageSerializer
@@ -95,7 +96,26 @@ def scanned_api_files(request, id=0):
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
 def scanned_api(request, id=0):
-    if request.method == "DELETE":
+    if request.method == "PUT":
+        request_data = JSONParser().parse(request)
+        scanned_page = ScannedPage.objects.get(id=id)
+
+        data = {}
+        # Поиск информации из номера бланка (Сёма)
+        data['id'] = scanned_page.id
+        data['event'] = scanned_page.event.id
+        data['organization'] = scanned_page.organization.id
+        data['complect'] = 1 # Заменить на распознанное
+        data['file_path'] = scanned_page.file_path
+        data['page_number'] = 3 # Заменить на распознанное
+
+        scanned_page_serializer = ScannedPageSerializer(scanned_page, data=data)
+        if not scanned_page_serializer.is_valid():
+            return JsonResponse("ERROR VALID", status=400, safe=False)
+        scanned_page_serializer.save()
+        return JsonResponse("OK", status=200, safe=False)
+
+    elif request.method == "DELETE":
         page = ScannedPage.objects.get(id=id)
         file_path = page.file_path
         page.delete()
