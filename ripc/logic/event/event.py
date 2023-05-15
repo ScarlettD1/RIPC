@@ -47,7 +47,10 @@ def view_event(request, event_id):
         complect_id = str(complect['id'])
         variant_id = str(complect['variant'])
         variant_data = Variant.objects.filter(id=variant_id)[0]
-        context['complect'][complect_id] = [[] for i in range(int(variant_data.page_count))]
+        context['complect'][complect_id] = {
+            'pages': [[] for i in range(int(variant_data.page_count))],
+            'is_additional': complect['is_additional']
+        }
 
     # Получаем имформацию об отсканированных страницах МП
     scanned_pages = ScannedPage.objects.filter(event=event_id, organization=organization_id).order_by('page_number')
@@ -63,7 +66,7 @@ def view_event(request, event_id):
 
         # Заполнение распознанных страниц
         complect_id = str(page['complect'])
-        context['complect'][complect_id][int(page['page_number'])-1] = page
+        context['complect'][complect_id]['pages'][int(page['page_number'])-1] = page
 
     return render(request, 'main_pages/view_event.html', context)
 

@@ -44,15 +44,15 @@
 {#                {% endfor %}#}
             </div>
         </div>
-{#        <div class="additional mt-2 ms-2">#}
-{#            <div class="head">#}
-{#                <button class="d-inline image-button btn btn-sm btn-light">#}
-{#                    <i class="fas fa-chevron-down"></i>#}
-{#                </button>#}
-{#                <h5 class="align-middle d-inline">Дополнительные комплеткты</h5>#}
-{#            </div>#}
-{#            <div class="ms-4 row row-cols-4">#}
-{#                <div class="complect-list col" id="1">#}
+        <div class="additional mt-2 ms-2">
+            <div class="head">
+                <button class="d-inline image-button btn btn-sm btn-light">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <h5 class="align-middle d-inline">Дополнительные комплеткты</h5>
+            </div>
+            <div class="ms-4 row row-cols-4" id="additional">
+                <div class="complect-list col" id="additional-list-1">
 {#                    <div class="complect" id="1">#}
 {#                        <button class="btn btn-success icon-button" href="#">#}
 {#                            <i class="bi bi-justify-left"></i>#}
@@ -61,8 +61,18 @@
 {#                            1#}
 {#                        </button>#}
 {#                    </div>#}
-{#                </div>#}
-{#                <div class="complect-list col" id="2">#}
+                </div>
+                <div class="complect-list col" id="additional-list-2">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-secondary icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-secondary num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="additional-list-3">
 {#                    <div class="complect" id="1">#}
 {#                        <button class="btn btn-secondary icon-button" href="#">#}
 {#                            <i class="bi bi-justify-left"></i>#}
@@ -72,28 +82,9 @@
 {#                        </button>#}
 {#                    </div>#}
 {#                </div>#}
-{#                <div class="complect-list col" id="3">#}
-{#                    <div class="complect" id="1">#}
-{#                        <button class="btn btn-secondary icon-button" href="#">#}
-{#                            <i class="bi bi-justify-left"></i>#}
-{#                        </button>#}
-{#                        <button class="btn btn-secondary num-button" href="#">#}
-{#                            1#}
-{#                        </button>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="complect-list col" id="4">#}
-{#                    <div class="complect" id="1">#}
-{#                        <button class="btn btn-secondary icon-button" href="#">#}
-{#                            <i class="bi bi-justify-left"></i>#}
-{#                        </button>#}
-{#                        <button class="btn btn-secondary num-button" href="#">#}
-{#                            1#}
-{#                        </button>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
+                </div>
+            </div>
+        </div>
         <div class="recognized mt-2 ms-2 pb-3">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">
@@ -104,7 +95,7 @@
             <input class="ms-4" type="checkbox" id="only_not_scan" name="scales">
             <label for="only_not_scan">Только неотсканированные</label>
             <div class="ms-4 row row-cols-4" id="recognized">
-                <div class="complect-list col" id="list-1">
+                <div class="complect-list col" id="recognized-list-1">
 {#                    <div class="complect" id="1">#}
 {#                        <button class="btn btn-success icon-button" href="#">#}
 {#                            <i class="bi bi-justify-left"></i>#}
@@ -114,7 +105,7 @@
 {#                        </button>#}
 {#                    </div>#}
                 </div>
-                <div class="complect-list col" id="list-2">
+                <div class="complect-list col" id="recognized-list-2">
 {#                    <div class="complect" id="1">#}
 {#                        <button class="btn btn-success icon-button" href="#">#}
 {#                            <i class="bi bi-justify-left"></i>#}
@@ -124,7 +115,7 @@
 {#                        </button>#}
 {#                    </div>#}
                 </div>
-                <div class="complect-list col" id="list-3">
+                <div class="complect-list col" id="recognized-list-3">
 {#                    <div class="complect" id="1">#}
 {#                        <button class="btn btn-success icon-button" href="#">#}
 {#                            <i class="bi bi-justify-left"></i>#}
@@ -134,7 +125,7 @@
 {#                        </button>#}
 {#                    </div>#}
                 </div>
-                <div class="complect-list col" id="list-4">
+                <div class="complect-list col" id="recognized-list-4">
 {#                    <div class="complect" id="1">#}
 {#                        <button class="btn btn-success icon-button" href="#">#}
 {#                            <i class="bi bi-justify-left"></i>#}
@@ -174,11 +165,14 @@
         </div>
         <div id="modal-view-number-participants" class="modal-view-number-participants p-3" style="display: none;">
             <div class="head">
-                <h4>Количество участников:</h4>
+                <h4>Настройка</h4>
             </div>
             <div style="height: 100%">
                 <form class="mt-2" href="#">
-                    <input name="number" class="form-control event-input" type="number" min="0" placeholder="0" style="width: 100%" required value="">
+                    <h6>Количество участников:</h6>
+                    <input name="number_participants" class="form-control event-input" type="number" min="1" placeholder="0" style="width: 100%" required value="">
+                    <h6 class="mt-2">Количество доп.комплектов:</h6>
+                    <input name="number_additional" class="form-control event-input" type="number" min="0" placeholder="0" style="width: 100%" required value="">
                     <button type="submit" class="btn btn-primary mt-3">Подтвердить</button>
                 </form>
             </div>

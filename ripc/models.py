@@ -91,6 +91,7 @@ class Complect(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
+    is_additional = models.BooleanField(default=False)
     file_path = models.TextField(null=True)
 
 

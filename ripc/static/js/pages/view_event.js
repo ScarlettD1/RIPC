@@ -55,16 +55,24 @@ async function updatePageData() {
             $('.page-block .not-recognized #not-recognized .btn-danger').bind('click', view_not_recognized_modal);
 
             // Заполнение компплектов
+            let additional1 = '';
+            let additional2 = '';
+            let additional3 = '';
+            let additional4 = '';
             let recognized1 = '';
             let recognized2 = '';
             let recognized3 = '';
             let recognized4 = '';
-            let count = 1;
+
+            let additional_count = 1;
+            let recognized_count = 1;
             for (let i in scannedData['complect']) {
-                let pages = scannedData['complect'][i];
+                let pages = scannedData['complect'][i]['pages'];
+                let is_additional = scannedData['complect'][i]['is_additional']
                 let pages_data = '';
                 let page_number = 0;
                 let all_scanned = true;
+                // Проход по всем страницам
                 for (let j in pages) {
                     page_number += 1;
                     let page = pages[j];
@@ -84,9 +92,22 @@ async function updatePageData() {
                         `;
                     }
                 }
+
+                // Объединение в одину строку
                 let complect_data = '';
                 if (all_scanned) {
-                    if (!onlyNotScanned){
+                    if (is_additional)
+                    {
+                        complect_data = `
+                            <div class="complect" id="complect-${i}">
+                                <button class="btn btn-success icon-button" id="allpages-${i}" title="Комплект: №${i}">
+                                    <i class="bi bi-justify-left"></i>
+                                </button>
+                                ${pages_data}
+                            </div>
+                        `;
+                    }
+                    else if (!onlyNotScanned && !is_additional){
                         complect_data = `
                             <div class="complect" id="complect-${i}">
                                 <button class="btn btn-success icon-button" id="allpages-${i}" title="Комплект: №${i}">
@@ -111,27 +132,54 @@ async function updatePageData() {
                     `;
                 }
 
-                switch(count % 4) {
-                    case 1:
-                        recognized1 += complect_data
-                        break;
-                    case 2:
-                        recognized2 += complect_data
-                        break;
-                    case 3:
-                        recognized3 += complect_data
-                        break;
-                    case 0:
-                        recognized4 += complect_data
-                        break;
+                // Распределение по колонкам
+                if (is_additional) {
+                    switch (additional_count % 4) {
+                        case 1:
+                            additional1 += complect_data
+                            break;
+                        case 2:
+                            additional2 += complect_data
+                            break;
+                        case 3:
+                            additional3 += complect_data
+                            break;
+                        case 0:
+                            additional4 += complect_data
+                            break;
+                    }
+                    additional_count += 1;
                 }
-                count += 1;
+                else {
+                    switch(recognized_count % 4) {
+                        case 1:
+                            recognized1 += complect_data
+                            break;
+                        case 2:
+                            recognized2 += complect_data
+                            break;
+                        case 3:
+                            recognized3 += complect_data
+                            break;
+                        case 0:
+                            recognized4 += complect_data
+                            break;
+                    }
+                    recognized_count += 1;
+                }
             }
-            $('.page-block .recognized #list-1').html(recognized1);
-            $('.page-block .recognized #list-2').html(recognized2);
-            $('.page-block .recognized #list-3').html(recognized3);
-            $('.page-block .recognized #list-4').html(recognized4);
 
+            $('.page-block .additional #additional-list-1').html(additional1);
+            $('.page-block .additional #additional-list-2').html(additional2);
+            $('.page-block .additional #additional-list-3').html(additional3);
+            $('.page-block .additional #additional-list-4').html(additional4);
+            $('.page-block .recognized #recognized-list-1').html(recognized1);
+            $('.page-block .recognized #recognized-list-2').html(recognized2);
+            $('.page-block .recognized #recognized-list-3').html(recognized3);
+            $('.page-block .recognized #recognized-list-4').html(recognized4);
+
+            $('.page-block .additional #additional .btn-success[id^=\'page-\']').bind('click', view_recognized_modal);
+            $('.page-block .additional #additional .btn-success[id^=\'allpages-\']').bind('click', view_recognized_modal);
             $('.page-block .recognized #recognized .btn-success[id^=\'page-\']').bind('click', view_recognized_modal);
             $('.page-block .recognized #recognized .btn-success[id^=\'allpages-\']').bind('click', view_recognized_modal);
         },
@@ -147,14 +195,14 @@ function checkNumberParticipants() {
    if (numberParticipants === '0') {
         $('.block-page').show();
         $('#modal-view-number-participants').show();
-        // Запуск генерации комплектов (Сёма)
    }
 }
 
-// Обновить кол-во участников
+// Обновить кол-во участников и сгенирировать комплеты
 $('#modal-view-number-participants form').submit(function (e) {
     e.preventDefault();
     let number_participants = $(this).serializeArray()[0].value
+    let number_additional = $(this).serializeArray()[1].value
 
      let data = {
         "event": event_id,
@@ -175,6 +223,8 @@ $('#modal-view-number-participants form').submit(function (e) {
              console.log(textStatus, jqXHR.responseText);
          }
      });
+    // Запуск генерации комплектов (Сёма)
+
 })
 
 // Отслеживание нажатий на скрытие/показ
