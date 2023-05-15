@@ -50,6 +50,7 @@ async function updatePageData() {
                     </button>
                 `;
             }
+            $('.page-block .not-recognized h5').html(`Нераспознанные бланки: ${scannedData['error_scanned_page'].length}`);
             $('.page-block .not-recognized #not-recognized').html(notRecognized);
             $('.page-block .not-recognized #not-recognized .btn-danger').bind('click', view_not_recognized_modal);
 
@@ -94,6 +95,9 @@ async function updatePageData() {
                                 ${pages_data}
                             </div>
                         `;
+                    }
+                    else {
+                        continue;
                     }
                 }
                 else {
