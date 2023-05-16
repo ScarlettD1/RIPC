@@ -1,4 +1,5 @@
 from django.urls import path, re_path, include
+from django.contrib.auth import views as authViews
 
 from . import views
 from .logic.complect import complect
@@ -16,6 +17,7 @@ from .logic.variant_cropping import variant_cropping
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('logout/', authViews.LogoutView.as_view(next_page='/accounts/login/'), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('personnel/users/', views.users, name='users'),
     path('personnel/users/<int:id>', views.user_detail, name='user_page'),
