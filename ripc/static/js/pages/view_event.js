@@ -22,7 +22,7 @@ async function updatePageData() {
     // Обновляем основную информацию
      await $.ajax({
         type: "GET",
-        url: `${baseURL}/api/event_organization/?event_id=${event_id}&organization_id=${organization_id}`,
+        url: `${baseURL}/api/event_organization/?event=${event_id}&organization=${organization_id}`,
         success: function (response) {
             let data = response[0]
             $('header #percent_status').text(`Завершено на: ${data['percent_status']}%`);

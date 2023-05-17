@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DeleteView, DetailView, CreateView
 from django.urls import reverse_lazy
 
+from ..required import some_rep_required
 from ...models import *
 from ..autorization import *
 from ...serializers import OrganizationSerializer
@@ -24,6 +25,8 @@ def organizations_registration(request):
 
 
 @csrf_exempt
+@login_required(login_url='/accounts/login/')
+@some_rep_required(login_url='/accounts/login/')
 def organizations_api(request):
     if request.method == "GET":
         query = {}

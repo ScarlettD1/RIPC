@@ -6,22 +6,29 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant
+from ripc.logic.check_who_auth import region_rep_authenticated
+from ripc.logic.required import some_rep_required, region_rep_required
+from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant, OrganizationRep
 from ripc.serializers import EventSerializer, OrganizationEventSerializer, ScannedPageSerializer, ComplectSerializer
 
 
 @login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def create_event(request):
     context = {}
     return render(request, 'main_pages/create_event.html', context)
 
 
 @login_required(login_url='/accounts/login/')
+@some_rep_required(login_url='/accounts/login/')
 def view_event(request, event_id):
     context = {}
 
-    # Поиск query
+    # Поиск id организации
     organization_id = request.GET.get('organization_id')
+    if not organization_id:
+        user_org = OrganizationRep.objects.filter(user=request.user.id).first()
+        organization_id = user_org.organization_id
 
     # Получаем имформацию о МП
     event = Event.objects.get(id=event_id)
@@ -46,7 +53,7 @@ def view_event(request, event_id):
     for complect in complects_data:
         complect_id = str(complect['id'])
         variant_id = str(complect['variant'])
-        variant_data = Variant.objects.filter(id=variant_id)[0]
+        variant_data = Variant.objects.filter(id=variant_id).first()
         context['complect'][complect_id] = {
             'pages': [[] for i in range(int(variant_data.page_count))],
             'is_additional': complect['is_additional']
@@ -73,6 +80,7 @@ def view_event(request, event_id):
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@some_rep_required(login_url='/accounts/login/')
 def event_api(request):
     if request.method == "GET":
         # Поиск query
@@ -87,7 +95,7 @@ def event_api(request):
 
         return JsonResponse(events_serializer.data, status=200, safe=False)
 
-    if request.method == "POST":
+    if request.method == "POST" and region_rep_authenticated(request.user):
         event_data = JSONParser().parse(request)
         if event_data.get('start_date'):
             event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%d.%m.%Y').date())
@@ -100,3 +108,4 @@ def event_api(request):
 
         events_serializer.save()
         return JsonResponse(events_serializer.data.get("id"), status=200, safe=False)
+    return JsonResponse("Method not allowed", status=400, safe=False)

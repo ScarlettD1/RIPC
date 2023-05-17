@@ -190,6 +190,7 @@ $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-primary'
             </td>
             <td><input name="max_score" class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
             <td><input name="name" class="w-100" id="inputEventTemplateName" type="text" required></td>
+            <td><input name="check_times" class="w-100" id="inputCheckTime" type="number" min="1" required></td>
         </tr>
     `)
 });
@@ -212,11 +213,12 @@ $("#templates-settings-form").submit(function (e) {
     e.preventDefault();
     let form = $(this).serializeArray()
     let data = []
-    for (let i=0; i<form.length; i+=3){
+    for (let i=0; i<form.length; i+=4){
         let temp = {}
         temp[form[i].name] = form[i].value
         temp[form[i+1].name] = form[i+1].value
         temp[form[i+2].name] = form[i+2].value
+        temp[form[i+3].name] = form[i+3].value
         data.push(temp);
     }
 
@@ -259,7 +261,7 @@ $('.page-block .matching-templates').on('show', function(){
         type: "GET",
         url: `${baseURL}/api/pattern_task/?id=${patternID}`,
         success: function (response) {
-            console.log("Предметные области получены!")
+            console.log("Настроенные шаблоны получены!")
             // Заполнение полученными данными
             if (response instanceof Array) {
                 for (let i=0; i<response.length; i++){

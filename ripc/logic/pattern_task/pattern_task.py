@@ -3,11 +3,14 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
+from ripc.logic.required import region_rep_required
 from ripc.models import PatternTask
 from ripc.serializers import PatternTaskSerializer
 
+
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def pattern_api(request):
     if request.method == "GET":
         query = {}

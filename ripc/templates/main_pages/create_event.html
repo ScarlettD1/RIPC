@@ -32,20 +32,17 @@
                     <div class="w-50" id="inputCalendar">
                         <div class="input-daterange input-group" id="datepicker">
                             <label class="input-group-text calendar-input" style="border-left-color: rgb(18,18,18);" for="inputEventStartDate">c</label>
-                            <input name="start_date" type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01/12/2000" required/>
+                            <input name="start_date" type="text" class="input-sm form-control calendar-input" id="inputEventStartDate" placeholder="01.12.2000" required/>
                             <span class="input-group-text bg-white calendar-input">
                                 <i class="fas fa-calendar-day"></i>
                             </span>
                             <label class="input-group-text px-3 calendar-input" for="inputEventEndDate">по</label>
-                            <input name="end_date" type="text" class="input-sm form-control calendar-input" id="inputEventEndDate" placeholder="01/12/2000" required/>
+                            <input name="end_date" type="text" class="input-sm form-control calendar-input" id="inputEventEndDate" placeholder="01.12.2000" required/>
                             <span class="input-group-text bg-white calendar-input">
                                 <i class="fas fa-calendar-day"></i>
                             </span>
                         </div>
                     </div>
-                </label>
-                <label class="create-event-form" for="inputCheckTime">Время для проверки заданий (часы):
-                    <input class="form-control w-auto event-input"  type="number" min="1" name="check_times" id="inputCheckTime" placeholder="1" required value="1">
                 </label>
                 <label class="create-event-form" for="inputEventFiles">Варианты работ:</label>
                 <div class="file-loading">
@@ -69,6 +66,7 @@
                             <th scope="col">Предметная область</th>
                             <th scope="col">Максимальный балл</th>
                             <th scope="col">Название шаблона</th>
+                            <th scope="col">Время проверки (мин):</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,6 +79,7 @@
                             </td>
                             <td><input name="max_score" class="w-100" id="inputEventMaxScore" type="number" min="0" max="100" required></td>
                             <td><input name="name" class="w-100" id="inputEventTemplateName" type="text" required></td>
+                            <td><input name="check_times" class="w-100" id="inputCheckTime" type="number" min="1" required></td>
                         </tr>
                     </tbody>
                 </table>

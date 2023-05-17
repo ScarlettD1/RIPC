@@ -5,12 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from ripc.logic.required import region_rep_required
 from ripc.models import Variant
 from ripc.serializers import VariantSerializer
 
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def variant_api_file(request, id=0):
     if request.method == "GET":
         if id:
@@ -25,6 +27,7 @@ def variant_api_file(request, id=0):
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def variant_api(request):
     if request.method == "POST":
         datas = []

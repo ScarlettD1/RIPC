@@ -2,12 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from ripc.logic.required import region_rep_required
 from ripc.models import VariantCropping
 from ripc.serializers import VariantCroppingSerializer
 
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def start_cropping_variant(request, id=0):
     if request.method == "GET":
         if id:
@@ -21,7 +23,6 @@ def start_cropping_variant(request, id=0):
             for data in result:
                 variant_cropping_serializer = VariantCroppingSerializer(data=data)
                 if not variant_cropping_serializer.is_valid():
-                    print(variant_cropping_serializer.errors)
                     return JsonResponse("ERROR", status=400, safe=False)
                 variant_cropping_serializer.save()
                 result_ids.append(variant_cropping_serializer.data.get('id'))

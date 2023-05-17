@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
+from ripc.logic.check_who_auth import region_rep_authenticated
+from ripc.logic.required import some_rep_required, region_rep_required
 from ripc.models import OrganizationEvent, Event, EventStatus, Organization
 from ripc.serializers import OrganizationEventSerializer, EventSerializer
 
@@ -20,6 +22,7 @@ def __complete_data(event_organizations_data):
 
 
 @login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def view_event_organization(request, event_id):
     context = {}
 
@@ -38,6 +41,8 @@ def view_event_organization(request, event_id):
 
 
 @csrf_exempt
+@login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def event_organizations_api(request):
     if request.method == "GET":
         query = {}
@@ -50,7 +55,7 @@ def event_organizations_api(request):
         if events and len(events.split(',')) > 1:
             events = events.split(',')
 
-        organizations = request.GET.get('organizations')
+        organizations = request.GET.get('organization')
         if organizations and len(organizations.split(',')) > 1:
             organizations = organizations.split(',')
 
@@ -61,7 +66,7 @@ def event_organizations_api(request):
             query['event__in'] = events if type(events) is list else [events]
 
         if organizations:
-            query['organizations__in'] = organizations if type(organizations) is list else [organizations]
+            query['organization__in'] = organizations if type(organizations) is list else [organizations]
 
         # Если query заполнен
         if query:
@@ -126,7 +131,6 @@ def event_organizations_api(request):
 
             event_organizations_serializer = OrganizationEventSerializer(event_organizations, data=data)
             if not event_organizations_serializer.is_valid():
-                print(event_organizations_serializer.errors)
                 return JsonResponse("ERROR VALID", status=400, safe=False)
             event_organizations_serializer.save()
         return JsonResponse("OK", status=200, safe=False)

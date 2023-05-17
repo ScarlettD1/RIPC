@@ -3,11 +3,13 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
+from ripc.logic.required import region_rep_required
 from ripc.serializers import TaskSerializer
 
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@region_rep_required(login_url='/accounts/login/')
 def task_api(request):
     if request.method == "POST":
         datas = []

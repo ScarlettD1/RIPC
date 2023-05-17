@@ -25,12 +25,14 @@ $('.page-block .organizations .organizations-event-form .btn-toolbar .btn-primar
         success: function (response) {
             console.log("Организации получены!")
             // Заполнение полученными данными
+            let inputOrganization = `<option disabled>Организация</option>`
             for (let i=0; i<response.length; i++){
                 organizations[response[i].id] = response[i].name
                 if (!(usageOrganization.includes(response[i].id))) {
-                    $('.modal-add-organization form #inputOrganization').append(`<option value=${response[i].id}>${response[i].name}</option>`)
+                    inputOrganization += `<option value=${response[i].id}>${response[i].name}</option>`
                 }
             }
+            $('.modal-add-organization form #inputOrganization').html(inputOrganization)
             $('.block-page').show();
             $('.modal-add-organization').show();
         },

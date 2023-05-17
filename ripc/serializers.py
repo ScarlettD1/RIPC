@@ -13,7 +13,7 @@ class SubjectSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'name', 'start_date', 'end_date', 'check_times']
+        fields = ['id', 'name', 'start_date', 'end_date']
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class VariantCroppingSerializer(serializers.ModelSerializer):
 class PatternTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatternTask
-        fields = ['id', 'name', 'max_score', 'subject']
+        fields = ['id', 'name', 'max_score', 'subject', 'check_times']
 
 
 class TaskSerializer(serializers.ModelSerializer):

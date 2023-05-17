@@ -3,7 +3,7 @@
 {% block head %}
 {% endblock %}
 {% block main_content %}
-    <div id="startData">
+    <div id="startData" style="display: none;">
         <div id="organization">
             {% for event_organization in event_organizations %}
                 <p>{{ event_organization.organization.id }}</p>

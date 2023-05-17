@@ -7,7 +7,8 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from docx.shared import Inches, Pt, Cm
 
-from ripc.models import Complect
+from ripc.logic.required import some_rep_required
+from ripc.models import Complect, OrganizationRep
 from ripc.serializers import ComplectSerializer
 
 from docx import Document
@@ -16,10 +17,14 @@ from docx import Document
 @csrf_exempt
 @xframe_options_exempt
 @login_required(login_url='/accounts/login/')
+@some_rep_required(login_url='/accounts/login/')
 def complects_id_file(request, event_id=0):
     if request.method == "GET":
-        # Поиск query
+        # Поиск id организации
         organization_id = request.GET.get('organization_id')
+        if not organization_id:
+            user_org = OrganizationRep.objects.filter(user=request.user.id).first()
+            organization_id = user_org.organization_id
 
         complects = Complect.objects.filter(event=event_id, organization=organization_id)
         complects_serializer = ComplectSerializer(complects, many=True)

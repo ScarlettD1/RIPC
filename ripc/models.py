@@ -52,7 +52,6 @@ class Event(models.Model):
     name = models.CharField(max_length=300)
     start_date = models.DateField()
     end_date = models.DateField()
-    check_times = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -72,6 +71,7 @@ class PatternTask(models.Model):
     name = models.CharField(max_length=300)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     max_score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    check_times = models.IntegerField()
 
 
 class Task(models.Model):

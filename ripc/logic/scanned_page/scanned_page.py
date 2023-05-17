@@ -9,12 +9,14 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
+from ripc.logic.required import some_rep_required
 from ripc.models import Complect, Variant, ScannedPage
 from ripc.serializers import ComplectSerializer, ScannedPageSerializer
 
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@some_rep_required(login_url='/accounts/login/')
 def complect_scan_data(request):
     if request.method == "GET":
         context = {}
@@ -98,6 +100,7 @@ def scanned_api_files(request, id=0):
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
+@some_rep_required(login_url='/accounts/login/')
 def scanned_api(request, id=0):
     if request.method == "PUT":
         request_data = JSONParser().parse(request)
