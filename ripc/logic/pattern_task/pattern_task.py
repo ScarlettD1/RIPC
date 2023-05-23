@@ -20,7 +20,7 @@ def pattern_api(request):
             ids = ids.split(',')
 
         if ids:
-            query['id__in'] = ids
+            query['id__in'] = ids if type(ids) is list else [ids]
 
         if query:
             patterns = PatternTask.objects.filter(**query)
