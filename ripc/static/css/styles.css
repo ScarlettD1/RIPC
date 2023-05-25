@@ -301,14 +301,21 @@ body.login_page {
   z-index: 1;
   left: 30%;
   top: 2%;
-  height: 95%;
+  height: 97%;
   width: 45%;
 }
 
 .modal-view-recognized .head button {
-  position: absolute ;
+  position: absolute;
   right: 3px;
   top: 0px;
+}
+
+.modal-view-recognized .btn-danger {
+  float: right;
+  position: relative;
+  left: 6.5rem;
+  top: -2rem;
 }
 
 .modal-view-not-recognized {

@@ -290,6 +290,7 @@ $('#modal-view-not-recognized form').submit(function (e) {
         "organization": organization_id,
         "number_blank": number_blank
     }
+    // Алгоритм распознавания по номеру (Сёма)
     $.ajax({
          type: "PUT",
          url: `${baseURL}/api/scanned_page/${scan_id}`,
@@ -327,7 +328,16 @@ $('#modal-view-not-recognized .btn-danger').click(function () {
     $('#modal-view-submit-del').show();
 });
 
-// Удалить нераспознанную страницу
+// Открыть окно удаления распознаного
+$('#modal-view-recognized .btn-danger').click(function () {
+    let scan_id = $('.block-page #modal-view-recognized iframe').attr('id').split('-')[1]
+    $('#modal-view-submit-del .head').attr('id', 'del-recognized')
+    $('#modal-view-submit-del .submit-btns').attr('id', `del-scan-${scan_id}`)
+    $('.block-page .block-page-2').show();
+    $('#modal-view-submit-del').show();
+});
+
+// Удалить страницу
 $('#modal-view-submit-del .btn-danger').click(function () {
     let scan_id = $('.block-page #modal-view-submit-del .submit-btns').attr('id').split('-')[2]
     $.ajax({
@@ -360,6 +370,9 @@ $('#modal-view-submit-del .btn-danger').click(function () {
                 $('#modal-view-submit-del .submit-btns').attr('id', 'del-scan-0')
                 $('.block-page .block-page-2').hide();
                 $('#modal-view-submit-del').hide();
+                $('.block-page #modal-view-recognized iframe').attr('id', `pdf-0`).attr('src', '')
+                $('.block-page').hide();
+                $('#modal-view-recognized').hide();
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
