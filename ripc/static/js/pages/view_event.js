@@ -297,9 +297,19 @@ $('#modal-view-not-recognized form').submit(function (e) {
          dataType: "JSON",
          success: function (jqXHR) {
              console.log("Номер бланка установлен")
-             $('.block-page').hide();
-             $('#modal-view-not-recognized').hide();
-             updatePageData();
+             // Перейти на следующую страницу
+             updatePageData().then(r => {
+                 $('#modal-view-not-recognized form .event-input').val('');
+                 if (scannedData['error_scanned_page'].length > 0) {
+                     let scan_id = scannedData['error_scanned_page'][0]['id']
+                     let file_url = `/api/scanned_page/file/${scan_id}`
+                     $('.block-page #modal-view-not-recognized iframe').attr('id', `pdf-${scan_id}`).attr('src', file_url)
+                 } else {
+                     $('.block-page #modal-view-not-recognized iframe').attr('id', `pdf-0`).attr('src', '')
+                     $('.block-page').hide();
+                     $('#modal-view-not-recognized').hide();
+                 }
+             });
          },
          error: function (jqXHR, textStatus, errorThrown) {
              console.log(textStatus, jqXHR.responseText);
@@ -307,34 +317,64 @@ $('#modal-view-not-recognized form').submit(function (e) {
     });
 })
 
-// Удалить нераспознанную страницу
+
+// Открыть окно удаления нераспознаного
 $('#modal-view-not-recognized .btn-danger').click(function () {
     let scan_id = $('.block-page #modal-view-not-recognized iframe').attr('id').split('-')[1]
+    $('#modal-view-submit-del .head').attr('id', 'del-not-recognized')
+    $('#modal-view-submit-del .submit-btns').attr('id', `del-scan-${scan_id}`)
+    $('.block-page .block-page-2').show();
+    $('#modal-view-submit-del').show();
+});
+
+// Удалить нераспознанную страницу
+$('#modal-view-submit-del .btn-danger').click(function () {
+    let scan_id = $('.block-page #modal-view-submit-del .submit-btns').attr('id').split('-')[2]
     $.ajax({
         type: "DELETE",
         url: `${baseURL}/api/scanned_page/${scan_id}`,
         success: function (response) {
-            console.log(`Страница ${scan_id} удалена!`)
-            // Перейти на следующую страницу
-            console.log(scannedData['error_scanned_page'].length);
-            updatePageData().then(r => {
-                console.log(scannedData['error_scanned_page'].length);
-                if (scannedData['error_scanned_page'].length > 0) {
-                    let scan_id = scannedData['error_scanned_page'][0]['id']
-                    let file_url = `/api/scanned_page/file/${scan_id}`
-                    $('.block-page #modal-view-not-recognized iframe').attr('id', `pdf-${scan_id}`).attr('src', file_url)
-                }
-                else {
-                    $('.block-page #modal-view-not-recognized iframe').attr('id', `pdf-0`).attr('src', '')
-                    $('.block-page').hide();
-                    $('#modal-view-not-recognized').hide();
-                }
-            });
+            let open_modal = $('.block-page #modal-view-submit-del .head').attr('id')
+            if (open_modal === "del-not-recognized") {
+                // Перейти на следующую страницу
+                updatePageData().then(r => {
+                    $('#modal-view-not-recognized form .event-input').val('');
+                    if (scannedData['error_scanned_page'].length > 0) {
+                        let scan_id = scannedData['error_scanned_page'][0]['id']
+                        let file_url = `/api/scanned_page/file/${scan_id}`
+                        $('.block-page #modal-view-not-recognized iframe').attr('id', `pdf-${scan_id}`).attr('src', file_url)
+                    }
+                    else {
+                        $('.block-page #modal-view-not-recognized iframe').attr('id', `pdf-0`).attr('src', '')
+                        $('.block-page').hide();
+                        $('#modal-view-not-recognized').hide();
+                    }
+                    $('#modal-view-submit-del .head').attr('id', 'unexpected-modal')
+                    $('#modal-view-submit-del .submit-btns').attr('id', 'del-scan-0')
+                    $('.block-page .block-page-2').hide();
+                    $('#modal-view-submit-del').hide();
+                });
+            }
+            else if (open_modal === "del-recognized") {
+                $('#modal-view-submit-del .head').attr('id', 'unexpected-modal')
+                $('#modal-view-submit-del .submit-btns').attr('id', 'del-scan-0')
+                $('.block-page .block-page-2').hide();
+                $('#modal-view-submit-del').hide();
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
         }
     });
+});
+
+
+// Отменить удаление старницы
+$('#modal-view-submit-del .btn-primary').click(function () {
+    $('#modal-view-submit-del .head').attr('id', 'unexpected-modal')
+    $('#modal-view-submit-del .submit-btns').attr('id', 'del-scan-0')
+    $('.block-page .block-page-2').hide();
+    $('#modal-view-submit-del').hide();
 });
 
 

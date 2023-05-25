@@ -218,7 +218,6 @@ $("#templates-settings-form").submit(function (e) {
         temp[form[i].name] = form[i].value
         temp[form[i+1].name] = form[i+1].value
         temp[form[i+2].name] = form[i+2].value
-        temp[form[i+3].name] = form[i+3].value
         data.push(temp);
     }
 
@@ -237,15 +236,6 @@ $("#templates-settings-form").submit(function (e) {
             $('.page-block .templates-settings #templates-settings-form').find('select').attr('disabled', true);
             $('.page-block .matching-templates form .btn-toolbar .btn-secondary').prop('disabled', true)
             $('.page-block .matching-templates #last-matching-submit').prop('disabled', true)
-
-            // Ожидание завершения обрезки заданий
-            while (croppingEnd !== true) {
-                setTimeout(function(){ console.log("Ожидание завершения обрезки заданий") },1000)
-            }
-
-            // Получить первое обрзанное задание
-            $('.page-block .matching-templates #templateImage').attr("src", `${baseURL}/api/cropping_variant/image/${croppingID[0][1]}`)
-            $('.page-block .matching-templates').show().trigger('show');
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);

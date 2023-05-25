@@ -284,7 +284,7 @@ body.login_page {
   top: 10px;
 }
 
-.block-page {
+.block-page, .block-page-2 {
   position: fixed;
   top: 0;
   left: 0;
@@ -340,4 +340,22 @@ body.login_page {
   top: 20%;
   height: 16rem;
   width: 25rem;
+}
+
+
+.modal-view-submit-del{
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1;
+  left: 43%;
+  top: 20%;
+  height: 8rem;
+  width: 23rem;
+}
+
+.modal-view-submit-del .submit-btns, .modal-view-submit-del .head{
+  display: flex;
+  justify-content: center;
 }
