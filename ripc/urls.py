@@ -3,6 +3,7 @@ from django.contrib.auth import views as authViews
 
 from . import views
 from .logic.complect import complect
+from .logic.criteria import criteria
 from .logic.event_organization import event_organization
 from .logic.pattern_task import pattern_task
 from .logic.region import region
@@ -43,7 +44,9 @@ urlpatterns = [
     path('api/scanned_page/file/<int:id>', scanned_page.scanned_api_file, name='scanned_api_file'),
     path('api/scanned_page/files/<int:id>', scanned_page.scanned_api_files, name='scanned_api_files'),
     path('api/scanned_page/<int:id>', scanned_page.scanned_api, name='scanned_api'),
+    path('api/scanned_page/scan', scanned_page.file_from_scanner, name='file_from_scanner'),
     path('api/complect/docx/<int:event_id>', complect.complects_id_file, name='complects_id_file'),
+    path('api/criteria/', criteria.criteria_api, name='criteria_api'),
 
     # Страницы
     path('create_event', event.create_event, name='create_event'),

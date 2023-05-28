@@ -51,34 +51,35 @@
                 <input class="mt-4 btn btn-primary" type="submit" value="Продолжить"/>
             </form>
         </div>
+
         <div class="templates-settings mt-2 ms-2" style="display: none;">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <h5 class="align-middle d-inline">Настройка шаблонов заданий</h5>
+                <h5 class="align-middle d-inline">Настройка шаблонов вариантов</h5>
             </div>
             <form id="templates-settings-form" class="px-3 create-event-form" method="post" action="#">
                 <table class="table table-bordered">
                     <thead class="create-event-table">
                         <tr>
                             <th scope="col"></th>
+                            <th scope="col">№</th>
                             <th scope="col">Предметная область</th>
                             <th scope="col">Максимальный балл</th>
-                            <th scope="col">Название шаблона</th>
                             <th scope="col">Время проверки (мин):</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id=1>
+                        <tr id="task-1">
                             <td><input class="checkbox w-100" type="checkbox"></td>
+                            <td style="width: 50px;"><input name="task_num" class="w-100" type="number" readonly="readonly" required value="1"></td>
                             <td>
                                 <select name="subject" class="w-100" id="inputEventSubject" required>
                                     <option disabled>Предметная область</option>
                                 </select>
                             </td>
                             <td><input name="max_score" class="w-100" id="inputEventMaxScore" type="number" min="0" max="100" required></td>
-                            <td><input name="name" class="w-100" id="inputEventTemplateName" type="text" required></td>
                             <td><input name="check_times" class="w-100" id="inputCheckTime" type="number" min="1" required></td>
                         </tr>
                     </tbody>
@@ -90,30 +91,33 @@
                 <input class="btn btn-primary" type="submit" value="Продолжить"/>
             </form>
         </div>
-        <div class="matching-templates mt-2 ms-2 pb-3" style="display: none;">
+
+        <div class="matching-criteria mt-2 ms-2 pb-3" style="display: none;">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <h5 class="align-middle d-inline">Сопоставление заданий и шаблонов</h5>
+                <h5 class="align-middle d-inline">Загрузка критериев</h5>
             </div>
             <div class="row px-3 py-3">
-                <div class="col-8">
-                    <img class="w-100" id="templateImage" src="">
-                </div>
-                <div class="col-4">
-                    <form>
-                        <select class="w-75" id="inputTemplate" required>
-                            <option disabled>Шаблон</option>
-                        </select>
-                        <div class="btn-toolbar mt-2">
-                            <button type="button" class="btn btn-secondary">Назад</button>
-                            <button type="button" class="btn btn-primary ms-2">Далее</button>
-                        </div>
-                    </form>
-                </div>
+                <form id="matching-criteria-form">
+                    <table class="table table-bordered">
+                        <thead class="matching-criteria-table">
+                            <tr>
+                                <th scope="col">Вариант</th>
+                                <th scope="col">Критерии</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+{#                        <tr id="variant-id">#}
+{#                            <td><input name="variant_name" class="w-100" type="text" required readonly="readonly"></td>#}
+{#                            <td><input name="criteria_file" type="file" accept="application/pdf" required></td>#}
+{#                        </tr>#}
+                        </tbody>
+                    </table>
+                    <input class="mt-4 btn btn-primary" type="submit" value="Продолжить"/>
+                </form>
             </div>
-            <input class="btn btn-primary mx-3" id="last-matching-submit" type="submit" value="Продолжить"/>
         </div>
     </main>
 {% endblock %}

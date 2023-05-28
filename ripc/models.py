@@ -68,7 +68,7 @@ class VariantCropping(models.Model):
 
 
 class PatternTask(models.Model):
-    name = models.CharField(max_length=300)
+    task_num = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     max_score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     check_times = models.IntegerField()

@@ -24,13 +24,15 @@ namespace RIPC_Scanner
         private void setInitParams(string[] args)
         {
             // Проверка получения параметров
-            if (args.Length == 0) {
+            if (args.Length == 0)
+            {
                 MessageBox.Show("Запуск возможен только через сайт RIPC!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
                 Environment.Exit(0);
                 return;
             }
             // Запись параметров в массив
             Parameters = new Uri(args[0].ToString()).AbsolutePath.Split('/').Skip(1).ToArray();
+            //Parameters = new string[] {"1", "2" };
         }
 
     }
