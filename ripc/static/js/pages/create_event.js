@@ -9,9 +9,6 @@ let matchingCropping = []
 let currentMatchingIndex = 0
 
 $(document).ready(function(){
-    // $('.page-block .main-settings .head .btn').click();
-    // $('.page-block .main-settings #main-settings-form .btn').remove();
-    // $('.page-block .templates-settings').show().trigger('show');
 });
 
 
@@ -156,7 +153,7 @@ $('.page-block .templates-settings').on('show', function(){
             // Заполнение полученными данными
             for (let i=0; i<response.length; i++){
                 subjects[response[i].id] = response[i].name
-                $('.table #1 #inputEventSubject').append(`<option value=${response[i].id}>${response[i].name}</option>`)
+                $('.table #task-1 #inputEventSubject').append(`<option value=${response[i].id}>${response[i].name}</option>`)
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -180,8 +177,9 @@ $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-primary'
 
     // Добавление поля
     table_rows.append(`
-        <tr id=${count_rows+1}>
+        <tr id=task-${count_rows+1}>
             <td><input class="checkbox w-100" type="checkbox"></td>
+            <td style="width: 50px;"><input name="task_num" class="w-100" type="number" readonly="readonly" required value=${count_rows+1}></td>
             <td>
                 <select name="subject" class="w-100" id="inputEventSubject" required>
                     <option disabled>Предметная область</option>
@@ -189,7 +187,6 @@ $('.page-block .templates-settings .create-event-form .btn-toolbar .btn-primary'
                 </select>
             </td>
             <td><input name="max_score" class="w-100" id="inputEventMaxScore" type="number" min="0" required></td>
-            <td><input name="name" class="w-100" id="inputEventTemplateName" type="text" required></td>
             <td><input name="check_times" class="w-100" id="inputCheckTime" type="number" min="1" required></td>
         </tr>
     `)
@@ -218,6 +215,7 @@ $("#templates-settings-form").submit(function (e) {
         temp[form[i].name] = form[i].value
         temp[form[i+1].name] = form[i+1].value
         temp[form[i+2].name] = form[i+2].value
+        temp[form[i+3].name] = form[i+2].value
         data.push(temp);
     }
 
@@ -234,8 +232,7 @@ $("#templates-settings-form").submit(function (e) {
             $('.page-block .templates-settings #templates-settings-form .btn').remove();
             $('.page-block .templates-settings #templates-settings-form').find('input').attr('readonly', true);
             $('.page-block .templates-settings #templates-settings-form').find('select').attr('disabled', true);
-            $('.page-block .matching-templates form .btn-toolbar .btn-secondary').prop('disabled', true)
-            $('.page-block .matching-templates #last-matching-submit').prop('disabled', true)
+            $('.page-block .matching-criteria').show().trigger('show');
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
@@ -246,20 +243,26 @@ $("#templates-settings-form").submit(function (e) {
 
 
 // Заполнение выбора шаблонов
-$('.page-block .matching-templates').on('show', function(){
+$('.page-block .matching-criteria').on('show', function(){
     $.ajax({
         type: "GET",
-        url: `${baseURL}/api/pattern_task/?id=${patternID}`,
+        url: `${baseURL}/api/variant/?id=${variantID}`,
         success: function (response) {
-            console.log("Настроенные шаблоны получены!")
+            console.log("Варианты получены!")
             // Заполнение полученными данными
             if (response instanceof Array) {
                 for (let i=0; i<response.length; i++){
-                    $('.page-block .matching-templates #inputTemplate').append(`<option value=${response[i].id}>${response[i].name}</option>`)
+                    let file_split = response[i].file_path.split('&&')
+                    let file_name = file_split[file_split.length-1]
+                    $('.page-block .matching-criteria .table tbody').append(`
+                        <tr id=variant-${response[i].id}>
+                            <td><input name="variant_name" class="w-100" type="text" required readonly="readonly" value='${file_name}'></td>
+                            <td><input name="criteria_file" type="file" accept="application/pdf" required></td>
+                        </tr>
+                    `)
                 }
                 return
             }
-            $('.page-block .matching-templates #inputTemplate').append(`<option value=${response.id}>${response.name}</option>`)
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
@@ -269,112 +272,39 @@ $('.page-block .matching-templates').on('show', function(){
 });
 
 
-// Переход на следующее изображение
-$('.page-block .matching-templates form .btn-toolbar .btn-primary').click(function(){
-    // Проверка на последнее сопоставление
-    if (currentMatchingIndex >= croppingID.length - 2) {
-        $(this).prop('disabled', true);
-        $('.page-block .matching-templates #last-matching-submit').prop('disabled', false)
-    }
-    $('.page-block .matching-templates form .btn-toolbar .btn-secondary').prop('disabled', false)
-
-    let old_info = croppingID[currentMatchingIndex]
-
-    currentMatchingIndex += 1;
-    let next_info = croppingID[currentMatchingIndex]
-    $('.page-block .matching-templates #templateImage').attr("src", `${baseURL}/api/cropping_variant/image/${next_info[1]}`)
-
-    // Проверка имеется ли уже инфомрация о значениях
-    let cropping = matchingCropping.map(matching => matching.cropping)
-    if (!cropping.includes(next_info[1])) { // Если нет
-        // Добавить новые значения
-        matchingCropping.push({
-            "variant": old_info[0],
-            "pattern": $('.page-block .matching-templates #inputTemplate').val(),
-            "cropping": old_info[1],
-        });
-        $(`.page-block .matching-templates #inputTemplate`).prop("selectedIndex", 1);
-        return
-    }
-
-    // Обновить старые значения
-    let old_cropping = matchingCropping[currentMatchingIndex]
-    matchingCropping[currentMatchingIndex-1] = {
-    "variant": old_info[0],
-    "pattern": $('.page-block .matching-templates #inputTemplate').val(),
-    "cropping": old_info[1],
-    };
-    $(`.page-block .matching-templates #inputTemplate option[value=${old_cropping.pattern}]`).prop('selected', true);
-
-});
-
-// Переход на предыдущее изображение
-$('.page-block .matching-templates form .btn-toolbar .btn-secondary').click(function(){
-    if (currentMatchingIndex <= 1) {
-        $(this).prop('disabled', true);
-    }
-    $('.page-block .matching-templates form .btn-toolbar .btn-primary').prop('disabled', false)
-    $('.page-block .matching-templates #last-matching-submit').prop('disabled', true)
-
-    let old_info = croppingID[currentMatchingIndex]
-    // Обновить старые значения
-    matchingCropping[currentMatchingIndex] = {
-        "variant": old_info[0],
-        "pattern": $('.page-block .matching-templates #inputTemplate').val(),
-        "cropping": old_info[1],
-    };
-
-    currentMatchingIndex -= 1;
-    let next_info = croppingID[currentMatchingIndex]
-    $('.page-block .matching-templates #templateImage').attr("src", `${baseURL}/api/cropping_variant/image/${next_info[1]}`)
-
-    // Заполнение текущими значениями
-    let old_cropping = matchingCropping[currentMatchingIndex]
-    $(`.page-block .matching-templates #inputTemplate option[value=${old_cropping.pattern}]`).prop('selected', true);
-
-});
-
-
 // Отправка настроек сопоставлений
-$(".page-block .matching-templates #last-matching-submit").click(function() {
-    // Проверка имеется ли уже инфомрация о последнем значении
-    let info = croppingID[currentMatchingIndex]
-    let cropping = matchingCropping.map(matching => matching.cropping)
-    if (!cropping.includes(info[1])) { // Если нет
-        // Добавить новые значения
-        matchingCropping.push({
-            "variant": info[0],
-            "pattern": $('.page-block .matching-templates #inputTemplate').val(),
-            "cropping": info[1],
-        });
-    }
-    else {
-        // Обновить значения
-        matchingCropping[currentMatchingIndex] = {
-            "variant": info[0],
-            "pattern": $('.page-block .matching-templates #inputTemplate').val(),
-            "cropping": info[1],
-        };
-    }
+$("#matching-criteria-form").submit(function (e) {
+    e.preventDefault();
+    let data = new FormData();
 
+    let table_child = $('#matching-criteria-form table tbody').children()
+    for (let i =0; i < table_child.length; i++) {
+        let var_id = $(table_child[i]).attr('id').split('-')[1]
+        let file = $(table_child[i]).find("input[name='criteria_file']")[0].files[0]
+
+        data.append(var_id, file)
+    }
 
     $.ajax({
         type: "POST",
-        url: `${baseURL}/api/task/`,
-        data: JSON.stringify(matchingCropping),
-        dataType: "JSON",
+        url: `${baseURL}/api/criteria/`,
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        cache: false,
+        data: data,
         success: function (jqXHR) {
-        // Если успешно - отправить на новый шаг
-            console.log("Настройки сопоставлений отправлены!");
+            // Если успешно - отправить на новый шаг
+            console.log("Критерии отправлены!");
             patternID = jqXHR
-            $('.page-block .matching-templates .head .btn').click();
-            $('.page-block .matching-templates #last-matching-submit').remove();
-            $('.page-block .matching-templates form #inputTemplate').attr('disabled', true);
+            $('.page-block .matching-criteria .head .btn').click();
+            $('.page-block .matching-criteria #matching-criteria-form-form .btn').remove();
+            $('.page-block .matching-criteria #matching-criteria-form').find('input').attr('readonly', true);
 
             // Перейти на страницу добавления организаций
-            setTimeout(function(){
-                window.location.href = `${baseURL}/event_organization/${eventID}`;
-            }, 1000);
+            // setTimeout(function(){
+            //     window.location.href = `${baseURL}/event_organization/${eventID}`;
+            // }, 1000);
 
         },
         error: function(jqXHR, textStatus, errorThrown) {

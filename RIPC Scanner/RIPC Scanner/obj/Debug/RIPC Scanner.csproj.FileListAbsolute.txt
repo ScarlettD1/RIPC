@@ -30,11 +30,6 @@ C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csp
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CoreCompileInputs.cache
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.exe
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.pdb
-C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\Interop.WIA.dll
-C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.ResolveComReference.cache
-C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Interop.WIA.dll
-C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.dll
-C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Newtonsoft.Json.xml
 C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CopyComplete
 C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.AssemblyReference.cache
 C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.SuggestedBindingRedirects.cache
@@ -57,3 +52,8 @@ C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC_Scan
 C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.GenerateResource.cache
 C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CoreCompileInputs.cache
 C:\Users\IlyaNotebook\Desktop\RIPC\RIPC Scanner\RIPC Scanner\obj\Debug\RIPC Scanner.csproj.CopyComplete
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Saraff.Twain.dll
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\Saraff.Twain.xml
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\itextsharp.dll
+C:\Users\iliab\Desktop\RIPC\RIPC Scanner\RIPC Scanner\bin\Debug\itextsharp.xml

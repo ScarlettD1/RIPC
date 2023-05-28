@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Windows;
-using Newtonsoft.Json;
+﻿using System.Windows;
 using System.Net.Http;
-using System.Text;
-using System.Net;
 using Saraff.Twain;
 using System.ComponentModel;
-using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Windows.Controls;
 using System.Threading.Tasks;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.Net.Http.Headers;
 
 namespace RIPC_Scanner
 {
@@ -24,10 +19,14 @@ namespace RIPC_Scanner
         private string[] parametrs = ((App)Application.Current).Parameters;
         private static readonly HttpClient client = new HttpClient();
         private Twain32 twain;
+        private string baseURL = "http://127.0.0.1:8000/api/scanned_page/scan";
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Установка токена для запросов в сервис
+            client.DefaultRequestHeaders.Add("token", "05fc8a08-b24a-4bbf-a1b2-82b645f26e28");
 
             // Установка переданных параметров
             SetParametrs();
@@ -142,15 +141,32 @@ namespace RIPC_Scanner
             // Получаем крайнее отсканированное изображение 
             var scannedImage = e.Image;
 
-            // Переводим изображение в байты
-            var byteImage = (byte[])(new ImageConverter()).ConvertTo(scannedImage, typeof(byte[]));
+            // Создаём хранилище в памяти
+            MemoryStream memoryStream = new MemoryStream();
+
+            // Создаём PDF
+            Document pdfDocument = new Document(new iTextSharp.text.Rectangle(scannedImage.Width, scannedImage.Height), 0, 0, 0, 0);
+            PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDocument, memoryStream);
+
+            // Открываем файл
+            pdfDocument.Open();
+
+            // Добавлем изображение в PDF
+            iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(scannedImage, ImageFormat.Png);
+            pdfDocument.Add(pdfImage);
+
+            // Закрываем PDF
+            pdfDocument.Close();
+
+            // Получаем байты PDF
+            byte[] pdfBytes = memoryStream.ToArray();
 
             // Отправляем изображение на сервис
-            //SendFile(byteImage);
+            SendFile(pdfBytes);
 
             // Сохраняем крайнюю страницу в файл
-            string fileName = $"C:\\Ripc\\page_{twain.ImageCount}_{DateTime.Now.ToString("MMddHHmmss")}.png";
-            e.Image.Save(fileName, ImageFormat.Png);
+            //string fileName = $"C:\\Ripc\\page_{twain.ImageCount}_{DateTime.Now.ToString("MMddHHmmss")}.png";
+            //e.Image.Save(fileName, ImageFormat.Png);
         }
 
         private void twain_AcquireError(object sender, Twain32.AcquireErrorEventArgs e)
@@ -231,24 +247,22 @@ namespace RIPC_Scanner
 
         private async void SendFile(byte[] file)
         {
-            var data = new
-            {
-                event_id = parametrs[0],
-                organization_id = parametrs[1],
-                byte_file = file
-            };
+            MultipartFormDataContent data = new MultipartFormDataContent();
+            data.Add(new StringContent(parametrs[0]), "event_id");
+            data.Add(new StringContent(parametrs[1]), "organization_id");
+            data.Add(new ByteArrayContent(file), "byte_file", "scan.png");
 
-            // Сериализуем данные в JSON строку
-            var json = JsonConvert.SerializeObject(data);
 
-            // Создаем HTTP клиент и отправляем POST запрос
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("", content);
+            // Отправляем POST запрос на сервис
+            var response = await client.PostAsync(baseURL, data);
 
             // Проверяем ответ
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception(response.StatusCode.ToString());
+                MessageBox.Show("Ошибка при отправке изображения на сервер.", "Ошибка!",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                // Закрытие сессии
+                twain.CloseDataSource();
             }
             return;
         }

@@ -1,4 +1,4 @@
-import time
+from time import time
 import PyPDF2
 
 from django.contrib.auth.decorators import login_required
@@ -32,7 +32,7 @@ def variant_api(request):
     if request.method == "POST":
         datas = []
         for name, file in request.FILES.items():
-            file_path = f'File_Storage/variant/{time.time()}&&{name}'
+            file_path = f'File_Storage/variant/{int(time())}&&{name}'
             with open(file_path, "wb") as new_file:
                 new_file.write(file.read())
             # Считываем PDF для подсчёта страниц
@@ -47,5 +47,20 @@ def variant_api(request):
             variants_serializer.save()
             variant_ids.append(variants_serializer.data.get('id'))
         return JsonResponse(variant_ids, status=200, safe=False)
+
+    if request.method == "GET":
+        query = {}
+        # Поиск query
+        ids = request.GET.get('id')
+        if ids and len(ids.split(',')) > 1:
+            ids = ids.split(',')
+
+        if ids:
+            query['id__in'] = ids if type(ids) is list else [ids]
+
+        if query:
+            patterns = Variant.objects.filter(**query)
+            patterns_serializer = VariantSerializer(patterns, many=True)
+            return JsonResponse(patterns_serializer.data, status=200, safe=False)
 
     return JsonResponse("ERROR", status=400, safe=False)

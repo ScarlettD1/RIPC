@@ -31,7 +31,7 @@ class VariantCroppingSerializer(serializers.ModelSerializer):
 class PatternTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatternTask
-        fields = ['id', 'name', 'max_score', 'subject', 'check_times']
+        fields = ['id', 'task_num', 'max_score', 'subject', 'check_times']
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -75,7 +75,7 @@ class ComplectSerializer(serializers.ModelSerializer):
 class ScannedPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScannedPage
-        fields = ['id', 'organization', 'complect', 'page_number', 'file_path']
+        fields = ['id', 'event', 'organization', 'complect', 'page_number', 'file_path']
 
 
 @register.filter()
