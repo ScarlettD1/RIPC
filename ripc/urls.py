@@ -45,6 +45,7 @@ urlpatterns = [
     path('api/scanned_page/files/<int:id>', scanned_page.scanned_api_files, name='scanned_api_files'),
     path('api/scanned_page/<int:id>', scanned_page.scanned_api, name='scanned_api'),
     path('api/scanned_page/scan', scanned_page.file_from_scanner, name='file_from_scanner'),
+    path('api/complects/generate', complect.complects_generate, name='complects_generate'),
     path('api/complect/docx/<int:event_id>', complect.complects_id_file, name='complects_id_file'),
     path('api/criteria/', criteria.criteria_api, name='criteria_api'),
 

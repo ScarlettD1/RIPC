@@ -28,7 +28,10 @@ def complect_scan_data(request):
 
         # Получаем имформацию о комплетках МП
         complects = Complect.objects.filter(event=event_id, organization=organization_id)
-        complects_serializer = ComplectSerializer(data=complects, many=True)
+        if not complects:
+            return JsonResponse("ERROR", status=404, safe=False)
+
+        complects_serializer = ComplectSerializer(complects, many=True)
         complects_data = complects_serializer.data
 
         # Генерируем списки для комплектов
@@ -66,7 +69,6 @@ def complect_scan_data(request):
 @csrf_exempt
 def file_from_scanner(request):
     if request.method == "POST":
-        print(request.headers)
         if request.headers['Token'] != "05fc8a08-b24a-4bbf-a1b2-82b645f26e28":
             return JsonResponse("Access Denied!", status=403, safe=False)
 
@@ -80,7 +82,7 @@ def file_from_scanner(request):
             new_file.write(byte_file)
         data['file_path'] = file_path
 
-        # Распознование страницы (Сёма)
+        # Распознование страницы + перезапись файла с поворотом (либо подавать байты изображения и потом сохранять) (Сёма)
         data['complect'] = 1  # Заменить на распознанное
         data['page_number'] = 3  # Заменить на распознанное
 

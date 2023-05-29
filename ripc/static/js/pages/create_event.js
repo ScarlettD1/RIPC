@@ -302,9 +302,9 @@ $("#matching-criteria-form").submit(function (e) {
             $('.page-block .matching-criteria #matching-criteria-form').find('input').attr('readonly', true);
 
             // Перейти на страницу добавления организаций
-            // setTimeout(function(){
-            //     window.location.href = `${baseURL}/event_organization/${eventID}`;
-            // }, 1000);
+            setTimeout(function(){
+                window.location.href = `${baseURL}/event_organization/${eventID}`;
+            }, 1000);
 
         },
         error: function(jqXHR, textStatus, errorThrown) {

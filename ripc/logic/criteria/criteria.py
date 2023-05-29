@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from ripc.logic.required import region_rep_required
+from ripc.serializers import CriteriaSerializer
 
 
 @csrf_exempt
@@ -19,13 +20,15 @@ def criteria_api(request):
                 new_file.write(file.read())
             datas.append({"variant": name, "file_path": file_path})
 
-        # variant_ids = []
-        # for data in datas:
-        #     variants_serializer = VariantSerializer(data=data)
-        #     if not variants_serializer.is_valid():
-        #         return JsonResponse("ERROR", status=400, safe=False)
-        #     variants_serializer.save()
-        #     variant_ids.append(variants_serializer.data.get('id'))
-        # return JsonResponse(variant_ids, status=200, safe=False)
+        criteria_ids = []
+        for data in datas:
+            criteria_serializer = CriteriaSerializer(data=data)
+            if not criteria_serializer.is_valid():
+                return JsonResponse("ERROR", status=400, safe=False)
+            criteria_serializer.save()
+            criteria_ids.append(criteria_serializer.data.get('id'))
+            # Обрезка критериев + запись обрезанных (либо подавать байты изображения и потом сохранять) (Сёма)
+
+        return JsonResponse(criteria_ids, status=200, safe=False)
 
     return JsonResponse("ERROR", status=400, safe=False)

@@ -96,6 +96,7 @@ def event_organizations_api(request):
         for data in datas:
             event_organizations_serializer = OrganizationEventSerializer(data=data)
             if not event_organizations_serializer.is_valid():
+                print(event_organizations_serializer.errors)
                 return JsonResponse("ERROR", status=500, safe=False)
             event_organizations_serializer.save()
 

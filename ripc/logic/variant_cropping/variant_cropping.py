@@ -15,9 +15,9 @@ def start_cropping_variant(request, id=0):
         if id:
             result_ids = []
             # Старт функции обрезки
-            result = [{"task_file_path": "File_Storage/task/1.png", "answer_coord": [0, 0, 1, 1]},
-                      {"task_file_path": "File_Storage/task/2.png", "answer_coord": [0, 0, 1, 1]},
-                      {"task_file_path": "File_Storage/task/3.png", "answer_coord": [0, 0, 1, 1]}]
+            result = [{"variant": id, "answer_coord": [0, 0, 1, 1]},
+                      {"variant": id, "answer_coord": [0, 0, 1, 1]},
+                      {"variant": id, "answer_coord": [0, 0, 1, 1]}]
 
             # Сохранение результата
             for data in result:

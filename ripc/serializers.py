@@ -1,7 +1,7 @@
 from django.template.defaulttags import register
 from rest_framework import serializers
 from .models import Subject, Event, Variant, PatternTask, VariantCropping, Task, OrganizationEvent, Organization, \
-    Region, EventStatus, ScannedPage, Complect
+    Region, EventStatus, ScannedPage, Complect, Criteria, CriteriaCropping
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class VariantSerializer(serializers.ModelSerializer):
 class VariantCroppingSerializer(serializers.ModelSerializer):
     class Meta:
         model = VariantCropping
-        fields = ['id', 'answer_coord', 'task_file_path']
+        fields = ['id', 'variant', 'answer_coord']
 
 
 class PatternTaskSerializer(serializers.ModelSerializer):
@@ -37,7 +37,7 @@ class PatternTaskSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id', 'variant', 'pattern', 'cropping']
+        fields = ['id', 'variant', 'pattern', 'variant_cropping', 'criteria_cropping']
 
 
 class RegionSerializer(serializers.ModelSerializer):
@@ -76,6 +76,18 @@ class ScannedPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScannedPage
         fields = ['id', 'event', 'organization', 'complect', 'page_number', 'file_path']
+
+
+class CriteriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Criteria
+        fields = ['id', 'variant', 'file_path']
+
+
+class CriteriaCroppingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CriteriaCropping
+        fields = ['id', 'criteria', 'file_path']
 
 
 @register.filter()

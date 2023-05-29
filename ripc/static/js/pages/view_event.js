@@ -225,6 +225,24 @@ $('#modal-view-number-participants form').submit(function (e) {
      });
     // Запуск генерации комплектов (Сёма)
 
+    data = {
+        "event": event_id,
+        "organization": organization_id,
+        "count_main": number_participants,
+        "count_additional": number_additional
+    }
+    $.ajax({
+         type: "POST",
+         url: `${baseURL}/api/complects/generate`,
+         data: JSON.stringify(data),
+         dataType: "JSON",
+         success: function (jqXHR) {
+             console.log("Комплекты сформированны!")
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             console.log(textStatus, jqXHR.responseText);
+         }
+     });
 })
 
 // Отслеживание нажатий на скрытие/показ

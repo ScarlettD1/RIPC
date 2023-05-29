@@ -6,6 +6,7 @@ from django.http import JsonResponse, FileResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from docx.shared import Inches, Pt, Cm
+from rest_framework.parsers import JSONParser
 
 from ripc.logic.required import some_rep_required
 from ripc.models import Complect, OrganizationRep
@@ -66,4 +67,45 @@ def complects_id_file(request, event_id=0):
         document.save(file_path)
         return FileResponse(open(file_path, "rb"), as_attachment=False, filename=f"Таблица компектов {event_id}.docx")
 
+    return JsonResponse("ERROR", status=400, safe=False)
+
+
+@csrf_exempt
+@xframe_options_exempt
+@login_required(login_url='/accounts/login/')
+@some_rep_required(login_url='/accounts/login/')
+def complects_generate(request, event_id=0):
+    if request.method == "POST":
+        settings_data = JSONParser().parse(request)
+
+        event_id = settings_data.get('event')
+        organization_id = settings_data.get('organization')
+        count_main = int(settings_data.get('count_main'))
+        count_additional = int(settings_data.get('count_additional'))
+
+        # Запуск генерации комплектов (Сёма)
+        result = []
+        for i in range(count_main):
+            result.append({
+                "event": event_id,
+                "organization": organization_id,
+                "variant": 1,
+                "file_path": f"File_Storage\complect\\{i+1}.pdf",
+                "is_additional": False
+            })
+        for i in range(count_additional):
+            result.append({
+                "event": event_id,
+                "organization": organization_id,
+                "variant": 1,
+                "file_path": f"File_Storage\complect\\add_{i+1}.pdf",
+                "is_additional": True
+            })
+
+        complects_serializer = ComplectSerializer(data=result, many=True)
+        if not complects_serializer.is_valid():
+            print(complects_serializer.errors)
+            return JsonResponse("ERROR VALID", status=400, safe=False)
+        complects_serializer.save()
+        return JsonResponse("OK", status=200, safe=False)
     return JsonResponse("ERROR", status=400, safe=False)
