@@ -9,8 +9,8 @@ from docx.shared import Inches, Pt, Cm
 from rest_framework.parsers import JSONParser
 
 from ripc.logic.required import some_rep_required
-from ripc.models import Complect, OrganizationRep
-from ripc.serializers import ComplectSerializer
+from ripc.models import Complect, OrganizationRep, OrganizationEvent
+from ripc.serializers import ComplectSerializer, OrganizationEventSerializer
 
 from docx import Document
 
@@ -27,7 +27,12 @@ def complects_id_file(request, event_id=0):
             user_org = OrganizationRep.objects.filter(user=request.user.id).first()
             organization_id = user_org.organization_id
 
-        complects = Complect.objects.filter(event=event_id, organization=organization_id)
+        # Получаем имформацию об организации в МП
+        event_organizations = OrganizationEvent.objects.filter(event=event_id, organization=organization_id)[0]
+        event_organizations_serializer = OrganizationEventSerializer(event_organizations, many=False)
+        event_organizations_data = event_organizations_serializer.data
+
+        complects = Complect.objects.filter(organization_event=event_organizations_data['id'])
         complects_serializer = ComplectSerializer(complects, many=True)
         complects_data = complects_serializer.data
 
@@ -82,21 +87,20 @@ def complects_generate(request, event_id=0):
         organization_id = settings_data.get('organization')
         count_main = int(settings_data.get('count_main'))
         count_additional = int(settings_data.get('count_additional'))
+        event_organization = OrganizationEvent.objects.filter(event=event_id, organization=organization_id)[0]
 
         # Запуск генерации комплектов (Сёма)
         result = []
         for i in range(count_main):
             result.append({
-                "event": event_id,
-                "organization": organization_id,
+                "organization_event": event_organization.id,
                 "variant": 1,
                 "file_path": f"File_Storage\complect\\{i+1}.pdf",
                 "is_additional": False
             })
         for i in range(count_additional):
             result.append({
-                "event": event_id,
-                "organization": organization_id,
+                "organization_event": event_organization.id,
                 "variant": 1,
                 "file_path": f"File_Storage\complect\\add_{i+1}.pdf",
                 "is_additional": True

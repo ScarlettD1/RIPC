@@ -98,9 +98,21 @@ class TaskExpert(models.Model):
     check_time = models.IntegerField()
 
 
-class Complect(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+class EventStatus(models.Model):
+    name = models.CharField(max_length=20)
+    color_hex = models.CharField(validators=[MinLengthValidator(6)], max_length=7)
+
+
+class OrganizationEvent(models.Model):
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
+    percent_status = models.TextField(max_length=3, null=True)
+    number_participants = models.TextField(max_length=5, null=True)
+
+
+class Complect(models.Model):
+    organization_event = models.ForeignKey(OrganizationEvent, on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     is_additional = models.BooleanField(default=False)
     file_path = models.TextField(null=True)
@@ -124,22 +136,8 @@ class ThirdMarkExpert(models.Model):
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
 
 
-class EventStatus(models.Model):
-    name = models.CharField(max_length=20)
-    color_hex = models.CharField(validators=[MinLengthValidator(6)], max_length=7)
-
-
-class OrganizationEvent(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
-    percent_status = models.TextField(max_length=3, null=True)
-    number_participants = models.TextField(max_length=5, null=True)
-
-
 class ScannedPage(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    organization_event = models.ForeignKey(OrganizationEvent, on_delete=models.CASCADE)
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE, null=True)
     page_number = models.CharField(max_length=2, null=True)
     file_path = models.TextField(null=True)

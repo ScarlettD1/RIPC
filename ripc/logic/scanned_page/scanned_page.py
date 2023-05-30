@@ -11,8 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from ripc.logic.required import some_rep_required
-from ripc.models import Complect, Variant, ScannedPage
-from ripc.serializers import ComplectSerializer, ScannedPageSerializer
+from ripc.models import Complect, Variant, ScannedPage, OrganizationEvent
+from ripc.serializers import ComplectSerializer, ScannedPageSerializer, OrganizationEventSerializer
 
 
 @csrf_exempt
@@ -26,8 +26,13 @@ def complect_scan_data(request):
         organization_id = request.GET.get('organization_id')
         event_id = request.GET.get('event_id')
 
+        # Получаем имформацию об организации в МП
+        event_organizations = OrganizationEvent.objects.filter(event=event_id, organization=organization_id)[0]
+        event_organizations_serializer = OrganizationEventSerializer(event_organizations, many=False)
+        event_organizations_data = event_organizations_serializer.data
+
         # Получаем имформацию о комплетках МП
-        complects = Complect.objects.filter(event=event_id, organization=organization_id)
+        complects = Complect.objects.filter(organization_event=event_organizations_data['id'])
         if not complects:
             return JsonResponse("ERROR", status=404, safe=False)
 
@@ -45,8 +50,8 @@ def complect_scan_data(request):
                 'is_additional': complect['is_additional']
             }
 
-        # Получаем имформацию об отсканированных страницах МП
-        scanned_pages = ScannedPage.objects.filter(event=event_id, organization=organization_id).order_by('page_number')
+        # Получаем имформацию о отсканированных страницах МП
+        scanned_pages = ScannedPage.objects.filter(organization_event=event_organizations_data['id']).order_by('page_number')
         scanned_pages_serializer = ScannedPageSerializer(scanned_pages, many=True)
         scanned_pages_data = scanned_pages_serializer.data
 
@@ -71,11 +76,13 @@ def file_from_scanner(request):
     if request.method == "POST":
         if request.headers['Token'] != "05fc8a08-b24a-4bbf-a1b2-82b645f26e28":
             return JsonResponse("Access Denied!", status=403, safe=False)
-
         data = {}
-        data['event'] = request.POST['event_id']
-        data['organization'] = request.POST['organization_id']
+
+        event = request.POST['event_id']
+        organization = request.POST['organization_id']
         byte_file = request.FILES['byte_file'].read()
+
+        event_organization = OrganizationEvent.objects.filter(event=event, organization=organization)[0]
 
         file_path = f'File_Storage/scanned_page/{int(time())}&&scan_{data["event"]}_{data["organization"]}.pdf'
         with open(file_path, "wb") as new_file:
@@ -83,6 +90,7 @@ def file_from_scanner(request):
         data['file_path'] = file_path
 
         # Распознование страницы + перезапись файла с поворотом (либо подавать байты изображения и потом сохранять) (Сёма)
+        data['organization_event'] = event_organization.id
         data['complect'] = 1  # Заменить на распознанное
         data['page_number'] = 3  # Заменить на распознанное
 

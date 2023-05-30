@@ -44,7 +44,7 @@ def view_event(request, event_id):
     context['event_organizations'] = event_organizations_serializer.data
 
     # Получаем имформацию о комплетках МП
-    complects = Complect.objects.filter(event=event_id, organization=organization_id)
+    complects = Complect.objects.filter(organization_event=event_organizations_serializer.data['id'])
     complects_serializer = ComplectSerializer(complects, many=True)
     complects_data = complects_serializer.data
 
@@ -60,7 +60,7 @@ def view_event(request, event_id):
         }
 
     # Получаем имформацию об отсканированных страницах МП
-    scanned_pages = ScannedPage.objects.filter(event=event_id, organization=organization_id).order_by('page_number')
+    scanned_pages = ScannedPage.objects.filter(organization_event=event_organizations_serializer.data['id']).order_by('page_number')
     scanned_pages_serializer = ScannedPageSerializer(scanned_pages, many=True)
     scanned_pages_data = scanned_pages_serializer.data
 

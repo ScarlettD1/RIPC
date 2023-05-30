@@ -69,13 +69,13 @@ class OrganizationEventSerializer(serializers.ModelSerializer):
 class ComplectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complect
-        fields = ['id', 'organization', 'event', 'variant', 'is_additional', 'file_path']
+        fields = ['id', 'organization_event', 'variant', 'is_additional', 'file_path']
 
 
 class ScannedPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScannedPage
-        fields = ['id', 'event', 'organization', 'complect', 'page_number', 'file_path']
+        fields = ['id', 'organization_event', 'complect', 'page_number', 'file_path']
 
 
 class CriteriaSerializer(serializers.ModelSerializer):
