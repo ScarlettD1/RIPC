@@ -213,6 +213,12 @@ body.login_page {
   width: 90%;
 }
 
+.nav-button a {
+  width: 100%;
+  display: block;
+  justify-content: center;
+}
+
 .nav-button img {
   margin-right: 5px;
 }
