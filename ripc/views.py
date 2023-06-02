@@ -47,9 +47,9 @@ def view_event(request, event_id):
 
 @user_passes_test(is_admin)
 @login_required(login_url='/accounts/login')
-def admin_event(request):
+def events_resp(request):
     contex = {}
-    return render(request, 'main_pages/admin_event.html', contex)
+    return render(request, 'main_pages/events_resp.html', contex)
 
 
 @user_passes_test(is_admin)

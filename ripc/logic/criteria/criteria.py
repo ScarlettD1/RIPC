@@ -4,13 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from ripc.logic.required import region_rep_required
+from ripc.logic.required import region_resp_required
 from ripc.serializers import CriteriaSerializer
 
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
-@region_rep_required(login_url='/accounts/login/')
+@region_resp_required(login_url='/accounts/login/')
 def criteria_api(request):
     if request.method == "POST":
         datas = []

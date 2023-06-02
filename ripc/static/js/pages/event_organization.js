@@ -73,8 +73,8 @@ $("#modal-add-organization form").submit(function (e) {
              table_rows.append(`
                 <tr id=${ eventOrganization.id }>
                     <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>
-                    <td class="organization w-50">
-                        <a href="/event/${ event_id }/?organization_id=${ eventOrganization['organization']['id'] }">${ eventOrganization['organization']['name'] }</a>
+                    <td class="organization text-start w-50">
+                        <a class="link-primary fw-bold" href="/event/${ event_id }/?organization_id=${ eventOrganization['organization']['id'] }">${ eventOrganization['organization']['name'] }</a>
                     </td>
                     <td class="number_participants">${ eventOrganization['number_participants'] }</td>
                     <td class="event_status">
@@ -84,7 +84,7 @@ $("#modal-add-organization form").submit(function (e) {
                     </td>
                     <td class="percent_status">
                         <div class="table-filed-color" style="background-color: ${ percent_status_color }">
-                            ${ eventOrganization['percent_status'] }%
+                            ${eventOrganization['percent_status']}%
                         </div>
                     </td>
                 </tr>

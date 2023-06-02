@@ -1,26 +1,28 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from ripc.logic.check_who_auth import region_rep_authenticated
-from ripc.logic.required import some_rep_required, region_rep_required
-from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant, OrganizationRep
+from ripc.logic.required import some_resp_required, region_resp_required
+from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant, OrganizationRep, RegionRep, \
+    Organization, Region
 from ripc.serializers import EventSerializer, OrganizationEventSerializer, ScannedPageSerializer, ComplectSerializer
 
 
 @login_required(login_url='/accounts/login/')
-@region_rep_required(login_url='/accounts/login/')
+@region_resp_required(login_url='/accounts/login/')
 def create_event(request):
     context = {}
     return render(request, 'main_pages/create_event.html', context)
 
 
 @login_required(login_url='/accounts/login/')
-@some_rep_required(login_url='/accounts/login/')
+@some_resp_required(login_url='/accounts/login/')
 def view_event(request, event_id):
     context = {}
 
@@ -78,9 +80,33 @@ def view_event(request, event_id):
     return render(request, 'main_pages/view_event.html', context)
 
 
+@login_required(login_url='/accounts/login/')
+@some_resp_required(login_url='/accounts/login/')
+def view_events(request):
+    context = {}
+    context['region_name'] = ''
+
+
+    # Поиск ID региона
+    region_id = 0
+    if request.user.is_superuser:
+        region_id = 1
+
+    elif region_rep_authenticated(request.user):
+        # Получаем по ID региона
+        region_id = RegionRep.objects.filter(user=request.user.id)[0].region_id
+
+    # Поиск имени региона
+    if region_id:
+        region = Region.objects.filter(id=region_id)[0]
+        context['region_name'] = region.name
+
+    return render(request, 'main_pages/events_resp.html', context)
+
+
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
-@some_rep_required(login_url='/accounts/login/')
+@some_resp_required(login_url='/accounts/login/')
 def event_api(request):
     if request.method == "GET":
         # Поиск query
@@ -89,18 +115,69 @@ def event_api(request):
         if ids:
             events = Event.objects.get(id=ids)
             events_serializer = EventSerializer(events, many=False)
-        else:
-            events = Subject.objects.all()
-            events_serializer = EventSerializer(events, many=True)
+            return JsonResponse(events_serializer.data, status=200, safe=False)
 
-        return JsonResponse(events_serializer.data, status=200, safe=False)
+        else:
+            context = {}
+            context['events'] = []
+            context['total_page'] = 1
+
+            page_number = request.GET.get("page", 1)
+
+            # Поиск ID региона
+            region_id = 0
+            if request.user.is_superuser:
+                region_id = 1
+            elif region_rep_authenticated(request.user):
+                # Получаем по ID региона
+                region_id = RegionRep.objects.filter(user=request.user.id)[0].region_id
+
+            # Поиск МП по region_id
+            events_serializer_data = None
+            if region_id:
+                events = Event.objects.filter(region=region_id).order_by("start_date")
+                events_paginator = Paginator(events, 15)
+                context['total_page'] = events_paginator.num_pages
+                page_obj = events_paginator.get_page(page_number)
+                events_serializer_data = EventSerializer(page_obj, many=True).data
+
+            if not events_serializer_data:
+                return JsonResponse("Event not found!", status=400, safe=False)
+
+            # Расчёт информации для МП
+            for event in events_serializer_data:
+                orgs_event = OrganizationEvent.objects.filter(event=event['id'])
+                orgs_event_data = OrganizationEventSerializer(orgs_event, many=True).data
+
+                orgs_count = len(orgs_event_data)
+                total_percent = 0
+                for org in orgs_event_data:
+                    # Расчёт общего процента со статусом сканирования
+                    if org['event_status'] == 2:
+                        total_percent += int(org['percent_status'])
+                if orgs_count:
+                    total_percent = int(total_percent / orgs_count)
+
+                context['events'].append({
+                    'id': event['id'],
+                    'name': event['name'],
+                    'start_date': str(datetime.strptime(event['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
+                    'end_date': str(datetime.strptime(event['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
+                    'orgs_count': orgs_count,
+                    'total_percent': total_percent
+                })
+            return JsonResponse(context, status=200, safe=False)
+
+        return JsonResponse("ERROR", status=400, safe=False)
 
     if request.method == "POST" and region_rep_authenticated(request.user):
         event_data = JSONParser().parse(request)
-        if event_data.get('start_date'):
-            event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%d.%m.%Y').date())
-        if event_data.get('end_date'):
-            event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%d.%m.%Y').date())
+        event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%d.%m.%Y').date())
+        event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%d.%m.%Y').date())
+        if request.user.is_superuser:
+            event_data['region'] = 1
+        else:
+            event_data['region'] = RegionRep.objects.filter(user=request.user.id)[0].region_id
 
         events_serializer = EventSerializer(data=event_data)
         if not events_serializer.is_valid():
@@ -108,4 +185,17 @@ def event_api(request):
 
         events_serializer.save()
         return JsonResponse(events_serializer.data.get("id"), status=200, safe=False)
+
+    if request.method == "DELETE" and region_rep_authenticated(request.user):
+        ids = request.GET.get('id')
+        if ids and len(ids.split(',')) > 1:
+            ids = ids.split(',')
+        else:
+            ids = [ids]
+
+        for id in ids:
+            event = Event.objects.get(id=id)
+            event.delete()
+        return JsonResponse("OK", status=200, safe=False)
+
     return JsonResponse("Method not allowed", status=400, safe=False)

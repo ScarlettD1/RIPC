@@ -20,19 +20,19 @@
         <hr>
     </header>
     <main class="page-block">
-        <div class="organizations mt-2 ms-2 me-2">
+        <div class="organizations mt-3 ms-3 me-3">
             <div class="head">
             </div>
-            <div id="organizations-event" class="organizations-event-form px-3">
+            <div id="organizations-event" class="organizations-event-form">
                 <div class="btn-toolbar justify-content-end mt-2 py-2">
                     <button type="button" class="btn btn-primary">Добавить</button>
                     <button type="button" class="btn btn-danger ms-2">Удалить</button>
                 </div>
                 <table class="table table-bordered">
                     <thead class="organizations-event-table">
-                        <tr>
+                        <tr class="text-center">
                             <th scope="col"></th>
-                            <th scope="col">Название</th>
+                            <th scope="col" class="text-start">Название</th>
                             <th scope="col">Кол-во участников</th>
                             <th scope="col">Статус</th>
                             <th scope="col">%Выполнения</th>
@@ -42,8 +42,8 @@
                         {% for event_organization in event_organizations %}
                             <tr id={{ event_organization.id }}>
                                 <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>
-                                <td class="organization w-50">
-                                    <a href="/event/{{ event.id }}/?organization_id={{ event_organization.organization.id }}">{{ event_organization.organization.name }}</a>
+                                <td class="organization text-start w-50">
+                                    <a class="link-primary fw-bold" href="/event/{{ event.id }}/?organization_id={{ event_organization.organization.id }}">{{ event_organization.organization.name }}</a>
                                 </td>
                                 <td class="number_participants">{{ event_organization.number_participants }}</td>
                                 <td class="event_status">
@@ -56,7 +56,7 @@
                                             {% elif event_organization.percent_status|to_int <= 75 %} #ffd700
                                             {% elif event_organization.percent_status|to_int <= 100 %} #b7ff00
                                             {% endif %}">
-                                    {{ event_organization.percent_status }}
+                                    {{ event_organization.percent_status }}%
                                     </div>
                                 </td>
                             </tr>

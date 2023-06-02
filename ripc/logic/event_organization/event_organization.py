@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from ripc.logic.check_who_auth import region_rep_authenticated
-from ripc.logic.required import some_rep_required, region_rep_required
+from ripc.logic.required import some_resp_required, region_resp_required
 from ripc.models import OrganizationEvent, Event, EventStatus, Organization
 from ripc.serializers import OrganizationEventSerializer, EventSerializer
 
@@ -22,7 +22,7 @@ def __complete_data(event_organizations_data):
 
 
 @login_required(login_url='/accounts/login/')
-@region_rep_required(login_url='/accounts/login/')
+@region_resp_required(login_url='/accounts/login/')
 def view_event_organization(request, event_id):
     context = {}
 
@@ -42,7 +42,7 @@ def view_event_organization(request, event_id):
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
-@region_rep_required(login_url='/accounts/login/')
+@region_resp_required(login_url='/accounts/login/')
 def event_organizations_api(request):
     if request.method == "GET":
         query = {}

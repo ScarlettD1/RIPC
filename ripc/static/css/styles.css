@@ -367,6 +367,6 @@ body.login_page {
   justify-content: center;
 }
 
-.table-admin-view td {
+table td, table select, table input {
   text-align: center;
 }

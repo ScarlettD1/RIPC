@@ -13,7 +13,7 @@ class SubjectSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'name', 'start_date', 'end_date']
+        fields = ['id', 'name', 'start_date', 'end_date', 'region']
 
 
 class VariantSerializer(serializers.ModelSerializer):

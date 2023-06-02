@@ -17,7 +17,6 @@ from .logic.variant import variant
 from .logic.variant_cropping import variant_cropping
 
 urlpatterns = [
-    path('', views.index, name='index'),
     path('logout/', authViews.LogoutView.as_view(next_page='/accounts/login/'), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('personnel/users/', views.users, name='users'),
@@ -50,10 +49,11 @@ urlpatterns = [
     path('api/criteria/', criteria.criteria_api, name='criteria_api'),
 
     # Страницы
+    path('', views.index, name='index'),
     path('create_event', event.create_event, name='create_event'),
     path('event/<int:event_id>/', event.view_event, name='view_event'),
     path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
-    path('admin_events', views.admin_event, name='admin_event'),
+    path('events_resp', event.view_events, name='events_resp'),
 
     # Скачивание Scanner
     path('scanner/download/', scanner.scanner_download, name='scanner_download')

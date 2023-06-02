@@ -52,6 +52,7 @@ class Event(models.Model):
     name = models.CharField(max_length=300)
     start_date = models.DateField()
     end_date = models.DateField()
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -104,7 +105,7 @@ class EventStatus(models.Model):
 
 
 class OrganizationEvent(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
     percent_status = models.TextField(max_length=3, null=True)
