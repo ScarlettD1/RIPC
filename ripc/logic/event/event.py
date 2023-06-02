@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from ripc.logic.check_who_auth import region_rep_authenticated
+from ripc.logic.check_who_auth import region_rep_authenticated, org_rep_authenticated
 from ripc.logic.required import some_resp_required, region_resp_required
 from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant, OrganizationRep, RegionRep, \
     Organization, Region
@@ -62,7 +62,8 @@ def view_event(request, event_id):
         }
 
     # Получаем имформацию об отсканированных страницах МП
-    scanned_pages = ScannedPage.objects.filter(organization_event=event_organizations_serializer.data['id']).order_by('page_number')
+    scanned_pages = ScannedPage.objects.filter(organization_event=event_organizations_serializer.data['id']).order_by(
+        'page_number')
     scanned_pages_serializer = ScannedPageSerializer(scanned_pages, many=True)
     scanned_pages_data = scanned_pages_serializer.data
 
@@ -75,7 +76,7 @@ def view_event(request, event_id):
 
         # Заполнение распознанных страниц
         complect_id = str(page['complect'])
-        context['complect'][complect_id]['pages'][int(page['page_number'])-1] = page
+        context['complect'][complect_id]['pages'][int(page['page_number']) - 1] = page
 
     return render(request, 'main_pages/view_event.html', context)
 
@@ -84,24 +85,57 @@ def view_event(request, event_id):
 @some_resp_required(login_url='/accounts/login/')
 def view_events(request):
     context = {}
-    context['region_name'] = ''
 
+    who_auth = None
 
-    # Поиск ID региона
-    region_id = 0
     if request.user.is_superuser:
-        region_id = 1
+        who_auth = "admin"
+        if request.GET.get('organization_id'):
+            who_auth = "org_rep"
 
     elif region_rep_authenticated(request.user):
-        # Получаем по ID региона
-        region_id = RegionRep.objects.filter(user=request.user.id)[0].region_id
+        who_auth = "region_rep"
+    elif org_rep_authenticated(request.user):
+        who_auth = "org_rep"
+    else:
+        return JsonResponse("ERROR AUTH!", status=403, safe=False)
 
-    # Поиск имени региона
-    if region_id:
-        region = Region.objects.filter(id=region_id)[0]
-        context['region_name'] = region.name
+    if who_auth in ["admin", "region_rep"]:
+        region_id = 0
+        if who_auth == "admin":
+            region_id = 1
 
-    return render(request, 'main_pages/events_resp.html', context)
+        elif who_auth == "region_rep":
+            # Получаем по ID региона
+            region_id = RegionRep.objects.filter(user=request.user.id)[0].region_id
+
+        # Поиск имени региона
+        if region_id:
+            region = Region.objects.filter(id=region_id)[0]
+            context['region_name'] = region.name
+            return render(request, 'main_pages/events_resp.html', context)
+
+        else:
+            return JsonResponse("Region not found!", status=404, safe=False)
+
+    if who_auth == "org_rep":
+        if request.GET.get('organization_id'):
+            organization_id = request.GET.get('organization_id')
+        else:
+            # Получаем ID организации
+            organization = OrganizationRep.objects.filter(user=request.user.id)
+            if not organization:
+                return JsonResponse("OrganizationRep not found!", status=404, safe=False)
+            organization_id = organization[0].organization_id
+
+        # Поиск имени организации
+        if organization_id:
+            organization = Organization.objects.filter(id=organization_id)[0]
+            context['organization_name'] = organization.name
+            return render(request, 'main_pages/events_org.html', context)
+        else:
+            return JsonResponse("Organization not found!", status=404, safe=False)
+
 
 
 @csrf_exempt

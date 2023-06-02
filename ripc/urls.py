@@ -53,7 +53,7 @@ urlpatterns = [
     path('create_event', event.create_event, name='create_event'),
     path('event/<int:event_id>/', event.view_event, name='view_event'),
     path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
-    path('events_resp', event.view_events, name='events_resp'),
+    path('events', event.view_events, name='view_events'),
 
     # Скачивание Scanner
     path('scanner/download/', scanner.scanner_download, name='scanner_download')
