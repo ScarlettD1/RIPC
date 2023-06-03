@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -27,15 +28,8 @@ def view_event_organization(request, event_id):
     context = {}
 
     event = Event.objects.get(id=event_id)
-    event_serializer = EventSerializer(event, many=False)
-    event_data = event_serializer.data
-    event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y"))
-    event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y"))
-    context['event'] = event_data
-
-    event_organizations = OrganizationEvent.objects.filter(event=event_id)
-    event_organizations_serializer = OrganizationEventSerializer(event_organizations, many=True)
-    context['event_organizations'] = __complete_data(event_organizations_serializer.data)
+    if not event:
+        return JsonResponse("Event not found!", status=404, many=False)
 
     return render(request, 'main_pages/event_organization.html', context)
 
@@ -59,6 +53,8 @@ def event_organizations_api(request):
         if organizations and len(organizations.split(',')) > 1:
             organizations = organizations.split(',')
 
+        page_number = request.GET.get('page')
+
         if ids:
             query['id__in'] = ids if type(ids) is list else [ids]
 
@@ -71,6 +67,17 @@ def event_organizations_api(request):
         # Если query заполнен
         if query:
             event_organizations = OrganizationEvent.objects.filter(**query)
+            if page_number:
+                context = {}
+                event_organizations_paginator = Paginator(event_organizations, 15)
+                context['total_page'] = event_organizations_paginator.num_pages
+                page_obj = event_organizations_paginator.get_page(page_number)
+                event_organizations_serializer = OrganizationEventSerializer(page_obj, many=True)
+                event_organizations_data = __complete_data(event_organizations_serializer.data)
+                context['event_organizations'] = event_organizations_data
+                return JsonResponse(context, status=200, safe=False)
+
+
             event_organizations_serializer = OrganizationEventSerializer(event_organizations, many=True)
             event_organizations_data = __complete_data(event_organizations_serializer.data)
             return JsonResponse(event_organizations_data, status=200, safe=False)
@@ -82,11 +89,9 @@ def event_organizations_api(request):
         return JsonResponse(event_organizations_data, status=200, safe=False)
 
     elif request.method == "POST":
-        # Поиск query
-        get_full = request.GET.get('get_full')
-
         datas = []
         event_organization_result = []
+
         event_organizations_data = JSONParser().parse(request)
         if type(event_organizations_data) is dict:
             datas.append(event_organizations_data)
@@ -100,10 +105,7 @@ def event_organizations_api(request):
                 return JsonResponse("ERROR", status=500, safe=False)
             event_organizations_serializer.save()
 
-            if get_full:
-                event_organization_result.append(__complete_data([event_organizations_serializer.data]))
-            else:
-                event_organization_result.append(event_organizations_serializer.data.get('id'))
+            event_organization_result.append(event_organizations_serializer.data.get('id'))
 
         return JsonResponse(event_organization_result, status=200, safe=False)
 

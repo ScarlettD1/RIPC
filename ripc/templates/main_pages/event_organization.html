@@ -3,20 +3,9 @@
 {% block head %}
 {% endblock %}
 {% block main_content %}
-    <div id="startData" style="display: none;">
-        <div id="organization">
-            {% for event_organization in event_organizations %}
-                <p>{{ event_organization.organization.id }}</p>
-            {% endfor %}
-        </div>
-        <p id="event_id">
-            {{ event.id }}
-        </p>
-    </div>
-
     <header>
-        <h2>{{ event.name }}</h2>
-        <h5>{{ event.start_date }} - {{ event.end_date }}</h5>
+        <h2 class="event-name"></h2>
+        <h5 class="event-datas"></h5>
         <hr>
     </header>
     <main class="page-block">
@@ -39,32 +28,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for event_organization in event_organizations %}
-                            <tr id={{ event_organization.id }}>
-                                <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>
-                                <td class="organization text-start w-50">
-                                    <a class="link-primary fw-bold" href="/event/{{ event.id }}/?organization_id={{ event_organization.organization.id }}">{{ event_organization.organization.name }}</a>
-                                </td>
-                                <td class="number_participants">{{ event_organization.number_participants }}</td>
-                                <td class="event_status">
-                                    <div class="table-filed-color" style="background-color: {{ event_organization.event_status.color_hex }}">{{ event_organization.event_status.name }}</div>
-                                </td>
-                                <td class="percent_status">
-                                    <div class="table-filed-color" style="background-color:
-                                            {% if event_organization.percent_status|to_int <= 25 %} #ff0000
-                                            {% elif event_organization.percent_status|to_int <= 50 %} #ffaa00
-                                            {% elif event_organization.percent_status|to_int <= 75 %} #ffd700
-                                            {% elif event_organization.percent_status|to_int <= 100 %} #b7ff00
-                                            {% endif %}">
-                                    {{ event_organization.percent_status }}%
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
+{#                        {% for event_organization in event_organizations %}#}
+{#                            <tr id={{ event_organization.id }}>#}
+{#                                <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>#}
+{#                                <td class="organization text-start w-50">#}
+{#                                    <a class="link-primary fw-bold" href="/event/{{ event.id }}/?organization_id={{ event_organization.organization.id }}">{{ event_organization.organization.name }}</a>#}
+{#                                </td>#}
+{#                                <td class="number_participants">{{ event_organization.number_participants }}</td>#}
+{#                                <td class="event_status">#}
+{#                                    <div class="table-filed-color" style="background-color: {{ event_organization.event_status.color_hex }}">{{ event_organization.event_status.name }}</div>#}
+{#                                </td>#}
+{#                                <td class="percent_status">#}
+{#                                    <div class="table-filed-color" style="background-color:#}
+{#                                            {% if event_organization.percent_status|to_int <= 25 %} #ff0000#}
+{#                                            {% elif event_organization.percent_status|to_int <= 50 %} #ffaa00#}
+{#                                            {% elif event_organization.percent_status|to_int <= 75 %} #ffd700#}
+{#                                            {% elif event_organization.percent_status|to_int <= 100 %} #b7ff00#}
+{#                                            {% endif %}">#}
+{#                                    {{ event_organization.percent_status }}%#}
+{#                                    </div>#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
                     </tbody>
                 </table>
-            </div>
+            <nav class="pt-3" aria-label="Page navigation example">
+                <ul class="pagination mb-0">
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="#" aria-label="Previous">#}
+{#                            <span aria-hidden="true">&laquo;</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                    <li class="page-item page-num-nav"><a class="page-link" href="#">1</a></li>#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="#" aria-label="Next">#}
+{#                            <span aria-hidden="true">&raquo;</span>#}
+{#                        </a>#}
+{#                    </li>#}
+                </ul>
+            </nav>
         </div>
+            </div>
     </main>
 
     <!-- Модальное окно добавления-->

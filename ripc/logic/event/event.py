@@ -148,15 +148,17 @@ def event_api(request):
 
         if ids:
             events = Event.objects.get(id=ids)
-            events_serializer = EventSerializer(events, many=False)
-            return JsonResponse(events_serializer.data, status=200, safe=False)
+            events_serializer_data = EventSerializer(events, many=False).data
+            events_serializer_data['start_date'] = str(datetime.strptime(events_serializer_data['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+            events_serializer_data['end_date'] = str(datetime.strptime(events_serializer_data['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+            return JsonResponse(events_serializer_data, status=200, safe=False)
 
         else:
             context = {}
             context['events'] = []
             context['total_page'] = 1
 
-            page_number = request.GET.get("page", 1)
+            page_number = request.GET.get("page")
 
             # Поиск ID региона
             region_id = 0
@@ -170,10 +172,13 @@ def event_api(request):
             events_serializer_data = None
             if region_id:
                 events = Event.objects.filter(region=region_id).order_by("start_date")
-                events_paginator = Paginator(events, 15)
-                context['total_page'] = events_paginator.num_pages
-                page_obj = events_paginator.get_page(page_number)
-                events_serializer_data = EventSerializer(page_obj, many=True).data
+                if page_number:
+                    events_paginator = Paginator(events, 15)
+                    context['total_page'] = events_paginator.num_pages
+                    page_obj = events_paginator.get_page(page_number)
+                    events_serializer_data = EventSerializer(page_obj, many=True).data
+                else:
+                    events_serializer_data = EventSerializer(events, many=True).data
 
             if not events_serializer_data:
                 return JsonResponse("Event not found!", status=400, safe=False)
