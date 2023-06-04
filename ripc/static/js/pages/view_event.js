@@ -1,4 +1,4 @@
-let baseURL = "http://127.0.0.1:8000"
+let baseURL = `${document.location.protocol}//${document.location.host}`
 let event_id = 0
 let organization_id = 0
 let scannedData = {}

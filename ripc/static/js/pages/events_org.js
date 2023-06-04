@@ -1,4 +1,4 @@
-let baseURL = "http://127.0.0.1:8000"
+let baseURL = `${document.location.protocol}//${document.location.host}`
 let page = 1
 let lastPage = 1
 

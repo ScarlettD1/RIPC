@@ -1,12 +1,10 @@
 let subjects = {} // Данные учебных дисциплин
-let baseURL = "http://127.0.0.1:8000"
+let baseURL = `${document.location.protocol}//${document.location.host}`
 let eventID = 0
 let variantID = []
 let patternID = []
 let croppingID = []
 let croppingEnd = false
-let matchingCropping = []
-let currentMatchingIndex = 0
 
 $(document).ready(function(){
 });
