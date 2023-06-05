@@ -3,6 +3,7 @@ from django.urls import path, include
 from . import views
 from .logic.region import region
 from .logic.organization import organization
+from .logic.rate import rate
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -18,4 +19,5 @@ urlpatterns = [
     path('personnel/organizations/', organization.organizations, name='orgs'),
     path('personnel/organizations/reg/', organization.organizations_registration, name='org_reg'),
     path('personnel/organizations/<int:id>', organization.organizations_detail, name='orgs_detail'),
+    path('estimate/', rate.rate),
 ]
