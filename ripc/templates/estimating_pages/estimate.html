@@ -1,0 +1,48 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+
+{% block main_content %}
+    <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Задание</h3>
+        <img src="путь_к_изображению_задания.jpg" alt="Изображение задания" class="img-fluid">
+      </div>
+      <div class="col-md-6">
+        <h3>Оценка</h3>
+        <input type="text" class="form-control" placeholder="Введите оценку">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Ответ ученика</h3>
+        <p>Здесь отображается ответ ученика</p>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-primary">Кнопка критерии</button>
+        <button class="btn btn-primary">Кнопка распечатать</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <button class="btn btn-primary">Пред</button>
+        <button class="btn btn-primary">След</button>
+      </div>
+      <div class="col-md-6">
+        <h3>Время проверки</h3>
+        <p>Здесь отображается время проверки</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <button class="btn btn-danger">Нет ответа</button>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-success">Закончить проверку</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
