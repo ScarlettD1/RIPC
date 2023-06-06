@@ -11,4 +11,4 @@ from ripc.logic.required import some_resp_required
 def scanner_download(request):
     if request.method == "GET":
         context = {}
-        return FileResponse(open('File_Storage/scanner/setup.exe', "rb"), as_attachment=True, filename='RIPC Scanner Setup.exe')
+        return FileResponse(open('File_Storage/scanner/setup.msi', "rb"), as_attachment=True, filename='RIPC Scanner Setup.msi')

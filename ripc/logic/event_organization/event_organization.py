@@ -30,6 +30,7 @@ def view_event_organization(request, event_id):
     event = Event.objects.get(id=event_id)
     if not event:
         return JsonResponse("Event not found!", status=404, many=False)
+    context['event'] = event
 
     return render(request, 'main_pages/event_organization.html', context)
 

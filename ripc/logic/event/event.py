@@ -10,8 +10,9 @@ from rest_framework.parsers import JSONParser
 from ripc.logic.check_who_auth import region_rep_authenticated, org_rep_authenticated
 from ripc.logic.required import some_resp_required, region_resp_required
 from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant, OrganizationRep, RegionRep, \
-    Organization, Region
-from ripc.serializers import EventSerializer, OrganizationEventSerializer, ScannedPageSerializer, ComplectSerializer
+    Organization, Region, PatternTask, Criteria
+from ripc.serializers import EventSerializer, OrganizationEventSerializer, ScannedPageSerializer, ComplectSerializer, \
+    PatternTaskSerializer, VariantSerializer, CriteriaSerializer, SubjectSerializer
 
 
 @login_required(login_url='/accounts/login/')
@@ -19,6 +20,44 @@ from ripc.serializers import EventSerializer, OrganizationEventSerializer, Scann
 def create_event(request):
     context = {}
     return render(request, 'main_pages/create_event.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+@region_resp_required(login_url='/accounts/login/')
+def edit_event(request, event_id):
+    context = {}
+
+    event = Event.objects.filter(id=event_id).first()
+    if not event:
+        return JsonResponse("Event not found!", status=404, safe=False)
+
+    event_serializer = EventSerializer(event, many=False)
+    event_data = event_serializer.data
+    event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+    event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+    context['event'] = event_data
+
+    variants = Variant.objects.filter(event=event_id)
+    variants_data = VariantSerializer(variants, many=True).data
+    context['variants'] = variants_data
+
+    for i, variant in enumerate(variants_data):
+        context['variants'][i]['file_name'] = variant['file_path'].split('&&')[1]
+        criteria = Criteria.objects.get(variant=variant['id'])
+        criteria_data = CriteriaSerializer(criteria, many=False).data
+        criteria_data['file_name'] = criteria_data['file_path'].split('&&')[1]
+        context['variants'][i]['criteria_obj'] = criteria_data
+
+    subjects = Subject.objects.all()
+    subjects_data = SubjectSerializer(subjects, many=True).data
+    context['subjects'] = subjects_data
+
+    pattern_tasks = PatternTask.objects.filter(event=event_id)
+    pattern_tasks_data = PatternTaskSerializer(pattern_tasks, many=True).data
+    context['pattern_tasks'] = pattern_tasks_data
+
+    print(context)
+    return render(request, 'main_pages/edit_event.html', context)
 
 
 @login_required(login_url='/accounts/login/')
@@ -141,7 +180,7 @@ def view_events(request):
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
 @some_resp_required(login_url='/accounts/login/')
-def event_api(request):
+def event_api(request, id=0):
     if request.method == "GET":
         # Поиск query
         ids = request.GET.get('id')
@@ -181,7 +220,7 @@ def event_api(request):
                     events_serializer_data = EventSerializer(events, many=True).data
 
             if not events_serializer_data:
-                return JsonResponse("Event not found!", status=400, safe=False)
+                return JsonResponse(context, status=200, safe=False)
 
             # Расчёт информации для МП
             for event in events_serializer_data:
@@ -220,6 +259,22 @@ def event_api(request):
 
         events_serializer = EventSerializer(data=event_data)
         if not events_serializer.is_valid():
+            return JsonResponse("ERROR", status=500, safe=False)
+
+        events_serializer.save()
+        return JsonResponse(events_serializer.data.get("id"), status=200, safe=False)
+
+    if request.method == "PUT" and region_rep_authenticated(request.user):
+        event_data = JSONParser().parse(request)
+        event_old = Event.objects.get(id=id)
+
+        event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%d.%m.%Y').date())
+        event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%d.%m.%Y').date())
+        event_data['region'] = event_old.region_id
+
+        events_serializer = EventSerializer(event_old, data=event_data)
+        if not events_serializer.is_valid():
+            print(events_serializer.errors)
             return JsonResponse("ERROR", status=500, safe=False)
 
         events_serializer.save()

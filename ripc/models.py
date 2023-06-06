@@ -59,6 +59,7 @@ class Event(models.Model):
 
 
 class Variant(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     page_count = models.CharField(max_length=2)
     file_path = models.TextField(null=True)
 
@@ -69,6 +70,7 @@ class VariantCropping(models.Model):
 
 
 class PatternTask(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     task_num = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     max_score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])

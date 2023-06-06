@@ -3,6 +3,7 @@ import PyPDF2
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, FileResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 
 from ripc.logic.required import region_resp_required
@@ -11,6 +12,7 @@ from ripc.serializers import VariantSerializer
 
 
 @csrf_exempt
+@xframe_options_exempt
 @login_required(login_url='/accounts/login/')
 @region_resp_required(login_url='/accounts/login/')
 def variant_api_file(request, id=0):
@@ -20,7 +22,7 @@ def variant_api_file(request, id=0):
             variants_serializer = VariantSerializer(variants, many=False)
             file_path = variants_serializer['file_path'].value
             file_name = file_path.split('&&')[-1]
-            return FileResponse(open(file_path, "rb"), as_attachment=True, filename=file_name)
+            return FileResponse(open(file_path, "rb"), as_attachment=False, filename=file_name)
 
     return JsonResponse("ERROR", status=400, safe=False)
 
@@ -31,13 +33,14 @@ def variant_api_file(request, id=0):
 def variant_api(request):
     if request.method == "POST":
         datas = []
+        event_id = request.POST['event_id']
         for name, file in request.FILES.items():
             file_path = f'File_Storage/variant/{int(time())}&&{name}'
             with open(file_path, "wb") as new_file:
                 new_file.write(file.read())
             # Считываем PDF для подсчёта страниц
             reader = PyPDF2.PdfReader(file_path)
-            datas.append({"page_count": str(len(reader.pages)), "file_path": file_path})
+            datas.append({"page_count": str(len(reader.pages)), "file_path": file_path, "event": event_id})
 
         variant_ids = []
         for data in datas:

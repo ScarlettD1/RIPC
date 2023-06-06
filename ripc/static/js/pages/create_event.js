@@ -42,6 +42,7 @@ $('#inputCalendar .input-daterange').datepicker({
 $("#inputEventFiles").fileinput({
     theme: "fa5",
     language: "ru",
+    uploadUrl: '/',
     allowedFileExtensions: ["pdf"],
     removeFromPreviewOnError: true,
     browseClass: "btn btn-info",
@@ -55,7 +56,7 @@ $("#inputEventFiles").fileinput({
         'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
     },
     fileActionSettings: {
-        showZoom: false,
+        showZoom: true,
         indicatorNew: ''
     }
 });
@@ -100,43 +101,48 @@ $("#main-settings-form").submit(function (e) {
 	})
 
     // Запрос на создание МП
-    let res_event = $.ajax({
+    $.ajax({
         type: "POST",
         url: `${baseURL}/api/event/`,
         data: JSON.stringify(formData),
-        dataType: "json"
-    }).fail(function (){
-        console.log('error: Не удалось отправить основные настройки')
-        alert("Ошибка при отправке основных настроек!")
+        dataType: "json",
+        success: function (response) {
+            eventID = response
+            filesData.append('event_id', eventID);
+
+            // Запрос на создание файлов варианта
+            $.ajax({
+                type: "POST",
+                url: `${baseURL}/api/variant/`,
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: filesData,
+                success: function (response) {
+                    variantID = response;
+                    console.log("ok: Основные настройки отправлены!");
+                    $('.page-block .main-settings .head .btn').click();
+                    $('.page-block .main-settings #main-settings-form .btn').remove();
+                    $('.page-block .templates-settings').show().trigger('show');
+                    $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
+
+                    // Запуск обрезки заданий (Сёма)
+                    startCropping()
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, jqXHR.responseText);
+                    alert("Ошибка при обработке файлов варинатов!")
+                }
+            })
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при создании мероприятия!")
+        }
     })
 
-    // Запрос на создание файлов варианта
-    let res_files = $.ajax({
-        type: "POST",
-        url: `${baseURL}/api/variant/`,
-        enctype: 'multipart/form-data',
-        processData: false,
-        contentType: false,
-        cache: false,
-        data: filesData
-    }).fail(function (){
-        console.log('error: Не удалось отправить файлы вариантов')
-        alert("Ошибка при отправке файлов вариантов!")
-    });
-
-    // Если все запросы выполнились - перейти на следующий шаг
-    $.when(res_event, res_files).done(function (){
-        eventID = res_event.responseJSON;
-        variantID = res_files.responseJSON;
-        console.log("ok: Основные настройки отправлены!");
-        $('.page-block .main-settings .head .btn').click();
-        $('.page-block .main-settings #main-settings-form .btn').remove();
-        $('.page-block .templates-settings').show().trigger('show');
-        $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
-
-        // Запуск обрезки заданий (Сёма)
-        startCropping()
-    })
 });
 
 
@@ -213,7 +219,8 @@ $("#templates-settings-form").submit(function (e) {
         temp[form[i].name] = form[i].value
         temp[form[i+1].name] = form[i+1].value
         temp[form[i+2].name] = form[i+2].value
-        temp[form[i+3].name] = form[i+2].value
+        temp[form[i+3].name] = form[i+3].value
+        temp['event'] = eventID
         data.push(temp);
     }
 

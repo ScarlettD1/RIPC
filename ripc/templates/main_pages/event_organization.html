@@ -6,6 +6,7 @@
     <header>
         <h2 class="event-name"></h2>
         <h5 class="event-datas"></h5>
+        <button class="btn btn-primary"><a href="/edit_event/{{ event.id }}">Редактировать</a></button>
         <hr>
     </header>
     <main class="page-block">
@@ -40,7 +41,7 @@
 {#                                </td>#}
 {#                                <td class="percent_status">#}
 {#                                    <div class="table-filed-color" style="background-color:#}
-{#                                            {% if event_organization.percent_status|to_int <= 25 %} #ff0000#}
+{#                                            {% if event_organization.percent_status|to_int <= 25 %} #ff2c40#}
 {#                                            {% elif event_organization.percent_status|to_int <= 50 %} #ffaa00#}
 {#                                            {% elif event_organization.percent_status|to_int <= 75 %} #ffd700#}
 {#                                            {% elif event_organization.percent_status|to_int <= 100 %} #b7ff00#}

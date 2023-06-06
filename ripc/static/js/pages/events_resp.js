@@ -21,7 +21,7 @@ function getEventsInfo() {
             let eventsTable = ``
             for (let i=0; i<events.length; i++){
                 let percent_status_color = ''
-                if (events[i]['total_percent'] <= 25) percent_status_color = '#ff0000'
+                if (events[i]['total_percent'] <= 25) percent_status_color = '#ff2c40'
                 else if (events[i]['total_percent'] <= 50) percent_status_color = '#ffaa00'
                 else if (events[i]['total_percent'] <= 75) percent_status_color = '#ffd700'
                 else if (events[i]['total_percent'] <= 100) percent_status_color = '#b7ff00'

@@ -411,14 +411,14 @@ $('#modal-view-submit-del .btn-primary').click(function () {
 
 // Закрыть модальное окно отсканированой страницы по кнопке
 $('#modal-view-recognized #close-modal').click(function(){
-    $('.block-page #modal-view-recognized #pdf').attr('id', `pdf-0`).attr('src', '')
+    $('.block-page #modal-view-recognized iframe').attr('id', `pdf-0`).attr('src', '')
     $('.block-page').hide();
     $('#modal-view-recognized').hide();
 });
 
 // Закрыть модальное окно нераспознанной страницы по кнопке
 $('#modal-view-not-recognized #close-modal').click(function(){
-    $('.block-page #modal-view-not-recognized #pdf').attr('id', `pdf-0`).attr('src', '')
+    $('.block-page #modal-view-not-recognized iframe').attr('id', `pdf-0`).attr('src', '')
     $('.block-page').hide();
     $('#modal-view-not-recognized').hide();
 });

@@ -19,7 +19,7 @@ class EventSerializer(serializers.ModelSerializer):
 class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant
-        fields = ['id', 'page_count', 'file_path']
+        fields = ['id', 'page_count', 'file_path', 'event']
 
 
 class VariantCroppingSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class VariantCroppingSerializer(serializers.ModelSerializer):
 class PatternTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatternTask
-        fields = ['id', 'task_num', 'max_score', 'subject', 'check_times']
+        fields = ['id', 'task_num', 'max_score', 'subject', 'check_times', 'event']
 
 
 class TaskSerializer(serializers.ModelSerializer):

@@ -49,7 +49,7 @@ function getPageInfo() {
 
                 // Поиск цвета процентов статуса
                 let percent_status_color = ''
-                if (eventOrganization['percent_status'] <= 25) percent_status_color = '#ff0000'
+                if (eventOrganization['percent_status'] <= 25) percent_status_color = '#ff2c40'
                 else if (eventOrganization['percent_status'] <= 50) percent_status_color = '#ffaa00'
                 else if (eventOrganization['percent_status'] <= 75) percent_status_color = '#ffd700'
                 else if (eventOrganization['percent_status'] <= 100) percent_status_color = '#b7ff00'

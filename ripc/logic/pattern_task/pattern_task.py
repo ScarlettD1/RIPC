@@ -48,3 +48,23 @@ def pattern_api(request):
             pattern_serializer.save()
             pattern_ids.append(pattern_serializer.data.get('id'))
         return JsonResponse(pattern_ids, status=200, safe=False)
+
+    if request.method == "PUT":
+        datas = []
+        pattern_ids = []
+        pattern_data = JSONParser().parse(request)
+        if type(pattern_data) is dict:
+            datas.append(pattern_data)
+        else:
+            datas = pattern_data
+
+        for data in datas:
+            pattern_old = PatternTask.objects.get(event_id=data['event'], task_num=data['task_num'])
+
+            pattern_serializer = PatternTaskSerializer(pattern_old, data=data)
+            if not pattern_serializer.is_valid():
+                print(pattern_serializer.errors)
+                return JsonResponse("ERROR", status=500, safe=False)
+            pattern_serializer.save()
+            pattern_ids.append(pattern_serializer.data.get('id'))
+        return JsonResponse(pattern_ids, status=200, safe=False)

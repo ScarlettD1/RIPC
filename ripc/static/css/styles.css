@@ -146,7 +146,7 @@ body.login_page {
 
 .page-content {
   background: #eaeaea;
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
   margin: 0;
 }
@@ -235,12 +235,12 @@ body.login_page {
   height: 36px;
 }
 
-.create-event-form, .organizations-event-form{
+.create-event-form, .organizations-event-form, .edit-event-form{
   display: block;
   margin-top: 5px;
 }
 
-.create-event-table, .organizations-event-table, .matching-criteria-table{
+.create-event-table, .organizations-event-table, .matching-criteria-table, .variant-table{
   background: rgb(233, 236, 239);
 }
 
@@ -299,7 +299,7 @@ body.login_page {
   background: rgba(38, 38, 38, 0.8);
 }
 
-.modal-view-recognized {
+.modal-view-recognized, .modal-view-file {
   background: white;
   box-shadow: 0 4px 4px #00000004;
   border-radius: 10px;
@@ -311,10 +311,11 @@ body.login_page {
   width: 45%;
 }
 
-.modal-view-recognized .head button {
+.modal-view-recognized .head button,
+.modal-view-file .head button{
   position: absolute;
   right: 3px;
-  top: 0px;
+  top: 0;
 }
 
 .modal-view-recognized .btn-danger {

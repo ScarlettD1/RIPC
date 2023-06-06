@@ -1,11 +1,30 @@
 from time import time
 
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 
 from ripc.logic.required import region_resp_required
+from ripc.models import Criteria
 from ripc.serializers import CriteriaSerializer
+
+
+@csrf_exempt
+@xframe_options_exempt
+@login_required(login_url='/accounts/login/')
+@region_resp_required(login_url='/accounts/login/')
+def criteria_api_file(request, id=0):
+    if request.method == "GET":
+        if id:
+            criteria = Criteria.objects.get(id=id)
+            criteria_serializer = CriteriaSerializer(criteria, many=False)
+            file_path = criteria_serializer['file_path'].value
+            file_name = file_path.split('&&')[-1]
+            return FileResponse(open(file_path, "rb"), as_attachment=False, filename=file_name)
+
+    return JsonResponse("ERROR", status=400, safe=False)
+
 
 
 @csrf_exempt

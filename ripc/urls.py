@@ -31,6 +31,7 @@ urlpatterns = [
     path('personnel/organizations/<int:id>', organization.organizations_detail, name='orgs_detail'),
     path('api/subject/', subject.subject_api, name='subject_api'),
     path('api/event/', event.event_api, name='event_api'),
+    path('api/event/<int:id>', event.event_api, name='event_api'),
     path('api/variant/', variant.variant_api, name='variant_api_post'),
     path('api/variant/file/<int:id>', variant.variant_api_file, name='variant_api_file'),
     path('api/cropping_variant/start/<int:id>', variant_cropping.start_cropping_variant, name='start_cropping_variant'),
@@ -47,10 +48,12 @@ urlpatterns = [
     path('api/complects/generate', complect.complects_generate, name='complects_generate'),
     path('api/complect/docx/<int:event_id>', complect.complects_id_file, name='complects_id_file'),
     path('api/criteria/', criteria.criteria_api, name='criteria_api'),
+    path('api/criteria/file/<int:id>', criteria.criteria_api_file, name='criteria_api_file'),
 
     # Страницы
     path('', views.index, name='index'),
     path('create_event', event.create_event, name='create_event'),
+    path('edit_event/<int:event_id>/', event.edit_event, name='edit_event'),
     path('event/<int:event_id>/', event.view_event, name='view_event'),
     path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
     path('events', event.view_events, name='view_events'),
