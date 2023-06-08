@@ -1,0 +1,84 @@
+{% extends "base_menu_generic.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Регистрация Эксперта{% endblock %}
+
+{% block main_content %}
+    <div class="w-50 expert-reg container mt-3 pb-1 rounded-2 border px-5 pb-4 border-opacity-50 border-1 border-dark">
+        <h3 class="display-6 my-4 fw-normal">Регистрация эксперта</h3>
+        <main class="w-100 m-auto">
+            <form action="{% url 'experts_reg' %}" method="post" class="need-validation" novalidate>
+                {% csrf_token %}
+
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        {{ user_form.first_name | as_crispy_field }}
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        {{ user_form.last_name | as_crispy_field }}
+                        {{ user_form.last_name.errors }}
+
+
+                    </div>
+
+                    <div class="col-12">
+                        <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Отчество</label>
+                        {{ expert_form.surname | as_crispy_field }}
+                        {{ expert_form.surname.errors }}
+
+
+                    </div>
+
+                    <div class="col-12">
+                        {{ user_form.username | as_crispy_field }}
+                        {{ user_form.username.errors }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ user_form.password | as_crispy_field }}
+                        {{ user_form.password.errors }}
+
+                    </div>
+
+                    <div class="col-12">
+                        {{ user_form.email | as_crispy_field }}
+                        {{ user_form.email.errors }}
+
+                    </div>
+
+                    <div class="col-12">
+                        <label for="{{ expert_form.organization.id_for_label }}" class="form-label">Организация</label>
+                        {{ expert_form.organization | as_crispy_field }}
+                        {{ expert_form.organization.errors }}
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ expert_form.subject.id_for_label }}" class="form-label">Предмет</label>
+                        {{ expert_form.subject | as_crispy_field }}
+                        {{ expert_form.subject.errors }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ expert_form.referee.id_for_label }}" class="form-label">Право третьей
+                            проверки</label>
+                        {{ expert_form.referee | as_crispy_field }}
+                        {{ expert_form.referee.errors }}
+                    </div>
+
+                    <button type="submit" class="btn mt-5 btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </main>
+    </div>
+    <script>
+        var select_box_element = document.querySelector('#id_organization');
+        dselect(select_box_element, {
+            search: true
+        });
+    </script>
+{% endblock %}

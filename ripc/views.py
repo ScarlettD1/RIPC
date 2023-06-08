@@ -12,14 +12,14 @@ from .forms import RegisterUserForm
 @login_required(login_url='/accounts/login/')
 def index(request):
     context = {'user': request.user}
-    return render(request, 'ripc/index.html', context)
+    return render(request, 'index.html', context)
 
 
 @user_passes_test(is_not_expert)  # проверка на права, для захода на страницу
 @login_required(login_url='/accounts/login/')
 def detail(request, question_id):
     expert_name = get_object_or_404(Expert, pk=question_id)
-    return render(request, 'ripc/detail.html', {'name': expert_name})
+    return render(request, '', {'name': expert_name})
 
 
 @login_required(login_url='/accounts/login/')

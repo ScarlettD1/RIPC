@@ -1,0 +1,38 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+{% block title %}Эксперты{% endblock %}
+
+{% block main_content %}
+    <div class="container mt-3 pb-1">
+        <h3 class="display-6 my-4 fw-normal">Эксперты</h3>
+        <div class="row align-items-start table-naming">
+            <div class="col-1">№</div>
+            <div class="col-2">ФИО</div>
+            <div class="col-2">Статус</div>
+            <div class="col-2">Предмет</div>
+            <div class="col-2">Организация</div>
+            <div class="col-3">Активные мероприятия</div>
+        </div>
+        {% if orgs.count > 0 %}
+            <div class="rounded-3">
+                {% for expert in experts %}
+                    <div class="row align-items-start bg-light py-2">
+                        <div class="col-1">{{ expert.id }}</div>
+                        <div class="col-2">{{ expert }}</div>
+                        <div class="col-2">{{ expert.status }}</div>
+                        <div class="col-2"><a href="/organizations/{{ expert.org.id }}">{{ expert.org.name }}</a></div>
+                        <div class="col-2">33</div>
+                        <div class="col-2">{{ expert.subject }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mt-2">Нет доступных экспертов</p>
+        {% endif %}
+        <div class="flex-row d-flex justify-content-end w-90">
+            <a href="/experts/reg/">
+                <button class="btn btn-primary rounded-pill px-3 my-4" type="button">Добавить эксперта</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

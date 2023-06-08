@@ -7,7 +7,7 @@
                 <img class ="logo-img nav-logo mx-auto" src="{% static 'images/signin.png' %}" alt="">
                 <li class="nav-user nav-item">
                     <i class="fas fa-user-alt"></i>
-                    <p class="d-inline">user_name</p>
+                    <p class="d-inline">{{ request.user }}</p>
                     <button class="d-inline image-button btn btn-sm btn-light" href="#">
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
@@ -22,14 +22,14 @@
                     <p class="d-inline">Оценка</p>
                 </li>
                 <li>
-                    <button class="nav-button btn btn-toggle btn-light d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
-                     <i class="fas fa-handshake mx-2"></i> Структура
+                    <button class="nav-button btn btn-toggle js-toggle-btn btn-light d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                     <i class="fas js-arrow-down arrow-icon fa-angle-down mx-2"></i> Структура
                     </button>
                     <div class="collapse" id="home-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal mx-3 pb-1 small">
-                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-globe"></i><a href="/personnel/regions/">Регионы</a></li>
-                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-university"></i><a href=".personnel/organizations/" class="">Организации</a></li>
-                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-graduation-cap"></i><a href="/personnel/users/">Эксперты</a></li>
+                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-globe"></i><a href="/regions/">Регионы</a></li>
+                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-university"></i><a href="/organizations/" class="">Организации</a></li>
+                        <li class="btn nav-button d-inline-flex align-items-center text-decoration-none btn-light rounded"><i class="mx-2 fas fa-graduation-cap"></i><a href="/experts/">Эксперты</a></li>
                       </ul>
                     </div>
                 </li>

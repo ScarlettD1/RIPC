@@ -1,13 +1,59 @@
 {% extends "base_menu_generic.html" %}
 {% load static %}
+{% block title %}{{ region.name }} - Регион{% endblock %}
 
 {% block main_content %}
-    <div class="static-info">
-        <ul>
-            <li>Название: {{ region.name }}</li>
-            <li>Кол-во сотрудников: {{ region.name }}</li>
-            <li>asdasd</li>
-            <li>asdasd</li>
-        </ul>
+    <div class="container mt-3 pb-1">
+        <div class="my-3">
+            <h3 class="display-6 my-4 fw-normal">{{ region.name }}</h3>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="reps my-3">
+                    <h3 class="fw-bold">Представители региона:</h3>
+                    {% if reps.count == 0 %}
+                        <div class="list-group w-25 my-2">
+                            {% for rep in reps %}
+                                <a href="/users/{{ rep.id }}"
+                                   class="list-group-item list-group-item-action d-flex gap-3 py-3"
+                                   aria-current="true">
+                                    <div class="d-flex gap-2 w-75 justify-content-between">
+                                        <h6 class="mb-0">{{ rep }}</h6>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="mt-2 text-danger d-inline-block">У региона отсутствуют представители</p>
+{#                        кнопка добавления представителя            #}
+                    {% endif %}
+                </div>
+                <div class="nav d-flex justify-content-between mx-3  flex-column">
+                    <button class="btn btn-danger my-1">Удалить регион</button>
+                    <button class="btn btn-primary my-1">Редактировать регион</button>
+                </div>
+            </div>
+            <h3 class="fw-bold">Организации региона:</h3>
+        </div>
+
+
+        <div class="row align-items-start table-naming">
+            <div class="col-1">№</div>
+            <div class="col-4">Название организации</div>
+            <div class="col-3">Кол-во участников</div>
+            <div class="col-3">Активные мероприятия</div>
+        </div>
+        {% if orgs.count > 0 %}
+            <div class="rounded-3">
+                {% for org in orgs %}
+                    <div class="row align-items-start py-2">
+                        <div class="col-1">{{ org.id }}</div>
+                        <div class="col-4"><a href="/organizations/{{ org.id }}">{{ org.name }}</a></div>
+                        <div class="col-3">232</div>
+                        <div class="col-3">33</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mt-2">Нет доступных организаций</p>
+        {% endif %}
     </div>
 {% endblock %}
