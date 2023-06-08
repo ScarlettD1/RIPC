@@ -27,8 +27,12 @@
         <hr>
     </header>
     <main class="page-block">
-        <a href="/scanner/download"><button class="btn btn-success mt-3 ms-3">Скачать клиент сканирования</button></a>
-        <a href="ripc://scanner/{{ event.id }}/{{ event_organizations.organization }}"><button class="btn btn-primary mt-3 ms-2">Открыть клиент сканирования</button></a>
+        <div class="d-flex mb-3">
+            <a class="" href="/scanner/download"><button class="btn btn-success mt-3 ms-3">Скачать клиент сканирования</button></a>
+            <a class="" href="ripc://scanner/{{ event.id }}/{{ event_organizations.organization }}"><button class="btn btn-primary mt-3 ms-2">Открыть клиент сканирования</button></a>
+            <a class="ms-auto px-3" href="/complects/download/{{ event.id }}?organization_id={{ event_organizations.organization }}"><button class="btn btn-warning mt-3">Скачать комплекты</button></a>
+        </div>
+
         <div class="not-recognized mt-3 ms-2">
             <div class="head">
                 <button class="d-inline image-button btn btn-sm btn-light">

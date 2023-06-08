@@ -4,6 +4,7 @@ let organization_id = 0
 let scannedData = {}
 let onlyNotScanned = false
 let numberParticipants = 0
+let havePages = false
 
 $(document).ready(function(){
     getStartData();
@@ -34,6 +35,10 @@ async function updatePageData() {
             console.log(textStatus, jqXHR.responseText);
         }
     });
+
+     if (!havePages){
+        return
+     }
 
     await $.ajax({
         type: "GET",
@@ -196,6 +201,9 @@ function checkNumberParticipants() {
         $('.block-page').show();
         $('#modal-view-number-participants').show();
    }
+   else {
+       havePages = true
+   }
 }
 
 // Обновить кол-во участников и сгенирировать комплеты
@@ -216,6 +224,7 @@ $('#modal-view-number-participants form').submit(function (e) {
          dataType: "JSON",
          success: function (jqXHR) {
              console.log("Количество участников установлено")
+             havePages = true
              $('.block-page').hide();
              $('#modal-view-number-participants').hide();
          },
