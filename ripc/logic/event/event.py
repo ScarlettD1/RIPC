@@ -56,7 +56,6 @@ def edit_event(request, event_id):
     pattern_tasks_data = PatternTaskSerializer(pattern_tasks, many=True).data
     context['pattern_tasks'] = pattern_tasks_data
 
-    print(context)
     return render(request, 'main_pages/edit_event.html', context)
 
 

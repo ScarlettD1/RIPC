@@ -7,6 +7,27 @@ $(document).ready(function(){
 });
 
 
+// Функция запуска обрезки заданий
+async function startCropping(variantID) {
+    for (let i in variantID) {
+        let v_id = variantID[i]
+        $.ajax({
+            type: "GET",
+            url: `${baseURL}/api/cropping_variant/start/${v_id}/?update=true`,
+            success: function (response) {
+                console.log(`Обрезка заданий для варианта [${v_id}] завершена!`)
+                for (let res_i in response)
+                    croppingID.push([v_id , response[res_i]])
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
+                alert(`Ошибка при обрезки заданий для варианта [${v_id}]!`)
+            }
+        });
+    }
+}
+
+
 function getStartData() {
     let variantDiv = $("#startData #variantFiles").find('.startvar')
     for (let i=0; i<variantDiv.length; i++) {
@@ -74,6 +95,49 @@ $("#main-settings-form").submit(function (e) {
         dataType: "json",
         success: function (response) {
             console.log("Основные настройкм мероприятия обновлены!");
+            let filesData = new FormData();
+
+            // Получаем данные для обновления файлов
+            let table_child = $('#main-settings-form table tbody').children()
+            for (let i =0; i < table_child.length; i++) {
+                let var_id = $(table_child[i]).attr('id').split('-')[1]
+                let file = $(table_child[i]).find("input[name='new_variant_file']")[0].files[0]
+                if (file) {
+                    filesData.append(`${var_id}&&${file.name}`, file)
+                }
+            }
+            if (!filesData) {
+                // Обновление страницы
+                setTimeout(function(){
+                    window.location = window.location.href;
+                }, 1000);
+            }
+            // Запрос на обновление файлов варианта
+            $.ajax({
+                type: "POST",
+                url: `${baseURL}/api/variant/?update=true`,
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: filesData,
+                success: function (response) {
+                    let variantID = response;
+                    console.log("Файлы для обновления вариантов отправлены!");
+                    // Запуск обрезки заданий (Сёма)
+                    startCropping(variantID)
+
+                    // Обновление страницы
+                    setTimeout(function(){
+                        window.location = window.location.href;
+                    }, 1000);
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, jqXHR.responseText);
+                    alert("Ошибка при обновлении вариантов!")
+                }
+            })
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
@@ -109,6 +173,46 @@ $("#templates-settings-form").submit(function (e) {
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
             alert("Ошибка при обновлении шаблонов!")
+        }
+    });
+});
+
+
+// Обновление файлов критерий
+$("#matching-criteria-form").submit(function (e) {
+    e.preventDefault();
+    let data = new FormData();
+
+    let table_child = $('#matching-criteria-form table tbody').children()
+    for (let i =0; i < table_child.length; i++) {
+        let var_id = $(table_child[i]).attr('id').split('-')[1]
+        let crit_id = $($(table_child[i]).find(".btn-danger")[0]).attr('id')
+        let file = $(table_child[i]).find("input[name='new_criteria_file']")[0].files[0]
+
+        data.append(`${crit_id}&&${var_id}`, file)
+    }
+
+    $.ajax({
+        type: "POST",
+        url: `${baseURL}/api/criteria/?update=true`,
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        cache: false,
+        data: data,
+        success: function (jqXHR) {
+            console.log("Критерии обновлены!");
+            patternID = jqXHR
+
+            // Обновление страницы
+            setTimeout(function(){
+                window.location = window.location.href;
+            }, 1000);
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при обновлении критериев!")
         }
     });
 });

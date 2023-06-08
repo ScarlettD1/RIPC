@@ -4,7 +4,6 @@ let eventID = 0
 let variantID = []
 let patternID = []
 let croppingID = []
-let croppingEnd = false
 
 $(document).ready(function(){
 });
@@ -80,7 +79,6 @@ async function startCropping() {
             }
         });
     }
-    croppingEnd = true;
 }
 
 
