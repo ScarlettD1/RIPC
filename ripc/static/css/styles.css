@@ -1,84 +1,88 @@
 /* Reset and base styles  */
 * {
-	padding: 0;
-	margin: 0;
-	border: none;
+    padding: 0;
+    margin: 0;
+    border: none;
 }
 
 *,
 *::before,
 *::after {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 :focus,
 :active {
-	/*outline: none;*/
+    /*outline: none;*/
 }
 
 a:focus,
 a:active {
-	/* outline: none;*/
+    /* outline: none;*/
 }
 
 /* Links */
 
-a, a:link, a:visited  {
-     color: inherit;
+a, a:link, a:visited {
+    color: inherit;
     text-decoration: none;
     /* display: inline-block; */
 }
 
-a:hover  {
+a:hover {
     /* color: inherit; */
     text-decoration: none;
+}
+
+i {
+margin-right: 8px;
 }
 
 /* Common */
 
 aside, nav, footer, header, section, main {
-	display: block;
+    display: block;
 }
 
 h1, h2, h3, h4, h5, h6, p {
     font-size: inherit;
-	font-weight: inherit;
+    font-weight: inherit;
 }
 
 ul, ul li {
-	list-style: none;
+    list-style: none;
 }
 
 img {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 img, svg {
-	max-width: 100%;
-	height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 address {
-  font-style: normal;
+    font-style: normal;
 }
 
 /* Form */
 
 input, textarea, button, select {
-	font-family: inherit;
+    font-family: inherit;
     font-size: inherit;
     color: inherit;
     background-color: transparent;
 }
 
 input::-ms-clear {
-	display: none;
+    display: none;
 }
 
 button, input[type="submit"] {
-  display: inline-block;
-  box-shadow: none;
-  cursor: pointer;
+    display: inline-block;
+    box-shadow: none;
+    cursor: pointer;
 }
 
 input:focus, input:active,
@@ -87,148 +91,159 @@ button:focus, button:active {
 }
 
 button::-moz-focus-inner {
-	padding: 0;
-	border: 0;
+    padding: 0;
+    border: 0;
 }
 
 label {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 legend {
-	display: block;
+    display: block;
 }
 
 /***********************/
 
 html,
 body {
-  height: 100%;
-  max-width: 100%;
+    height: 100%;
+    max-width: 100%;
 }
 
 body.login_page {
-  display: flex;
-  align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #021E2B;
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #021E2B;
 }
 
 .form-signin {
-  max-width: 450px;
-  padding: 20px 30px;
-  background-color: #FFFFFF;
-  border-radius: 8px;
+    max-width: 450px;
+    padding: 20px 30px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
 }
 
 .form-signin .form-floating:focus-within {
-  z-index: 2;
+    z-index: 2;
 }
 
 .form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .page-content {
-  background: #eaeaea;
-  height: 100%;
-  width: 100%;
-  margin: 0;
+    background: #eaeaea;
+    height: 100%;
+    width: 100%;
+    margin: 0;
 }
 
 .page-block {
-  background: white;
-  box-shadow: 0 4px 4px #00000004;
-  height: auto;
-  padding-left: 0;
-  padding-right: 0;
-  margin-bottom: 2rem;
-  border-radius: 10px;
+    background: white;
+    box-shadow: 0 4px 4px #00000004;
+    height: auto;
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 2rem;
+    border-radius: 10px;
 }
 
 .user_name {
-  vertical-align: sub;
+    vertical-align: sub;
 }
 
 .exit_button {
-  padding-left: 15px;
+    padding-left: 15px;
 }
 
 .logo-img {
-  margin-top: 20px;
-  width: 80%;
+    margin-top: 20px;
+    width: 80%;
 }
 
 .nav {
-  width: inherit;
-  height: 100%;
+    width: inherit;
+    height: 100%;
 }
 
 .nav-user {
-  margin-top: 16px;
-  margin-left: 14px;
-  color: black;
+    margin-top: 16px;
+    margin-left: 14px;
+    color: black;
 }
 
 .image-button {
-  border: none;
-  background: none;
+    border: none;
+    background: none;
 }
 
 .nav-button {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-inline: auto;
-  text-decoration: none;
-  width: 90%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-inline: auto;
+    text-decoration: none;
+    width: 90%;
 }
 
 .nav-button img {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .event-input {
-  border-color: rgb(18, 18, 18) rgb(133, 133, 133) rgb(133, 133, 133) rgb(18, 18, 18);
-  border-width: 2px;
-  height: 36px;
+    border-color: rgb(18, 18, 18) rgb(133, 133, 133) rgb(133, 133, 133) rgb(18, 18, 18);
+    border-width: 2px;
+    height: 36px;
 }
 
 .calendar-input {
-  border-color: rgb(18, 18, 18) rgb(133, 133, 133) rgb(133, 133, 133) rgb(133, 133, 133);
-  border-width: 2px;
-  height: 36px;
+    border-color: rgb(18, 18, 18) rgb(133, 133, 133) rgb(133, 133, 133) rgb(133, 133, 133);
+    border-width: 2px;
+    height: 36px;
 }
 
 .create-event-form {
-  display: block;
-  margin-top: 5px;
+    display: block;
+    margin-top: 5px;
 }
 
 .create-event-table {
-  background: rgb(233, 236, 239);
+    background: rgb(233, 236, 239);
 }
 
 .table {
-  margin: 0;
+    margin: 0;
 }
 
 .checkbox {
-  transform: scale(1.5);
+    transform: scale(1.5);
 }
 
 .table-naming {
-  font-size: large;
-  font-weight: bold;
-  padding-bottom: 5px;
-  background-color: rgba(15, 105, 197, 0.37);
-  border-radius: 5px;
+    font-size: large;
+    font-weight: bold;
+    padding-bottom: 5px;
+    background-color: rgba(15, 105, 197, 0.37);
+    border-radius: 5px;
+}
+
+.arrow-icon {
+    transition: all 0.3s ease-out;
+}
+.arrow-icon-after {
+    transform: rotate(180deg);
+}
+
+.expert-reg {
+    background-color: #f5f5f5;
 }

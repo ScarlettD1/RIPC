@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth.models import User
 
 
 class Subject(models.Model):
@@ -31,26 +32,55 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def create(cls, name, region):
+        org = cls(name=name, region=region)
+        org.save()
+        return org
+
+
+class ExpertStatus(models.Model):
+    status = models.CharField(max_length=50, default='Работает')
+
 
 class Expert(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    surname = models.CharField(max_length=30)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    mail = models.CharField(max_length=50)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     referee = models.BooleanField()
+    status = models.ForeignKey(ExpertStatus, on_delete=models.CASCADE)
+
+    @classmethod
+    def create(cls, data):
+
+        user = User.objects.create_user(data['username'], data['email'], data['password'])
+        user.last_name = data['last_name']
+        user.first_name = data['first_name']
+        user.save()
+
+        org = Organization.objects.get(pk=data['organization'])
+        subject = Subject.objects.get(pk=data['subject'])
+
+        expert = cls(surname=data['surname'], user=user, referee=data['referee'], org=org, subject=subject)
+        expert.save()
+        return expert
 
 
 class Admin(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    surname = models.CharField(max_length=30)
 
 
 class RegionRep(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    surname = models.CharField(max_length=30)
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
 
 
 class OrganizationRep(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    surname = models.CharField(max_length=30)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
 

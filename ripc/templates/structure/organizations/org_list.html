@@ -1,23 +1,26 @@
 {% extends "base_menu_generic.html" %}
 {% load static %}
+{% block title %}Организации{% endblock %}
 
 {% block main_content %}
     <div class="container mt-3 pb-1">
         <h3 class="display-6 my-4 fw-normal">Организации</h3>
         <div class="row align-items-start table-naming">
             <div class="col-1">№</div>
-            <div class="col-4">Название организации</div>
-            <div class="col-3">Кол-во участников</div>
+            <div class="col-3">Название организации</div>
+            <div class="col-2">Регион</div>
+            <div class="col-2">Кол-во участников</div>
             <div class="col-3">Активные мероприятия</div>
         </div>
         {% if orgs.count > 0 %}
             <div class="rounded-3">
                 {% for org in orgs %}
-                    <div class="row align-items-start py-2">
+                    <div class="row align-items-start bg-light py-2">
                         <div class="col-1">{{ org.id }}</div>
-                        <div class="col-4"><a href="/personnel/organization/{{ org.id }}">{{ org.name }}</a></div>
-                        <div class="col-3">232</div>
-                        <div class="col-3">33</div>
+                        <div class="col-3"><a href="/organizations/{{ org.id }}">{{ org.name }}</a></div>
+                        <div class="col-2"><a href="/regions/{{ org.region.id }}">{{ org.region.name }}</a></div>
+                        <div class="col-2">232</div>
+                        <div class="col-2">33</div>
                     </div>
                 {% endfor %}
             </div>
@@ -25,9 +28,44 @@
             <p class="mt-2">Нет доступных организаций</p>
         {% endif %}
         <div class="flex-row d-flex justify-content-end w-90">
-            <a href="/personnel/organization/reg">
-                <button class="btn btn-primary rounded-pill px-3 my-3" type="button">Добавить организацию</button>
-            </a>
+            <button class="btn btn-primary rounded-pill px-3 my-4" type="button" data-bs-toggle="modal"
+                    data-bs-target="#OrgCreateModal">Добавить организацию
+            </button>
         </div>
     </div>
+    <div class="modal fade" id="OrgCreateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'org_reg' %}" method="post" class="need-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить организацию</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-12 my-3">
+                            <label class="col-form-label" for="{{ form.name.id_for_label }}">Название
+                                организации</label>
+                            {{ form.name }}
+                            {{ form.name.errors }}
+                        </div>
+
+                        <div class="col-12 my-3">
+                            <label class="col-form-label" for="{{ form.region.id_for_label }}">Регион
+                                организации</label>
+                            {{ form.region }}
+                            {{ form.region.errors }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/organization.js' %}"></script>
 {% endblock %}

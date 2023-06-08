@@ -17,9 +17,10 @@
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
-      {% block content %}{% endblock %}
+{% block content %}{% endblock %}
 <footer>
 </footer>
+<script src="{% static 'js/script.js' %}"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>
-{% block scripts %}{% endblock %}
