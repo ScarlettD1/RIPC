@@ -9,7 +9,7 @@ from docx.shared import Inches, Pt, Cm
 from rest_framework.parsers import JSONParser
 
 from ripc.logic.required import some_resp_required
-from ripc.models import Complect, OrganizationRep, OrganizationEvent
+from ripc.models import Complect, OrganizationRep, OrganizationEvent, ScannedPage
 from ripc.serializers import ComplectSerializer, OrganizationEventSerializer
 
 from docx import Document
@@ -43,7 +43,7 @@ def complects_download(request, event_id=0):
         font = style.font
         font.name = 'Times New Roman'
         font.size = Pt(12)
-        count_rows = math.ceil(len(complects_data) / 2) - 2
+        count_rows = math.ceil(len(complects_data) / 2)
         table = document.add_table(rows=count_rows, cols=4)
         table.style = 'Table Grid'
         table.autofit = False
@@ -81,6 +81,16 @@ def complects_download(request, event_id=0):
             zip.writestr(f'{compect["id"]}.pdf', compect["file_path"])
         zip.close()
         zip_io.name = f'Комплекты {event_id}.zip'
+
+        # Установка статуса "Скачены", если нет отсканированных
+        old_org_event = OrganizationEvent.objects.filter(event=event_id, organization=organization_id)[0]
+        if not ScannedPage.objects.filter(organization_event=old_org_event.id):
+            status_data = {"event_status": 3, "percent_status": "0", "event": event_id, "organization": organization_id}
+            org_event_serializer = OrganizationEventSerializer(old_org_event, data=status_data)
+            if not org_event_serializer.is_valid():
+                print(org_event_serializer.errors)
+                return JsonResponse("ERROR VALID STATUS", status=400, safe=False)
+            org_event_serializer.save()
 
         return HttpResponse(zip_io.getvalue(), content_type="application/x-zip-compressed", headers={
             'Content-Disposition': f'attachment;filename=Комплекты {event_id}.zip'
@@ -125,5 +135,15 @@ def complects_generate(request, event_id=0):
             print(complects_serializer.errors)
             return JsonResponse("ERROR VALID", status=400, safe=False)
         complects_serializer.save()
+
+        # Установка статуса "Сформированы"
+        old_org_event = OrganizationEvent.objects.filter(event=event_id, organization=organization_id)[0]
+        status_data = {"event_status": 2, "percent_status": "0", "event": event_id, "organization": organization_id}
+        org_event_serializer = OrganizationEventSerializer(old_org_event, data=status_data)
+        if not org_event_serializer.is_valid():
+            print(org_event_serializer.errors)
+            return JsonResponse("ERROR VALID STATUS", status=400, safe=False)
+        org_event_serializer.save()
+
         return JsonResponse("OK", status=200, safe=False)
     return JsonResponse("ERROR", status=400, safe=False)

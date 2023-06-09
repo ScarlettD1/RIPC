@@ -98,6 +98,36 @@ def file_from_scanner(request):
         if not scanned_page_serializer.is_valid():
             return JsonResponse("ERROR VALID", status=400, safe=False)
         scanned_page_serializer.save()
+
+        # Расчёт процента выполнения
+        # Общее кол-во страниц основных комплектов
+        total_pages = 0
+        complects = Complect.objects.filter(organization_event=event_organization.id, is_additional=False)
+        for complect in complects:
+            total_pages += Variant.objects.get(id=complect.variant).page_count
+
+        # Кол-во распознаных отсканированных страниц
+        total_pages_scanned = 0
+        scanned_pages = ScannedPage.objects.filter(organization_event=event_organization.id)
+        for page in scanned_pages:
+            if page.complect and page.page_number:
+                total_pages_scanned += 1
+
+        percent_status = (total_pages_scanned / total_pages) * 100
+        if percent_status == 100:
+            # Установка статуса "Скан. Завершено"
+            status_data = {"event_status": 5, "percent_status": "100", "event": event, "organization": organization}
+        else:
+            per_split = str(percent_status).split('.')
+            percent_status = f"{per_split[0]}" if per_split[1] else f"{per_split[0]}.{per_split[1][0]}"
+            status_data = {"event_status": 4, "percent_status": percent_status, "event": event, "organization": organization}
+
+        org_event_serializer = OrganizationEventSerializer(event_organization, data=status_data)
+        if not org_event_serializer.is_valid():
+            print(org_event_serializer.errors)
+            return JsonResponse("ERROR VALID STATUS", status=400, safe=False)
+        org_event_serializer.save()
+
         return JsonResponse("OK", status=200, safe=False)
 
     return JsonResponse("ERROR", status=400, safe=False)
@@ -144,27 +174,87 @@ def scanned_api(request, id=0):
     if request.method == "PUT":
         request_data = JSONParser().parse(request)
         scanned_page = ScannedPage.objects.get(id=id)
+        event_organization = OrganizationEvent.objects.filter(event=request_data['event'], organization=request_data['organization'])[0]
 
         data = {}
         # Поиск информации из номера бланка (Сёма)
-        data['id'] = scanned_page.id
-        data['event'] = scanned_page.event.id
-        data['organization'] = scanned_page.organization.id
-        data['complect'] = 1 # Заменить на распознанное
+        data['organization_event'] = event_organization.id
+        data['complect'] = request_data['number_blank'][0] # Заменить на распознанное
         data['file_path'] = scanned_page.file_path
-        data['page_number'] = 3 # Заменить на распознанное
+        data['page_number'] = request_data['number_blank'][1] # Заменить на распознанное
 
         scanned_page_serializer = ScannedPageSerializer(scanned_page, data=data)
         if not scanned_page_serializer.is_valid():
+            print(scanned_page_serializer.errors)
             return JsonResponse("ERROR VALID", status=400, safe=False)
         scanned_page_serializer.save()
+
+
+        # Расчёт процента выполнения
+        # Общее кол-во страниц
+        total_pages = 0
+        complects = Complect.objects.filter(organization_event=event_organization.id)
+        for complect in complects:
+            total_pages += int(Variant.objects.get(id=complect.variant.id).page_count)
+
+        # Кол-во распознаных отсканированных страниц
+        total_pages_scanned = 0
+        scanned_pages = ScannedPage.objects.filter(organization_event=event_organization.id)
+        for page in scanned_pages:
+            if page.complect and page.page_number:
+                total_pages_scanned += 1
+
+        percent_status = (total_pages_scanned / total_pages) * 100
+        if percent_status == 100:
+            # Установка статуса "Скан. Завершено"
+            status_data = {"event_status": 5, "percent_status": "100", "event": request_data['event'],
+                           "organization": request_data['organization']}
+        else:
+            per_split = str(percent_status).split('.')
+            percent_status = f"{per_split[0]}" if per_split[1] else f"{per_split[0]}.{per_split[1][0]}"
+            status_data = {"event_status": 4, "percent_status": percent_status, "event": request_data['event'],
+                           "organization": request_data['organization']}
+
+        org_event_serializer = OrganizationEventSerializer(event_organization, data=status_data)
+        if not org_event_serializer.is_valid():
+            print(org_event_serializer.errors)
+            return JsonResponse("ERROR VALID STATUS", status=400, safe=False)
+        org_event_serializer.save()
+
         return JsonResponse("OK", status=200, safe=False)
 
     elif request.method == "DELETE":
-        page = ScannedPage.objects.get(id=id)
-        file_path = page.file_path
-        page.delete()
+        this_page = ScannedPage.objects.get(id=id)
+        event_organization = OrganizationEvent.objects.get(id=this_page.organization_event.id)
+        file_path = this_page.file_path
+        this_page.delete()
         os.remove(file_path)
+
+        # Расчёт процента выполнения
+        # Общее кол-во страниц
+        total_pages = 0
+        complects = Complect.objects.filter(organization_event=event_organization.id)
+        for complect in complects:
+            total_pages += int(Variant.objects.get(id=complect.variant.id).page_count)
+
+        # Кол-во распознаных отсканированных страниц
+        total_pages_scanned = 0
+        scanned_pages = ScannedPage.objects.filter(organization_event=event_organization.id)
+        for page in scanned_pages:
+            if page.complect and page.page_number:
+                total_pages_scanned += 1
+
+        percent_status = (total_pages_scanned / total_pages) * 100
+        per_split = str(percent_status).split('.')
+        percent_status = f"{per_split[0]}" if per_split[1] else f"{per_split[0]}.{per_split[1][0]}"
+        status_data = {"event_status": 4, "percent_status": percent_status, "event": event_organization.event.id,
+                       "organization": event_organization.organization.id}
+        org_event_serializer = OrganizationEventSerializer(event_organization, data=status_data)
+        if not org_event_serializer.is_valid():
+            print(org_event_serializer.errors)
+            return JsonResponse("ERROR VALID STATUS", status=400, safe=False)
+        org_event_serializer.save()
+
         return JsonResponse("OK", status=200, safe=False)
 
     return JsonResponse("ERROR", status=400, safe=False)

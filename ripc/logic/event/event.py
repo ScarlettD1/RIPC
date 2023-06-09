@@ -229,9 +229,8 @@ def event_api(request, id=0):
                 orgs_count = len(orgs_event_data)
                 total_percent = 0
                 for org in orgs_event_data:
-                    # Расчёт общего процента со статусом сканирования
-                    if org['event_status'] == 2:
-                        total_percent += int(org['percent_status'])
+                    # Расчёт общего процента
+                    total_percent += int(org['percent_status'])
                 if orgs_count:
                     total_percent = int(total_percent / orgs_count)
 
@@ -243,6 +242,7 @@ def event_api(request, id=0):
                     'orgs_count': orgs_count,
                     'total_percent': total_percent
                 })
+                print(total_percent)
             return JsonResponse(context, status=200, safe=False)
 
         return JsonResponse("ERROR", status=400, safe=False)

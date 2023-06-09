@@ -110,7 +110,7 @@ class OrganizationEvent(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
-    percent_status = models.TextField(max_length=3, null=True)
+    percent_status = models.TextField(max_length=4, null=True)
     number_participants = models.TextField(max_length=5, null=True)
 
 
