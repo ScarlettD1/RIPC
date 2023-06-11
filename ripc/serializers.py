@@ -25,7 +25,7 @@ class VariantSerializer(serializers.ModelSerializer):
 class VariantCroppingSerializer(serializers.ModelSerializer):
     class Meta:
         model = VariantCropping
-        fields = ['id', 'variant', 'answer_coord']
+        fields = ['id', 'variant', 'task_num', 'answer_coord']
 
 
 class PatternTaskSerializer(serializers.ModelSerializer):
@@ -37,7 +37,7 @@ class PatternTaskSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id', 'variant', 'pattern', 'variant_cropping', 'criteria_cropping']
+        fields = ['id', 'variant', 'pattern', 'variant_cropping', 'criteria_cropping', 'task_num']
 
 
 class RegionSerializer(serializers.ModelSerializer):
@@ -87,7 +87,7 @@ class CriteriaSerializer(serializers.ModelSerializer):
 class CriteriaCroppingSerializer(serializers.ModelSerializer):
     class Meta:
         model = CriteriaCropping
-        fields = ['id', 'criteria', 'file_path']
+        fields = ['id', 'criteria', 'task_num', 'file_path']
 
 
 @register.filter()

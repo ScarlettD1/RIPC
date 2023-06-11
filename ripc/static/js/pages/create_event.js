@@ -4,6 +4,7 @@ let eventID = 0
 let variantID = []
 let patternID = []
 let croppingID = []
+let criteriaID = []
 let fileinputOptions = {
     theme: "fa5",
     language: "ru",
@@ -465,15 +466,30 @@ $("#matching-criteria-form").submit(function (e) {
         success: function (jqXHR) {
             // Если успешно - отправить на новый шаг
             console.log("Критерии отправлены!");
-            patternID = jqXHR
+            criteriaID = jqXHR
             $('.page-block .matching-criteria .head .btn').click();
             $('.page-block .matching-criteria #matching-criteria-form-form .btn').remove();
             $('.page-block .matching-criteria #matching-criteria-form').find('input').attr('readonly', true);
 
-            // Перейти на страницу добавления организаций
-            setTimeout(function(){
-                window.location.href = `${baseURL}/event_organization/${eventID}`;
-            }, 1000);
+            // Создание заданий
+            $.ajax({
+                type: "GET",
+                url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
+                success: function (jqXHR) {
+                // Если успешно - отправить на новый шаг
+                    console.log("Задания созданы!");
+
+                    // Перейти на страницу добавления организаций
+                    setTimeout(function(){
+                        window.location.href = `${baseURL}/event_organization/${eventID}`;
+                    }, 1000);
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, jqXHR.responseText);
+                    alert("Ошибка при создании заданий!")
+                }
+            });
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
