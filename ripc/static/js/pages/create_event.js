@@ -4,9 +4,197 @@ let eventID = 0
 let variantID = []
 let patternID = []
 let croppingID = []
+let fileinputOptions = {
+    theme: "fa5",
+    language: "ru",
+    uploadUrl: '/',
+    uploadAsync: false,
+    allowedFileExtensions: ["pdf"],
+    removeFromPreviewOnError: true,
+    browseClass: "btn btn-info",
+    mainClass: "d-grid w-75",
+    autoUpload: false,
+    showClose: false,
+    showUpload: false,
+    enableResumableUpload: true,
+    preferIconicPreview: true,
+    initialPreview: [],
+    initialPreviewConfig: [],
+    previewFileIconSettings: {
+        'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+    },
+    fileActionSettings: {
+        showZoom: true,
+        indicatorNew: ''
+    }
+}
 
 $(document).ready(function(){
+    // Функция для календаря
+    $('#inputCalendar .input-daterange').datepicker({
+        format: "dd.mm.yyyy",
+        language: "ru",
+        orientation: "bottom right",
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    getStartData().then(function () {
+        // Функция для файлов
+        $("#inputEventFiles").fileinput(fileinputOptions);
+        if (variantID) {
+            $('.file-actions .file-footer-buttons .kv-file-remove').remove();
+            $('.file-actions .file-footer-buttons .kv-file-zoom').prop('disabled', false);
+        }
+    });
 });
+
+
+async function getStartData() {
+    let event = Number($("#startData #event_id").text())
+    if (!event){
+        return
+    }
+    $("#startData").remove()
+
+    eventID = event
+    let completed = true;
+
+    await $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/event/?id=${eventID}`,
+        dataType: 'JSON',
+        success: function (response) {
+            console.log("Основные настройки получены!")
+            $("#main-settings-form #inputEventName").val(response["name"])
+            $("#main-settings-form #inputEventStartDate").val(response["start_date"])
+            $("#main-settings-form #inputEventEndDate").val(response["end_date"])
+
+            $('#inputCalendar .input-daterange').datepicker({}).on('show', function (e) {
+                $('.day').click(function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при получении основных настроек!")
+            completed = false
+            return
+        }
+    });
+    if (!completed) return;
+    await $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/variant/?event_id=${eventID}`,
+        dataType: 'JSON',
+        success: function (response) {
+            console.log("Варианты получены!")
+            fileinputOptions["initialPreviewAsData"] = false
+            for (let i = 0; i < response.length; i++) {
+                variantID.push(response[i]["id"])
+                fileinputOptions['initialPreview'].push(`<iframe class="kv-preview-data" src="${baseURL}/api/variant/file/${response[i]['id']}"></iframe>`)
+                fileinputOptions['initialPreviewConfig'].push({
+                    type: "pdf",
+                    caption: response[i]['file_path'].split('&&')[response[i]['file_path'].split('&&').length-1],
+                    key: i+1,
+                    previewAsData: false,
+                })
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log("Ошибка при получении вариантов!");
+            completed = false
+            return
+        }
+    });
+    if (!completed) return;
+    console.log("ok: Этап 1!");
+    $('.page-block .main-settings .head .btn').click();
+    $('.page-block .main-settings #main-settings-form .btn').remove();
+    $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
+
+    completed = await $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/subject`,
+        dataType: 'JSON',
+        success: function (response) {
+            console.log("Предметные области получены!")
+            // Заполнение полученными данными
+            for (let i=0; i<response.length; i++){
+                subjects[response[i].id] = response[i].name
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при получении предметных областей!")
+            completed = false
+            return
+        }
+    });
+    if (!completed) return;
+    $('.page-block .templates-settings').show()
+
+    await $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/pattern_task/?event_id=${eventID}`,
+        dataType: 'JSON',
+        success: function (response) {
+            if (!response.length) {
+                console.log("Настройки шаблонов вариантов не получены!")
+                $('.page-block .templates-settings').trigger("show")
+                 completed = false
+                return
+            }
+            console.log("Настройки шаблонов вариантов получены!")
+            let table_rows = $("#templates-settings-form table tbody")
+            table_rows.children().remove()
+
+            for (let i = 0; i < response.length; i++) {
+                patternID.push(response[i]["id"])
+                // Заполнение предметных областей
+                let options = ''
+                for (let id in subjects){
+                    if (id === response[i]["subject"]) {
+                        options += `<option selected value=${id}>${subjects[id]}</option>`
+                    }
+                    else {
+                        options += `<option value=${id}>${subjects[id]}</option>`
+                    }
+
+                }
+                // Добавление поля
+                table_rows.append(`
+                    <tr id=task-${response[i]["task_num"]}>
+                        <td><input class="checkbox w-100" type="checkbox"></td>
+                        <td style="width: 50px;"><input name="task_num" class="w-100" type="number" readonly="readonly" required value=${response[i]["task_num"]}></td>
+                        <td>
+                            <select name="subject" class="w-100" id="inputEventSubject" required>
+                                <option disabled>Предметная область</option>
+                                ${options}
+                            </select>
+                        </td>
+                        <td><input name="max_score" class="w-100" id="inputEventMaxScore" type="number" min="0" required value="${response[i]["max_score"]}"></td>
+                        <td><input name="check_times" class="w-100" id="inputCheckTime" type="number" min="1" required value="${response[i]["check_times"]}"></td>
+                    </tr>
+                `)
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log("Ошибка при получении настроек шаблонов вариантов!")
+            completed = false
+            return
+        }
+    });
+    if (!completed) return;
+    console.log("ok: Этап 2!");
+    $('.page-block .templates-settings .head .btn').click();
+    $('.page-block .templates-settings #templates-settings-form .btn').remove();
+    $('.page-block .templates-settings #templates-settings-form').find('input').attr('readonly', true);
+    $('.page-block .templates-settings #templates-settings-form').find('select').attr('disabled', true);
+    $('.page-block .matching-criteria').show().trigger('show');
+}
 
 
 // Отслеживание нажатий на скрытие/показ
@@ -24,40 +212,6 @@ $('.page-block .head .btn').click(function(){
         $(this).find('i').attr("class", "fas fa-chevron-right")
     }
 
-});
-
-
-// Функция для календаря
-$('#inputCalendar .input-daterange').datepicker({
-    format: "dd.mm.yyyy",
-    language: "ru",
-    orientation: "bottom right",
-    autoclose: true,
-    todayHighlight: true
-});
-
-
-// Функция для файлов
-$("#inputEventFiles").fileinput({
-    theme: "fa5",
-    language: "ru",
-    uploadUrl: '/',
-    allowedFileExtensions: ["pdf"],
-    removeFromPreviewOnError: true,
-    browseClass: "btn btn-info",
-    mainClass: "d-grid w-75",
-    showClose: false,
-    showUpload: false,
-    enableResumableUpload: true,
-    initialPreviewAsData: true,
-    preferIconicPreview: true,
-    previewFileIconSettings: {
-        'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
-    },
-    fileActionSettings: {
-        showZoom: true,
-        indicatorNew: ''
-    }
 });
 
 
@@ -94,9 +248,10 @@ $("#main-settings-form").submit(function (e) {
     })
 
     // Получаем файлы с формы
-    $.each($(this).find('#inputEventFiles')[0].files, function (key, value) {
-        filesData.append(value.name, value);
-	})
+    let files = $("#inputEventFiles").fileinput("getFileStack");
+    for (let name in files) {
+        filesData.append(files[name]["name"], files[name]["file"]);
+    }
 
     // Запрос на создание МП
     $.ajax({
@@ -120,14 +275,25 @@ $("#main-settings-form").submit(function (e) {
                 success: function (response) {
                     variantID = response;
                     console.log("ok: Основные настройки отправлены!");
-                    $('.page-block .main-settings .head .btn').click();
+                    // $('.page-block .main-settings .head .btn').click();
                     $('.page-block .main-settings #main-settings-form .btn').remove();
-                    $('.page-block .templates-settings').show().trigger('show');
+                    // $('.page-block .templates-settings').show().trigger('show');
                     $('.page-block .main-settings #main-settings-form').find('input').attr('readonly', true);
+                    $('#inputCalendar .input-daterange').datepicker({
+                        }).on('show', function(e){
+                            $('.day').click(function(event) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                        });
+                    });
+                    $('.file-actions .file-footer-buttons .kv-file-remove').remove();
+                    $('.file-actions .file-footer-buttons .kv-file-zoom').prop('disabled', false);
 
                     // Запуск обрезки заданий (Сёма)
                     startCropping()
-
+                    setTimeout(function(){
+                        window.location.href = `${baseURL}/event_organization/${eventID}`;
+                    }, 1000);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, jqXHR.responseText);

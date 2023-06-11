@@ -9,7 +9,7 @@ from rest_framework.parsers import JSONParser
 
 from ripc.logic.check_who_auth import region_rep_authenticated
 from ripc.logic.required import some_resp_required, region_resp_required
-from ripc.models import OrganizationEvent, Event, EventStatus, Organization
+from ripc.models import OrganizationEvent, Event, EventStatus, Organization, Variant, PatternTask, Criteria
 from ripc.serializers import OrganizationEventSerializer, EventSerializer
 
 
@@ -31,6 +31,16 @@ def view_event_organization(request, event_id):
     if not event:
         return JsonResponse("Event not found!", status=404, many=False)
     context['event'] = event
+
+    variants = Variant.objects.filter(event=event.id)
+    patterns = PatternTask.objects.filter(event=event.id)
+    criteria = []
+    for variant in variants:
+        criteria.append(Criteria.objects.filter(variant=variant.id))
+
+    if not variants or not patterns or len(criteria) != len(variants):
+        context = {"event_id": event.id}
+        return render(request, 'main_pages/create_event.html', context)
 
     return render(request, 'main_pages/event_organization.html', context)
 

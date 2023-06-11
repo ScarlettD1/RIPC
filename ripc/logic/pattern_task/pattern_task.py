@@ -18,9 +18,15 @@ def pattern_api(request):
         ids = request.GET.get('id')
         if ids and len(ids.split(',')) > 1:
             ids = ids.split(',')
+        event_ids = request.GET.get('event_id')
+        if event_ids and len(event_ids.split(',')) > 1:
+            event_ids = event_ids.split(',')
 
         if ids:
             query['id__in'] = ids if type(ids) is list else [ids]
+
+        if event_ids:
+            query['event__in'] = event_ids if type(event_ids) is list else [event_ids]
 
         if query:
             patterns = PatternTask.objects.filter(**query)

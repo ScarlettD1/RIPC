@@ -11,6 +11,10 @@
     <script src="{% static 'js/fileinput/fileinput_ru.js' %}"></script>
 {% endblock %}
 {% block main_content %}
+    <div id="startData" style="display: none">
+        <p id="event_id">{{ event_id }}</p>
+    </div>
+
     <header>
         <h2>Создание мероприятия</h2>
         <hr>

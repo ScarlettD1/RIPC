@@ -234,15 +234,26 @@ def event_api(request, id=0):
                 if orgs_count:
                     total_percent = int(total_percent / orgs_count)
 
+                # Проверка заполненности всех данных
+                not_create = False
+                variants = Variant.objects.filter(event=event['id'])
+                patterns = PatternTask.objects.filter(event=event['id'])
+                criteria = []
+                for variant in variants:
+                    criteria.append(Criteria.objects.filter(variant=variant.id))
+
+                if not variants or not patterns or len(criteria) != len(variants):
+                    not_create = True
+
                 context['events'].append({
                     'id': event['id'],
                     'name': event['name'],
                     'start_date': str(datetime.strptime(event['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
                     'end_date': str(datetime.strptime(event['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
                     'orgs_count': orgs_count,
-                    'total_percent': total_percent
+                    'total_percent': total_percent,
+                    'not_create': not_create
                 })
-                print(total_percent)
             return JsonResponse(context, status=200, safe=False)
 
         return JsonResponse("ERROR", status=400, safe=False)
