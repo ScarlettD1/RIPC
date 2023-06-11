@@ -14,13 +14,38 @@
         <div class="main-content px-3">
             <table class="table-admin-view table table-bordered table-hover">
                 <thead>
-                    <tr class="table-secondary text-center">
+                    <tr class="table-secondary">
                         <th scope="col"></th>
-                        <th class="text-start" scope="col">Название</th>
-                        <th scope="col">Дата начала</th>
-                        <th scope="col">Дата окончания</th>
-                        <th scope="col">Кол-во организаций</th>
-                        <th scope="col">%Выполнения</th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-between" style="height: 1.5rem">
+                                <p>Название</p>
+                                <button id='sort-name' class="bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-evenly" style="height: 1.5rem">
+                                <p>Дата начала</p>
+                                <button id='sort-start_date' class="bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-evenly" style="height: 1.5rem">
+                                <p>Дата окончания</p>
+                                <button id='sort-end_date' class="bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-evenly" style="height: 1.5rem">
+                                <p>Кол-во организаций</p>
+                                <button id='sort-orgs_count' class="bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-evenly" style="height: 1.5rem">
+                                <p>%Выполнения</p>
+                                <button id='sort-total_percent' class="bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

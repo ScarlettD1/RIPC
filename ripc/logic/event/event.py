@@ -197,7 +197,10 @@ def event_api(request, id=0):
             context['total_page'] = 1
 
             page_number = request.GET.get("page")
-
+            order_by = request.GET.get("order_by", "start_date")
+            standard_order_by = True
+            if order_by not in ['name', 'start_date', 'end_date', '-name', '-start_date', '-end_date']:
+                standard_order_by = False
             # Поиск ID региона
             region_id = 0
             if request.user.is_superuser:
@@ -209,8 +212,12 @@ def event_api(request, id=0):
             # Поиск МП по region_id
             events_serializer_data = None
             if region_id:
-                events = Event.objects.filter(region=region_id).order_by("start_date")
-                if page_number:
+                if standard_order_by:
+                    events = Event.objects.filter(region=region_id).order_by(order_by)
+                else:
+                    events = Event.objects.filter(region=region_id)
+
+                if page_number and standard_order_by:
                     events_paginator = Paginator(events, 15)
                     context['total_page'] = events_paginator.num_pages
                     page_obj = events_paginator.get_page(page_number)
@@ -254,6 +261,15 @@ def event_api(request, id=0):
                     'total_percent': total_percent,
                     'not_create': not_create
                 })
+
+            if not standard_order_by:
+                reverse = False
+                if order_by[0] == '-':
+                    reverse = True
+                    order_by = order_by[1:]
+                context['events'] = sorted(context['events'], reverse=reverse, key=lambda x: x[order_by])
+                context['events'] = context['events'][15*(int(page_number)-1):15*int(page_number)]
+
             return JsonResponse(context, status=200, safe=False)
 
         return JsonResponse("ERROR", status=400, safe=False)

@@ -1,17 +1,19 @@
 let baseURL = `${document.location.protocol}//${document.location.host}`
 let page = 1
 let lastPage = 1
+let sortBy = 'start_date'
 
 $(document).ready(function(){
     getEventsInfo();
     setInterval(getEventsInfo, 30000);
+    $('.table-admin-view thead button').bind('click', SortData)
 });
 
 // Получить стартовые данные
 function getEventsInfo() {
     $.ajax({
         type: "GET",
-        url: `${baseURL}/api/event/?page=${page}`,
+        url: `${baseURL}/api/event/?page=${page}&order_by=${sortBy}`,
         dataType: 'JSON',
         success: function (response) {
             console.log("Мероприятия получены!")
@@ -54,6 +56,14 @@ function getEventsInfo() {
             console.log(textStatus, jqXHR.responseText);
         }
     });
+}
+
+function SortData() {
+    if ($(this).attr('id').split('-')[1] === sortBy)
+        sortBy = '-' + sortBy
+    else
+        sortBy = $(this).attr('id').split('-')[1]
+    getEventsInfo()
 }
 
 function insertPagination(lastPage) {
