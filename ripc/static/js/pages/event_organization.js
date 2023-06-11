@@ -4,11 +4,13 @@ let organizations = {}
 let event_id = 0
 let page = 1
 let lastPage = 1
+let sortBy = 'organization'
 
 $(document).ready(function(){
     getStartData();
     getPageInfo();
     setInterval(getPageInfo, 30000);
+    $('.organizations-event-table button').bind('click', SortData)
 });
 
 // Получить стартовые данные
@@ -35,7 +37,7 @@ function getPageInfo() {
     // Информация о организациях в МП!
      $.ajax({
         type: "GET",
-        url: `${baseURL}/api/event_organization/?event=${event_id}&page=${page}`,
+        url: `${baseURL}/api/event_organization/?event=${event_id}&page=${page}&order_by=${sortBy}`,
         dataType: 'JSON',
         success: function (response) {
             console.log("Информация о организациях в МП получена!")
@@ -84,6 +86,14 @@ function getPageInfo() {
             console.log(textStatus, jqXHR.responseText);
         }
     });
+}
+
+function SortData() {
+    if ($(this).attr('id').split('-')[1] === sortBy)
+        sortBy = '-' + sortBy
+    else
+        sortBy = $(this).attr('id').split('-')[1]
+    getPageInfo()
 }
 
 // Открыть окно добавление организации

@@ -240,7 +240,7 @@ body.login_page {
   margin-top: 5px;
 }
 
-.create-event-table, .organizations-event-table, .matching-criteria-table, .variant-table{
+.create-event-table, .organizations-event-table, .matching-criteria-table, .variant-table, .table-th-admin-view{
   background: rgb(233, 236, 239);
 }
 

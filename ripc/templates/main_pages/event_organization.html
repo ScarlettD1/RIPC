@@ -22,10 +22,30 @@
                     <thead class="organizations-event-table">
                         <tr class="text-center">
                             <th scope="col"></th>
-                            <th scope="col" class="text-start">Организация</th>
-                            <th scope="col">Кол-во участников</th>
-                            <th scope="col">Статус</th>
-                            <th scope="col">%Выполнения</th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-between" style="height: 1.5rem">
+                                    <p>Организация</p>
+                                    <button id='sort-organization' class="bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                    <p>Кол-во участников</p>
+                                    <button id='sort-number_participants' class="ms-2 bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                    <p>Статус</p>
+                                    <button id='sort-event_status' class="ms-2 bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                    <p>%Выполнения</p>
+                                    <button id='sort-percent_status' class="ms-2 bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

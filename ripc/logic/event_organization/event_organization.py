@@ -65,6 +65,7 @@ def event_organizations_api(request):
             organizations = organizations.split(',')
 
         page_number = request.GET.get('page')
+        order_by = request.GET.get("order_by", "organization")
 
         if ids:
             query['id__in'] = ids if type(ids) is list else [ids]
@@ -77,12 +78,13 @@ def event_organizations_api(request):
 
         # Если query заполнен
         if query:
-            event_organizations = OrganizationEvent.objects.filter(**query)
+            event_organizations = OrganizationEvent.objects.filter(**query).order_by(order_by)
             if page_number:
                 context = {}
                 event_organizations_paginator = Paginator(event_organizations, 15)
                 context['total_page'] = event_organizations_paginator.num_pages
                 page_obj = event_organizations_paginator.get_page(page_number)
+
                 event_organizations_serializer = OrganizationEventSerializer(page_obj, many=True)
                 event_organizations_data = __complete_data(event_organizations_serializer.data)
                 context['event_organizations'] = event_organizations_data
