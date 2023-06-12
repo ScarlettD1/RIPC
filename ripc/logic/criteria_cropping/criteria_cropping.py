@@ -44,7 +44,7 @@ def cropping_criteria_image(request, id=0):
         if id:
             cropping = CriteriaCropping.objects.get(id=id)
             cropping_serializer = CriteriaCroppingSerializer(cropping, many=False)
-            with open(cropping_serializer.data.get('task_file_path'), "rb") as f:
+            with open(cropping_serializer.data.get('file_path'), "rb") as f:
                 return HttpResponse(f.read(), content_type="image/png")
 
     return JsonResponse("ERROR", status=400, safe=False)
