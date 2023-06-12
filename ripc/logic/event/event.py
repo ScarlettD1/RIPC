@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -9,6 +10,7 @@ from rest_framework.parsers import JSONParser
 
 from ripc.logic.check_who_auth import region_rep_authenticated, org_rep_authenticated
 from ripc.logic.required import some_resp_required, region_resp_required
+from ripc.logic.smtp.smtp import Smtp
 from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant, OrganizationRep, RegionRep, \
     Organization, Region, PatternTask, Criteria
 from ripc.serializers import EventSerializer, OrganizationEventSerializer, ScannedPageSerializer, ComplectSerializer, \
@@ -293,6 +295,9 @@ def event_api(request, id=0):
     if request.method == "PUT" and region_rep_authenticated(request.user):
         event_data = JSONParser().parse(request)
         event_old = Event.objects.get(id=id)
+        event_old_name = event_old.name
+        event_old_start_date = str(datetime.strptime(str(event_old.start_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+        event_old_end_date = str(datetime.strptime(str(event_old.end_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
 
         event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%d.%m.%Y').date())
         event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%d.%m.%Y').date())
@@ -302,8 +307,34 @@ def event_api(request, id=0):
         if not events_serializer.is_valid():
             print(events_serializer.errors)
             return JsonResponse("ERROR", status=500, safe=False)
-
         events_serializer.save()
+
+        # Отправить расслыку ответсенным организаций
+        event = Event.objects.get(id=event_old.id)
+        event_start_date = str(datetime.strptime(str(event.start_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+        event_end_date = str(datetime.strptime(str(event.end_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+        event_organizations = OrganizationEvent.objects.filter(event=event.id)
+        for event_organization in event_organizations:
+            org_resps = OrganizationRep.objects.filter(organization=event_organization.organization)
+            org_resp_users_email = []
+            for org_resp in org_resps:
+                org_resp_users_email.append(User.objects.get(id=org_resp.user_id).email)
+            smtp = Smtp()
+            smtp.send_mail(
+                subject="Изменения в мероприятии",
+                to_addr=org_resp_users_email,
+                text=f"""
+                Здравствуйте,
+                Для мероприятия "{event_old_name}" изменились данные.
+
+                Название: "{event.name}"
+                Старые сроки проведения: {event_old_start_date} - {event_old_end_date}
+                Новые сроки проведения: {event_start_date} - {event_end_date}
+
+                С уважением,
+                Команда RIPC.
+                """
+            )
         return JsonResponse(events_serializer.data.get("id"), status=200, safe=False)
 
     if request.method == "DELETE" and region_rep_authenticated(request.user):

@@ -51,7 +51,6 @@ def criteria_api(request):
                 return JsonResponse("ERROR", status=400, safe=False)
             criteria_serializer.save()
             criteria_ids.append(crit_id)
-            # Обрезка критериев + запись обрезанных (либо подавать байты изображения и потом сохранять) (Сёма)
 
         return JsonResponse(criteria_ids, status=200, safe=False)
 
@@ -71,7 +70,8 @@ def criteria_api(request):
                 return JsonResponse("ERROR", status=400, safe=False)
             criteria_serializer.save()
             criteria_ids.append(criteria_serializer.data.get('id'))
-            # Обрезка критериев + запись обрезанных (либо подавать байты изображения и потом сохранять) (Сёма)
+            # Обрезка критериев + запись обрезанных (Сёма)
+            # Надо добавить обрезанные критерии в БД
 
         return JsonResponse(criteria_ids, status=200, safe=False)
 

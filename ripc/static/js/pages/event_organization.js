@@ -47,7 +47,9 @@ function getPageInfo() {
             let org_events = response['event_organizations']
             for (let i=0; i<org_events.length; i++){
                 let eventOrganization = org_events[i]
-                usageOrganization.push(Number(eventOrganization['organization']['id']));
+                if (!(usageOrganization.includes(Number(eventOrganization['organization']['id'])))) {
+                    usageOrganization.push(Number(eventOrganization['organization']['id']));
+                }
 
                 // Поиск цвета процентов статуса
                 let percent_status_color = ''
@@ -182,7 +184,7 @@ $('.page-block .organizations .organizations-event-form .btn-toolbar .btn-danger
             console.log("Организации удалены из мероприятия")
             getPageInfo();
             for (let i in ids) {
-                usageOrganization.splice(usageOrganization.indexOf(ids[i]), 1);
+                usageOrganization.splice(usageOrganization.indexOf(ids[i]));
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {

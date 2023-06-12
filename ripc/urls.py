@@ -4,6 +4,7 @@ from django.contrib.auth import views as authViews
 from . import views
 from .logic.complect import complect
 from .logic.criteria import criteria
+from .logic.criteria_cropping import criteria_cropping
 from .logic.event_organization import event_organization
 from .logic.pattern_task import pattern_task
 from .logic.region import region
@@ -48,6 +49,8 @@ urlpatterns = [
     path('api/complects/generate', complect.complects_generate, name='complects_generate'),
     path('api/criteria/', criteria.criteria_api, name='criteria_api'),
     path('api/criteria/file/<int:id>', criteria.criteria_api_file, name='criteria_api_file'),
+    path('api/cropping_criteria/start/<int:id>', criteria_cropping.start_cropping_criteria, name='start_cropping_criteria'),
+    path('api/cropping_criteria/image/<int:id>', criteria_cropping.cropping_criteria_image, name='cropping_criteria_image'),
 
     # Страницы
     path('', views.index, name='index'),

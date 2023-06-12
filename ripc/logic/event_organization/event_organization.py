@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -9,8 +10,12 @@ from rest_framework.parsers import JSONParser
 
 from ripc.logic.check_who_auth import region_rep_authenticated
 from ripc.logic.required import some_resp_required, region_resp_required
-from ripc.models import OrganizationEvent, Event, EventStatus, Organization, Variant, PatternTask, Criteria
+from ripc.logic.smtp.smtp import Smtp
+from ripc.models import OrganizationEvent, Event, EventStatus, Organization, Variant, PatternTask, Criteria, \
+    OrganizationRep
 from ripc.serializers import OrganizationEventSerializer, EventSerializer
+
+baseURL = "http://127.0.0.1:8000"
 
 
 def __complete_data(event_organizations_data):
@@ -120,6 +125,33 @@ def event_organizations_api(request):
 
             event_organization_result.append(event_organizations_serializer.data.get('id'))
 
+            # Отправить расслыку ответсенным организаций
+            event = Event.objects.get(id=data['event'])
+            event_start_date = str(datetime.strptime(str(event.start_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+            event_end_date = str(datetime.strptime(str(event.end_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
+            org_resps = OrganizationRep.objects.filter(organization=data['organization'])
+            org_resp_users_email = []
+            for org_resp in org_resps:
+                org_resp_users_email.append(User.objects.get(id=org_resp.user_id).email)
+            smtp = Smtp()
+            smtp.send_mail(
+                subject="Уведомление об участии в мероприятии",
+                to_addr=org_resp_users_email,
+                text=f"""
+                Здравствуйте,
+                Для вашей организации назначено мероприятие.
+                
+                "{event.name}"
+                Сроки проведения: {event_start_date} - {event_end_date}
+                
+                Вам требуется сгенерировать необходимое количество комплектов.
+                Ссылка: {baseURL}/event/{event.id}/
+                
+                С уважением,
+                Команда RIPC.
+                """
+            )
+
         return JsonResponse(event_organization_result, status=200, safe=False)
 
     elif request.method == "PUT":
@@ -160,5 +192,29 @@ def event_organizations_api(request):
 
         for id in ids:
             event_organizations = OrganizationEvent.objects.get(id=id)
+            event_id = event_organizations.event.id
+            organization_id = event_organizations.organization.id
             event_organizations.delete()
+
+            # Отправить расслыку ответсенным организаций
+            event = Event.objects.get(id=event_id)
+            org_resps = OrganizationRep.objects.filter(organization=organization_id)
+            org_resp_users_email = []
+            for org_resp in org_resps:
+                org_resp_users_email.append(User.objects.get(id=org_resp.user_id).email)
+            smtp = Smtp()
+            smtp.send_mail(
+                subject="Уведомление об участии в мероприятии",
+                to_addr=org_resp_users_email,
+                text=f"""
+                Здравствуйте,
+                Ваша организации была удалена из мероприятия.
+
+                "{event.name}"
+
+                С уважением,
+                Команда RIPC.
+                """
+            )
+
         return JsonResponse("OK", status=200, safe=False)

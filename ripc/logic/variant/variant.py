@@ -2,13 +2,17 @@ from time import time
 import PyPDF2
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 
 from ripc.logic.required import region_resp_required
-from ripc.models import Variant
+from ripc.logic.smtp.smtp import Smtp
+from ripc.models import Variant, Event, OrganizationRep, OrganizationEvent, Complect
 from ripc.serializers import VariantSerializer
+
+baseURL = "http://127.0.0.1:8000"
 
 
 @csrf_exempt
@@ -33,9 +37,14 @@ def variant_api_file(request, id=0):
 def variant_api(request):
     if request.method == "POST" and request.GET.get('update'):
         variant_ids = []
+        if not request.FILES:
+            return JsonResponse(variant_ids, status=200, safe=False)
+
+        event_id = 0
         for name, file in request.FILES.items():
             var_id = name.split('&&')[0]
             old_variant = Variant.objects.get(id=var_id)
+            event_id = old_variant.event_id
 
             filename = name.split('&&')[1]
             file_path = f'File_Storage/variant/{int(time())}&&{filename}'
@@ -43,7 +52,7 @@ def variant_api(request):
                 new_file.write(file.read())
             # Считываем PDF для подсчёта страниц
             reader = PyPDF2.PdfReader(file_path)
-            data = {"page_count": str(len(reader.pages)), "file_path": file_path, "event": old_variant.event_id}
+            data = {"page_count": str(len(reader.pages)), "file_path": file_path, "event": event_id}
 
             variants_serializer = VariantSerializer(old_variant, data=data)
             if not variants_serializer.is_valid():
@@ -51,6 +60,35 @@ def variant_api(request):
                 return JsonResponse("ERROR", status=400, safe=False)
             variants_serializer.save()
             variant_ids.append(var_id)
+
+        # Удаление комплектов в мероприятиях
+        event_organizations = OrganizationEvent.objects.filter(event=event_id)
+        for event_organization in event_organizations:
+            Complect.objects.filter(organization_event=event_organization.id).delete()
+
+
+        # Отправить расслыку ответсенным организаций
+        event = Event.objects.get(id=event_id)
+        for event_organization in event_organizations:
+            org_resps = OrganizationRep.objects.filter(organization=event_organization.organization.id)
+            org_resp_users_email = []
+            for org_resp in org_resps:
+                org_resp_users_email.append(User.objects.get(id=org_resp.user_id).email)
+            smtp = Smtp()
+            smtp.send_mail(
+                subject="Изменения в мероприятии",
+                to_addr=org_resp_users_email,
+                text=f"""
+                Здравствуйте,
+                Для мероприятия "{event.name}" изменились варинаты.
+    
+                Вам требуется перегенерировать необходимое количество комплектов.
+                Ссылка: {baseURL}/event/{event.id}/
+    
+                С уважением,
+                Команда RIPC.
+                """
+            )
         return JsonResponse(variant_ids, status=200, safe=False)
 
     if request.method == "POST":

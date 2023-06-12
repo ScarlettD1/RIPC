@@ -8,16 +8,72 @@ $(document).ready(function(){
 
 
 // Функция запуска обрезки заданий
-async function startCropping(variantID) {
+async function startCroppingVar(variantID) {
     for (let i in variantID) {
         let v_id = variantID[i]
         $.ajax({
             type: "GET",
-            url: `${baseURL}/api/cropping_variant/start/${v_id}/?update=true`,
+            url: `${baseURL}/api/cropping_variant/start/${v_id}?update=true`,
             success: function (response) {
                 console.log(`Обрезка заданий для варианта [${v_id}] завершена!`)
-                for (let res_i in response)
-                    croppingID.push([v_id , response[res_i]])
+
+                // Создание заданий
+                $.ajax({
+                    type: "GET",
+                    url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
+                    success: function (jqXHR) {
+                    // Если успешно - отправить на новый шаг
+                        console.log("Задания созданы!");
+
+                        // Обновление страницы
+                        setTimeout(function(){
+                            window.location = window.location.href;
+                        }, 1000);
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, jqXHR.responseText);
+                        alert("Ошибка при создании заданий!")
+                    }
+                });
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
+                alert(`Ошибка при обрезки заданий для варианта [${v_id}]!`)
+            }
+        });
+    }
+}
+
+// Функция запуска обрезки критериев
+async function startCroppingCrit(criteriaID) {
+    for (let i in criteriaID) {
+        let c_id = criteriaID[i]
+        $.ajax({
+            type: "GET",
+            url: `${baseURL}/api/cropping_criteria/start/${c_id}?update=true`,
+            success: function (response) {
+                console.log(`Обрезка критериев [${c_id}] завершена!`)
+
+                // Создание заданий
+                $.ajax({
+                    type: "GET",
+                    url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
+                    success: function (jqXHR) {
+                    // Если успешно - отправить на новый шаг
+                        console.log("Задания созданы!");
+
+                        // Обновление страницы
+                        setTimeout(function(){
+                            window.location = window.location.href;
+                        }, 1000);
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, jqXHR.responseText);
+                        alert("Ошибка при создании заданий!")
+                    }
+                });
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
@@ -96,6 +152,7 @@ $("#main-settings-form").submit(function (e) {
         success: function (response) {
             console.log("Основные настройкм мероприятия обновлены!");
             let filesData = new FormData();
+            let hasFiles = false;
 
             // Получаем данные для обновления файлов
             let table_child = $('#main-settings-form table tbody').children()
@@ -104,13 +161,15 @@ $("#main-settings-form").submit(function (e) {
                 let file = $(table_child[i]).find("input[name='new_variant_file']")[0].files[0]
                 if (file) {
                     filesData.append(`${var_id}&&${file.name}`, file)
+                    hasFiles = true
                 }
             }
-            if (!filesData) {
+            if (!hasFiles) {
                 // Обновление страницы
                 setTimeout(function(){
                     window.location = window.location.href;
                 }, 1000);
+                return
             }
             // Запрос на обновление файлов варианта
             $.ajax({
@@ -125,12 +184,7 @@ $("#main-settings-form").submit(function (e) {
                     let variantID = response;
                     console.log("Файлы для обновления вариантов отправлены!");
                     // Запуск обрезки заданий (Сёма)
-                    startCropping(variantID)
-
-                    // Обновление страницы
-                    setTimeout(function(){
-                        window.location = window.location.href;
-                    }, 1000);
+                    startCroppingVar(variantID)
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -200,14 +254,11 @@ $("#matching-criteria-form").submit(function (e) {
         contentType: false,
         cache: false,
         data: data,
-        success: function (jqXHR) {
-            console.log("Критерии обновлены!");
-            patternID = jqXHR
-
-            // Обновление страницы
-            setTimeout(function(){
-                window.location = window.location.href;
-            }, 1000);
+        success: function (response) {
+            let criteriaID = response;
+            console.log("Файлы для обновления критериев отправлены!");
+            // Запуск обрезки критериев (Сёма)
+            startCroppingCrit(criteriaID)
 
         },
         error: function(jqXHR, textStatus, errorThrown) {

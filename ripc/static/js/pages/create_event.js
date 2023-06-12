@@ -3,8 +3,9 @@ let baseURL = `${document.location.protocol}//${document.location.host}`
 let eventID = 0
 let variantID = []
 let patternID = []
-let croppingID = []
+let croppingVarID = []
 let criteriaID = []
+let croppingCritID = []
 let fileinputOptions = {
     theme: "fa5",
     language: "ru",
@@ -217,7 +218,7 @@ $('.page-block .head .btn').click(function(){
 
 
 // Функция запуска обрезки заданий
-async function startCropping() {
+async function startCroppingVar() {
     for (let i in variantID) {
         let v_id = variantID[i]
         $.ajax({
@@ -226,11 +227,31 @@ async function startCropping() {
             success: function (response) {
                 console.log(`Обрезка заданий для варианта [${v_id}] завершена!`)
                 for (let res_i in response)
-                    croppingID.push([v_id , response[res_i]])
+                    croppingVarID.push([v_id , response[res_i]])
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
                 alert(`Ошибка при обрезки заданий для варианта [${v_id}]!`)
+            }
+        });
+    }
+}
+
+// Функция запуска обрезки критериев
+async function startCroppingCrit() {
+    for (let i in criteriaID) {
+        let c_id = criteriaID[i]
+        $.ajax({
+            type: "GET",
+            url: `${baseURL}/api/cropping_criteria/start/${c_id}`,
+            success: function (response) {
+                console.log(`Обрезка критериев [${c_id}] завершена!`)
+                for (let res_i in response)
+                    croppingCritID.push([c_id , response[res_i]])
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(`ERROR: Ошибка при обрезки критериев [${c_id}]!`)
+                alert(`Ошибка при обрезки критериев [${c_id}]!`)
             }
         });
     }
@@ -291,7 +312,7 @@ $("#main-settings-form").submit(function (e) {
                     $('.file-actions .file-footer-buttons .kv-file-zoom').prop('disabled', false);
 
                     // Запуск обрезки заданий (Сёма)
-                    startCropping()
+                    startCroppingVar()
                     setTimeout(function(){
                         window.location.href = `${baseURL}/event_organization/${eventID}`;
                     }, 1000);
@@ -471,26 +492,28 @@ $("#matching-criteria-form").submit(function (e) {
             $('.page-block .matching-criteria #matching-criteria-form-form .btn').remove();
             $('.page-block .matching-criteria #matching-criteria-form').find('input').attr('readonly', true);
 
-            // Создание заданий
-            $.ajax({
-                type: "GET",
-                url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
-                success: function (jqXHR) {
-                // Если успешно - отправить на новый шаг
-                    console.log("Задания созданы!");
+            // Запуск обрезки критериев
+            startCroppingCrit().then( function () {
+                // Создание заданий
+                $.ajax({
+                    type: "GET",
+                    url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
+                    success: function (jqXHR) {
+                    // Если успешно - отправить на новый шаг
+                        console.log("Задания созданы!");
 
-                    // Перейти на страницу добавления организаций
-                    setTimeout(function(){
-                        window.location.href = `${baseURL}/event_organization/${eventID}`;
-                    }, 1000);
+                        // Перейти на страницу добавления организаций
+                        setTimeout(function(){
+                            window.location.href = `${baseURL}/event_organization/${eventID}`;
+                        }, 1000);
 
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, jqXHR.responseText);
-                    alert("Ошибка при создании заданий!")
-                }
-            });
-
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, jqXHR.responseText);
+                        alert("Ошибка при создании заданий!")
+                    }
+                });
+            })
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);
