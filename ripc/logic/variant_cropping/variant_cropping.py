@@ -20,7 +20,7 @@ def start_cropping_variant(request, id=0):
                       {"variant": id, "answer_coord": [0, 0, 1, 1], "task_num": 3}]
 
             # Удаление старых данных
-            if request.GET["update"]:
+            if request.GET.get("update"):
                 VariantCropping.objects.filter(variant=id).delete()
 
             # Сохранение результата

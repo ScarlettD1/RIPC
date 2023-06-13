@@ -296,8 +296,6 @@ def event_api(request, id=0):
         event_data = JSONParser().parse(request)
         event_old = Event.objects.get(id=id)
         event_old_name = event_old.name
-        event_old_start_date = str(datetime.strptime(str(event_old.start_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
-        event_old_end_date = str(datetime.strptime(str(event_old.end_date), '%Y-%m-%d').date().strftime("%d.%m.%Y"))
 
         event_data['start_date'] = str(datetime.strptime(event_data['start_date'], '%d.%m.%Y').date())
         event_data['end_date'] = str(datetime.strptime(event_data['end_date'], '%d.%m.%Y').date())
@@ -328,8 +326,7 @@ def event_api(request, id=0):
                 Для мероприятия "{event_old_name}" изменились данные.
 
                 Название: "{event.name}"
-                Старые сроки проведения: {event_old_start_date} - {event_old_end_date}
-                Новые сроки проведения: {event_start_date} - {event_end_date}
+                Сроки проведения: {event_start_date} - {event_end_date}
 
                 С уважением,
                 Команда RIPC.

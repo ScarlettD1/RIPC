@@ -227,31 +227,42 @@ $('#modal-view-number-participants form').submit(function (e) {
              havePages = true
              $('.block-page').hide();
              $('#modal-view-number-participants').hide();
+             // Запуск генерации комплектов (Сёма)
+            data = {
+                "event": event_id,
+                "organization": organization_id,
+                "count_main": number_participants,
+                "count_additional": number_additional
+            }
+            $("#modal-view-cropping #text").text("Процесс генерации комплектов")
+            $(".block-page").show()
+            $("#modal-view-cropping").show()
+            $.ajax({
+                type: "POST",
+                url: `${baseURL}/api/complects/generate`,
+                data: JSON.stringify(data),
+                dataType: "JSON",
+                success: function (jqXHR) {
+                    console.log("Комплекты сформированны!")
+                    updatePageData()
+                    $("#modal-view-cropping").hide()
+                    $(".block-page").hide()
+                    $("#modal-view-cropping #text").text("")
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(`ERROR: Ошибка при генерации комплектов!`)
+                    alert(`Ошибка при генерации комплектов!`)
+                    $("#modal-view-cropping").hide()
+                    $(".block-page").hide()
+                    $("#modal-view-cropping #text").text("")
+                }
+            });
          },
          error: function (jqXHR, textStatus, errorThrown) {
              console.log(textStatus, jqXHR.responseText);
          }
      });
-    // Запуск генерации комплектов (Сёма)
 
-    data = {
-        "event": event_id,
-        "organization": organization_id,
-        "count_main": number_participants,
-        "count_additional": number_additional
-    }
-    $.ajax({
-         type: "POST",
-         url: `${baseURL}/api/complects/generate`,
-         data: JSON.stringify(data),
-         dataType: "JSON",
-         success: function (jqXHR) {
-             console.log("Комплекты сформированны!")
-         },
-         error: function (jqXHR, textStatus, errorThrown) {
-             console.log(textStatus, jqXHR.responseText);
-         }
-     });
 })
 
 // Отслеживание нажатий на скрытие/показ

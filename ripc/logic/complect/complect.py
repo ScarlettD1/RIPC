@@ -78,7 +78,7 @@ def complects_download(request, event_id=0):
 
         # Сохранение комплектов
         for compect in complects_data:
-            zip.writestr(f'{compect["id"]}.pdf', compect["file_path"])
+            zip.write(compect["file_path"], f'{compect["id"]}.pdf')
         zip.close()
         zip_io.name = f'Комплекты {event_id}.zip'
 

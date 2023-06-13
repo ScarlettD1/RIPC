@@ -217,28 +217,53 @@ $('.page-block .head .btn').click(function(){
 });
 
 
-// Функция запуска обрезки заданий
+// Функция запуска обрезки вариантов
 async function startCroppingVar() {
+    $("#modal-view-cropping #text").text("Процесс обрезки вариантов")
+    $(".block-page").show()
+    $("#modal-view-cropping").show()
+    let resultCheck = Array(variantID.length).fill(false);
     for (let i in variantID) {
         let v_id = variantID[i]
         $.ajax({
             type: "GET",
             url: `${baseURL}/api/cropping_variant/start/${v_id}`,
             success: function (response) {
-                console.log(`Обрезка заданий для варианта [${v_id}] завершена!`)
+                console.log(`Обрезка варианта [${v_id}] завершена!`)
                 for (let res_i in response)
                     croppingVarID.push([v_id , response[res_i]])
+                resultCheck[i] = true
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
-                alert(`Ошибка при обрезки заданий для варианта [${v_id}]!`)
+                console.log(`ERROR: Ошибка при обрезки варианта [${v_id}]!`)
+                alert(`Ошибка при обрезки варианта [${v_id}]!`)
+                $("#modal-view-cropping").hide()
+                $(".block-page").hide()
+                $("#modal-view-cropping #text").text("")
+                return
             }
         });
     }
+    let intervalId = setInterval(function () {
+        if (resultCheck.every(element => element === true)) {
+            clearInterval(intervalId)
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+            $("#modal-view-cropping #text").text("")
+            setTimeout(function(){
+                window.location.href = `${baseURL}/event_organization/${eventID}`;
+            }, 1000);
+        }
+    }, 200);
+
 }
 
-// Функция запуска обрезки критериев
+// Функция запуска обрезки критериев с запуском создания заданий
 async function startCroppingCrit() {
+    $("#modal-view-cropping #text").text("Процесс обрезки критериев")
+    $(".block-page").show()
+    $("#modal-view-cropping").show()
+    let resultCheck = Array(criteriaID.length).fill(false);
     for (let i in criteriaID) {
         let c_id = criteriaID[i]
         $.ajax({
@@ -248,13 +273,58 @@ async function startCroppingCrit() {
                 console.log(`Обрезка критериев [${c_id}] завершена!`)
                 for (let res_i in response)
                     croppingCritID.push([c_id , response[res_i]])
+                resultCheck[i] = true
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(`ERROR: Ошибка при обрезки критериев [${c_id}]!`)
                 alert(`Ошибка при обрезки критериев [${c_id}]!`)
+                $("#modal-view-cropping").hide()
+                $(".block-page").hide()
+                $("#modal-view-cropping #text").text("")
+                return
             }
         });
     }
+    let intervalId = setInterval(function () {
+        if (resultCheck.every(element => element === true)) {
+            clearInterval(intervalId)
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+            $("#modal-view-cropping #text").text("")
+            createTasks()
+        }
+    }, 200);
+}
+
+
+// Создание заданий
+async function createTasks() {
+    $("#modal-view-cropping #text").text("Процесс создания заданий")
+    $(".block-page").show()
+    $("#modal-view-cropping").show()
+    $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
+        success: function (jqXHR) {
+        // Если успешно - отправить на новый шаг
+            console.log("Задания созданы!");
+            $("#modal-view-cropping #text").text("")
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+            // Перейти на страницу добавления организаций
+            setTimeout(function(){
+                window.location.href = `${baseURL}/event_organization/${eventID}`;
+            }, 1000);
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при создании заданий!")
+            $("#modal-view-cropping #text").text("")
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+        }
+    });
 }
 
 
@@ -313,9 +383,6 @@ $("#main-settings-form").submit(function (e) {
 
                     // Запуск обрезки заданий (Сёма)
                     startCroppingVar()
-                    setTimeout(function(){
-                        window.location.href = `${baseURL}/event_organization/${eventID}`;
-                    }, 1000);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, jqXHR.responseText);
@@ -492,28 +559,8 @@ $("#matching-criteria-form").submit(function (e) {
             $('.page-block .matching-criteria #matching-criteria-form-form .btn').remove();
             $('.page-block .matching-criteria #matching-criteria-form').find('input').attr('readonly', true);
 
-            // Запуск обрезки критериев
-            startCroppingCrit().then( function () {
-                // Создание заданий
-                $.ajax({
-                    type: "GET",
-                    url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
-                    success: function (jqXHR) {
-                    // Если успешно - отправить на новый шаг
-                        console.log("Задания созданы!");
-
-                        // Перейти на страницу добавления организаций
-                        setTimeout(function(){
-                            window.location.href = `${baseURL}/event_organization/${eventID}`;
-                        }, 1000);
-
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus, jqXHR.responseText);
-                        alert("Ошибка при создании заданий!")
-                    }
-                });
-            })
+            // Запуск обрезки критериев и создание заданий
+            startCroppingCrit()
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, jqXHR.responseText);

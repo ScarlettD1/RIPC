@@ -124,6 +124,18 @@
             </div>
         </div>
     </main>
+
+        <!-- Модальное окно -->
+    <div class="block-page" style="display: none;">
+        <div id="modal-view-cropping" class="modal-view-cropping p-3" style="display: none;">
+            <div class="d-flex align-items-center">
+                <h6 id="text"></h6>
+                <span class="spinner-border text-primary spinner-border-sm ms-3" role="status"></span>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'js/pages/create_event.js' %}"></script>

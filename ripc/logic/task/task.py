@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from ripc.logic.required import region_resp_required
-from ripc.models import Variant, Criteria, CriteriaCropping, VariantCropping
+from ripc.models import Variant, Criteria, CriteriaCropping, VariantCropping, PatternTask
 from ripc.serializers import TaskSerializer
 
 @csrf_exempt
@@ -16,7 +16,7 @@ def task_api(request):
         datas = []
         task_ids = []
 
-        pattern_tasks = Variant.objects.filter(event=event_id)
+        pattern_tasks = PatternTask.objects.filter(event=event_id)
         variants = Variant.objects.filter(event=event_id)
         for variant in variants:
             criteria = Criteria.objects.filter(variant=variant.id).first()

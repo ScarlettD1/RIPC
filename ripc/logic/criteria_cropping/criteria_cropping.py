@@ -23,8 +23,8 @@ def start_cropping_criteria(request, id=0):
                       {"criteria": id, "file_path": f"File_Storage\criteria\\{int(time())}&&{id}_3.png", "task_num": 3}]
 
             # Удаление старых данных
-            if request.GET["update"]:
-                CriteriaCropping.objects.filter(variant=id).delete()
+            if request.GET.get("update"):
+                CriteriaCropping.objects.filter(criteria=id).delete()
 
             # Сохранение результата
             for data in result:

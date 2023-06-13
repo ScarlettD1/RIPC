@@ -7,8 +7,49 @@ $(document).ready(function(){
 });
 
 
+// Создание заданий
+async function createTasks() {
+    $("#modal-view-cropping #text").text("Процесс создания заданий")
+    $(".block-page").show()
+    $("#modal-view-cropping").show()
+    $.ajax({
+        type: "GET",
+        url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
+        success: function (jqXHR) {
+        // Если успешно - отправить на новый шаг
+            console.log("Задания созданы!");
+            $("#modal-view-cropping #text").text("")
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+
+            // Обновление страницы
+            setTimeout(function(){
+                window.location = window.location.href;
+            }, 1000);
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, jqXHR.responseText);
+            alert("Ошибка при создании заданий!")
+            $("#modal-view-cropping #text").text("")
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+
+            // Обновление страницы
+            setTimeout(function(){
+                window.location = window.location.href;
+            }, 1000);
+        }
+    });
+}
+
+
 // Функция запуска обрезки заданий
 async function startCroppingVar(variantID) {
+    $("#modal-view-cropping #text").text("Процесс обрезки вариантов")
+    $(".block-page").show()
+    $("#modal-view-cropping").show()
+    let resultCheck = Array(variantID.length).fill(false);
     for (let i in variantID) {
         let v_id = variantID[i]
         $.ajax({
@@ -16,37 +57,39 @@ async function startCroppingVar(variantID) {
             url: `${baseURL}/api/cropping_variant/start/${v_id}?update=true`,
             success: function (response) {
                 console.log(`Обрезка заданий для варианта [${v_id}] завершена!`)
+                resultCheck[i] = true
 
-                // Создание заданий
-                $.ajax({
-                    type: "GET",
-                    url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
-                    success: function (jqXHR) {
-                    // Если успешно - отправить на новый шаг
-                        console.log("Задания созданы!");
-
-                        // Обновление страницы
-                        setTimeout(function(){
-                            window.location = window.location.href;
-                        }, 1000);
-
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus, jqXHR.responseText);
-                        alert("Ошибка при создании заданий!")
-                    }
-                });
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
                 alert(`Ошибка при обрезки заданий для варианта [${v_id}]!`)
+                $("#modal-view-cropping").hide()
+                $(".block-page").hide()
+                $("#modal-view-cropping #text").text("")
+                return
             }
         });
     }
+
+    let intervalId = setInterval(function () {
+        if (resultCheck.every(element => element === true)) {
+            clearInterval(intervalId)
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+            $("#modal-view-cropping #text").text("")
+
+            // Создание заданий
+            createTasks()
+        }
+    }, 200);
 }
 
 // Функция запуска обрезки критериев
 async function startCroppingCrit(criteriaID) {
+    $("#modal-view-cropping #text").text("Процесс обрезки критериев")
+    $(".block-page").show()
+    $("#modal-view-cropping").show()
+    let resultCheck = Array(criteriaID.length).fill(false);
     for (let i in criteriaID) {
         let c_id = criteriaID[i]
         $.ajax({
@@ -54,33 +97,29 @@ async function startCroppingCrit(criteriaID) {
             url: `${baseURL}/api/cropping_criteria/start/${c_id}?update=true`,
             success: function (response) {
                 console.log(`Обрезка критериев [${c_id}] завершена!`)
-
-                // Создание заданий
-                $.ajax({
-                    type: "GET",
-                    url: `${baseURL}/api/task?end_step=true&event=${eventID}`,
-                    success: function (jqXHR) {
-                    // Если успешно - отправить на новый шаг
-                        console.log("Задания созданы!");
-
-                        // Обновление страницы
-                        setTimeout(function(){
-                            window.location = window.location.href;
-                        }, 1000);
-
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus, jqXHR.responseText);
-                        alert("Ошибка при создании заданий!")
-                    }
-                });
+                resultCheck[i] = true
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(`ERROR: Ошибка при обрезки заданий для варианта [${v_id}]!`)
                 alert(`Ошибка при обрезки заданий для варианта [${v_id}]!`)
+                $("#modal-view-cropping").hide()
+                $(".block-page").hide()
+                $("#modal-view-cropping #text").text("")
+                return
             }
         });
     }
+    let intervalId = setInterval(function () {
+        if (resultCheck.every(element => element === true)) {
+            clearInterval(intervalId)
+            $("#modal-view-cropping").hide()
+            $(".block-page").hide()
+            $("#modal-view-cropping #text").text("")
+
+            // Создание заданий
+            createTasks()
+        }
+    }, 200);
 }
 
 

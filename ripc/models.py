@@ -92,8 +92,8 @@ class CriteriaCropping(models.Model):
 class Task(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     pattern = models.ForeignKey(PatternTask, on_delete=models.CASCADE)
-    variant_cropping = models.OneToOneField(VariantCropping, on_delete=models.CASCADE)
-    criteria_cropping = models.OneToOneField(CriteriaCropping, on_delete=models.CASCADE)
+    variant_cropping = models.ForeignKey(VariantCropping, on_delete=models.CASCADE)
+    criteria_cropping = models.ForeignKey(CriteriaCropping, on_delete=models.CASCADE)
     task_num = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
 
 

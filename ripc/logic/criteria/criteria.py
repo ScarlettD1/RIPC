@@ -67,6 +67,7 @@ def criteria_api(request):
         for data in datas:
             criteria_serializer = CriteriaSerializer(data=data)
             if not criteria_serializer.is_valid():
+                print(criteria_serializer.errors)
                 return JsonResponse("ERROR", status=400, safe=False)
             criteria_serializer.save()
             criteria_ids.append(criteria_serializer.data.get('id'))
