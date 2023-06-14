@@ -203,16 +203,37 @@ def event_api(request, id=0):
             standard_order_by = True
             if order_by not in ['name', 'start_date', 'end_date', '-name', '-start_date', '-end_date']:
                 standard_order_by = False
-            # Поиск ID региона
+
+            # Поиск через какой параметр искать
             region_id = 0
+            organization_id = 0
             if request.user.is_superuser:
                 region_id = 1
+            elif org_rep_authenticated(request.user):
+                organization_id = 1
             elif region_rep_authenticated(request.user):
-                # Получаем по ID региона
                 region_id = RegionRep.objects.filter(user=request.user.id)[0].region_id
 
-            # Поиск МП по region_id
             events_serializer_data = None
+
+            # Поиск МП по organization id
+            if organization_id:
+                org_events = OrganizationEvent.objects.filter(organization=organization_id)
+                if standard_order_by:
+                    events = Event.objects.filter(id__in=[org_event.event_id for org_event in org_events]).order_by(order_by)
+                else:
+                    events = Event.objects.filter(id__in=[org_event.event_id for org_event in org_events])
+                if page_number and standard_order_by:
+                    events_paginator = Paginator(events, 15)
+                    context['total_page'] = events_paginator.num_pages
+                    page_obj = events_paginator.get_page(page_number)
+                    events_serializer_data = EventSerializer(page_obj, many=True).data
+                else:
+                    events_serializer_data = EventSerializer(events, many=True).data
+
+
+
+            # Поиск МП по region_id
             if region_id:
                 if standard_order_by:
                     events = Event.objects.filter(region=region_id).order_by(order_by)
@@ -230,40 +251,55 @@ def event_api(request, id=0):
             if not events_serializer_data:
                 return JsonResponse(context, status=200, safe=False)
 
-            # Расчёт информации для МП
-            for event in events_serializer_data:
-                orgs_event = OrganizationEvent.objects.filter(event=event['id'])
-                orgs_event_data = OrganizationEventSerializer(orgs_event, many=True).data
+            # Расчёт информации для МП в регионах
+            if region_id:
+                for event in events_serializer_data:
+                    orgs_event = OrganizationEvent.objects.filter(event=event['id'])
+                    orgs_event_data = OrganizationEventSerializer(orgs_event, many=True).data
 
-                orgs_count = len(orgs_event_data)
-                total_percent = 0
-                for org in orgs_event_data:
-                    # Расчёт общего процента
-                    total_percent += int(org['percent_status'])
-                if orgs_count:
-                    total_percent = int(total_percent / orgs_count)
+                    orgs_count = len(orgs_event_data)
+                    total_percent = 0
+                    for org in orgs_event_data:
+                        # Расчёт общего процента
+                        total_percent += int(org['percent_status'])
+                    if orgs_count:
+                        total_percent = int(total_percent / orgs_count)
 
-                # Проверка заполненности всех данных
-                not_create = False
-                variants = Variant.objects.filter(event=event['id'])
-                patterns = PatternTask.objects.filter(event=event['id'])
-                criteria = []
-                for variant in variants:
-                    criteria.append(Criteria.objects.filter(variant=variant.id))
+                    # Проверка заполненности всех данных
+                    not_create = False
+                    variants = Variant.objects.filter(event=event['id'])
+                    patterns = PatternTask.objects.filter(event=event['id'])
+                    criteria = []
+                    for variant in variants:
+                        criteria.append(Criteria.objects.filter(variant=variant.id))
 
-                if not variants or not patterns or len(criteria) != len(variants):
-                    not_create = True
+                    if not variants or not patterns or len(criteria) != len(variants):
+                        not_create = True
 
-                context['events'].append({
-                    'id': event['id'],
-                    'name': event['name'],
-                    'start_date': str(datetime.strptime(event['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
-                    'end_date': str(datetime.strptime(event['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
-                    'orgs_count': orgs_count,
-                    'total_percent': total_percent,
-                    'not_create': not_create
-                })
+                    context['events'].append({
+                        'id': event['id'],
+                        'name': event['name'],
+                        'start_date': str(datetime.strptime(event['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
+                        'end_date': str(datetime.strptime(event['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
+                        'orgs_count': orgs_count,
+                        'total_percent': total_percent,
+                        'not_create': not_create
+                    })
 
+            # Расчёт информации для МП по организации
+            if organization_id:
+                for event in events_serializer_data:
+                    org_event = OrganizationEvent.objects.filter(organization=organization_id, event=event['id']).first()
+
+                    context['events'].append({
+                        'id': event['id'],
+                        'name': event['name'],
+                        'start_date': str(datetime.strptime(event['start_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
+                        'end_date': str(datetime.strptime(event['end_date'], '%Y-%m-%d').date().strftime("%d.%m.%Y")),
+                        'total_percent': org_event.percent_status
+                    })
+
+            # Кастомная сортировка
             if not standard_order_by:
                 reverse = False
                 if order_by[0] == '-':

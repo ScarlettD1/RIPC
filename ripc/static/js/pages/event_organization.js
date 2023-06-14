@@ -132,7 +132,7 @@ $("#modal-add-organization form").submit(function (e) {
         "event": event_id,
         "event_status": '1',
         "organization": org_id,
-        "percent_status": '100',
+        "percent_status": '0',
         "number_participants": '0'
     }
      $.ajax({

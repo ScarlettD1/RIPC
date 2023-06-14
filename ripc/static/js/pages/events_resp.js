@@ -36,7 +36,7 @@ function getEventsInfo() {
                 eventsTable += `
                     <tr id="${events[i]['id']}">
                         <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>
-                        <th style="width: 50%"><a href="/event_organization/${events[i]['id']}" class=${aLinkStyle}>${events[i]['name']}</a></th>
+                        <th style="width: auto"><a href="/event_organization/${events[i]['id']}" class=${aLinkStyle}>${events[i]['name']}</a></th>
                         <td>${events[i]['start_date']}</td>
                         <td>${events[i]['end_date']}</td>
                         <td>${events[i]['orgs_count']}</td>
