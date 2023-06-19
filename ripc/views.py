@@ -3,10 +3,19 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DeleteView, DetailView, CreateView
 from django.urls import reverse_lazy
-
 from .logic.autorization import *
 from .models import *
 from .forms import RegisterUserForm
+
+
+def is_not_expert(user):
+    return True
+    # return user.role !== expert
+
+
+def is_admin(user):
+    return True
+    # return user.role !== expert
 
 
 @login_required(login_url='/accounts/login/')
@@ -22,10 +31,25 @@ def detail(request, question_id):
     return render(request, '', {'name': expert_name})
 
 
+@user_passes_test(is_admin)
 @login_required(login_url='/accounts/login/')
 def create_event(request):
     context = {}
     return render(request, 'main_pages/create_event.html', context)
+
+
+@user_passes_test(is_not_expert)
+@login_required(login_url='/accounts/login/')
+def view_event(request, event_id):
+    context = {}
+    return render(request, 'main_pages/view_event.html', context)
+
+
+@user_passes_test(is_admin)
+@login_required(login_url='/accounts/login')
+def events_resp(request):
+    contex = {}
+    return render(request, 'main_pages/events_resp.html', contex)
 
 
 @user_passes_test(is_admin)
@@ -47,6 +71,10 @@ class RegisterUserView(CreateView):
 
 
 def users(request):
+    return None
+
+
+def user_detail(request):
     return None
 
 

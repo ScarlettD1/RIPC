@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -48,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'Diploma.urls'
@@ -125,3 +129,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Allow CORS
+# ALLOWED_HOSTS = ['*']
+# CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8000',
+#     'http://127.0.0.1:8000',
+# ]
+#
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^(https|http)://localhost",
+]

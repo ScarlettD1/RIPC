@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
@@ -88,27 +88,49 @@ class Event(models.Model):
     name = models.CharField(max_length=300)
     start_date = models.DateField()
     end_date = models.DateField()
-    check_times = models.IntegerField()
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 
 class Variant(models.Model):
-    file_link = models.TextField()
-    page_len = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    page_count = models.CharField(max_length=2)
+    file_path = models.TextField(null=True)
+
+
+class VariantCropping(models.Model):
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
+    task_num = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    answer_coord = ArrayField(models.IntegerField())
 
 
 class PatternTask(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    task_num = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     max_score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    check_times = models.IntegerField()
+
+
+class Criteria(models.Model):
+    variant = models.OneToOneField(Variant, on_delete=models.CASCADE)
+    file_path = models.TextField(null=True)
+
+
+class CriteriaCropping(models.Model):
+    criteria = models.ForeignKey(Criteria, on_delete=models.CASCADE)
+    task_num = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    file_path = models.TextField(null=True)
 
 
 class Task(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     pattern = models.ForeignKey(PatternTask, on_delete=models.CASCADE)
-    answer_coord = ArrayField(ArrayField(models.IntegerField()))
-    file_link = models.TextField()
+    variant_cropping = models.ForeignKey(VariantCropping, on_delete=models.CASCADE)
+    criteria_cropping = models.ForeignKey(CriteriaCropping, on_delete=models.CASCADE)
+    task_num = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
 
 
 class TaskExpert(models.Model):
@@ -118,17 +140,30 @@ class TaskExpert(models.Model):
     check_time = models.IntegerField()
 
 
-class Complect(models.Model):
+class EventStatus(models.Model):
+    name = models.CharField(max_length=20)
+    color_hex = models.CharField(validators=[MinLengthValidator(6)], max_length=7)
+
+
+class OrganizationEvent(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
+    percent_status = models.TextField(max_length=4, null=True)
+    number_participants = models.TextField(max_length=5, null=True)
+
+
+class Complect(models.Model):
+    organization_event = models.ForeignKey(OrganizationEvent, on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    file_link = models.TextField()
+    is_additional = models.BooleanField(default=False)
+    file_path = models.TextField(null=True)
 
 
 class Answer(models.Model):
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    file_link = models.TextField()
+    file_path = models.TextField(null=True)
     mark = models.CharField(max_length=10, null=True)
 
 
@@ -143,22 +178,8 @@ class ThirdMarkExpert(models.Model):
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
 
 
-class EventStatus(models.Model):
-    name = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.name
-
-
-class OrganizationEvent(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
-    percent_status = models.CharField(max_length=3)
-
-
 class ScannedPage(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    organization_event = models.ForeignKey(OrganizationEvent, on_delete=models.CASCADE)
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE, null=True)
-    file_link = models.TextField()
+    page_number = models.CharField(max_length=2, null=True)
+    file_path = models.TextField(null=True)

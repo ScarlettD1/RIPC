@@ -111,12 +111,17 @@ body {
     max-width: 100%;
 }
 
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
 body.login_page {
-    display: flex;
-    align-items: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    background-color: #021E2B;
+  display: flex;
+  align-items: center;
+  padding-top: 0px;
+  padding-bottom: 80px;
+  background-color: #021E2B;
 }
 
 .form-signin {
@@ -143,20 +148,21 @@ body.login_page {
 }
 
 .page-content {
-    background: #eaeaea;
-    height: 100%;
-    width: 100%;
-    margin: 0;
+  background: #eaeaea;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
 }
 
 .page-block {
-    background: white;
-    box-shadow: 0 4px 4px #00000004;
-    height: auto;
-    padding-left: 0;
-    padding-right: 0;
-    margin-bottom: 2rem;
-    border-radius: 10px;
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  height: auto;
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  padding-bottom: 15px;
 }
 
 .user_name {
@@ -168,8 +174,13 @@ body.login_page {
 }
 
 .logo-img {
-    margin-top: 20px;
-    width: 80%;
+  margin-top: 20px;
+  width: 80%;
+}
+
+.menu-logo-img {
+  margin-top: 20px;
+  width: 80%;
 }
 
 .nav {
@@ -188,12 +199,32 @@ body.login_page {
     background: none;
 }
 
+.icon-button {
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 0;
+}
+
+.num-button {
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.3;
+}
+
 .nav-button {
     margin-top: 5px;
     margin-bottom: 5px;
     margin-inline: auto;
     text-decoration: none;
     width: 90%;
+}
+
+.nav-button a {
+  width: 100%;
+  display: block;
+  justify-content: center;
 }
 
 .nav-button img {
@@ -213,12 +244,19 @@ body.login_page {
 }
 
 .create-event-form {
-    display: block;
-    margin-top: 5px;
+  display: block;
+  margin-top: 5px;
+}
+.create-event-form, .organizations-event-form, .edit-event-form{
+  display: block;
+  margin-top: 5px;
 }
 
 .create-event-table {
-    background: rgb(233, 236, 239);
+  background: rgb(233, 236, 239);
+}
+.create-event-table, .organizations-event-table, .matching-criteria-table, .variant-table, .table-th-admin-view{
+  background: rgb(233, 236, 239);
 }
 
 .table {
@@ -246,4 +284,149 @@ body.login_page {
 
 .expert-reg {
     background-color: #f5f5f5;
+}
+
+.table-filed-color {
+  text-align: center;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.modal-add-organization {
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 110;
+  left: 30%;
+  top: 10%;
+  height: 200px;
+  width: 50%;
+}
+
+.modal-add-organization #inputOrganization {
+  background: #e7eaee;
+  height: 2rem;
+  border-radius: 6px;
+}
+
+.modal-add-organization .head button {
+  position: absolute ;
+  right: 15px;
+  top: 10px;
+}
+
+.block-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  background: rgba(38, 38, 38, 0.8);
+}
+
+.block-page-2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 150;
+  height: 100%;
+  width: 100%;
+  background: rgba(38, 38, 38, 0.8);
+}
+
+.modal-view-recognized, .modal-view-file {
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 110;
+  left: 30%;
+  top: 2%;
+  height: 97%;
+  width: 45%;
+}
+
+.modal-view-recognized .head button,
+.modal-view-file .head button{
+  position: absolute;
+  right: 3px;
+  top: 0;
+}
+
+.modal-view-recognized .btn-danger {
+  float: right;
+  position: relative;
+  left: 6.5rem;
+  top: -2rem;
+}
+
+.modal-view-not-recognized {
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 110;
+  left: 30%;
+  top: 2%;
+  height: 95%;
+  width: 50%;
+}
+
+.modal-view-not-recognized .head button {
+  position: absolute ;
+  right: 10px;
+  top: 5px;
+}
+
+
+.modal-view-number-participants{
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 110;
+  left: 43%;
+  top: 20%;
+  height: 16rem;
+  width: 25rem;
+}
+
+
+.modal-view-submit-del{
+  background: white;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 200;
+  left: 43%;
+  top: 20%;
+  height: 8rem;
+  width: 23rem;
+}
+
+.modal-view-submit-del .submit-btns, .modal-view-submit-del .head{
+  display: flex;
+  justify-content: center;
+}
+
+table td, table select, table input {
+  text-align: center;
+}
+
+.modal-view-cropping {
+  background: #e1e1e1;
+  box-shadow: 0 4px 4px #00000004;
+  border-radius: 8px;
+  position: fixed;
+  z-index: 110;
+  left: 45%;
+  top: 40%;
+  height: auto;
+  width: 310px;
+}
+
+.spinner-border-sm {
+  margin-top: -5px;
 }

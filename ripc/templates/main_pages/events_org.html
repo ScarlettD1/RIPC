@@ -1,0 +1,72 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+{% block main_content %}
+    <header>
+        <h2>Мероприятия</h2>
+        <h5 class="text-secondary">{{ organization_name }}</h5>
+        <hr>
+    </header>
+    <main class="page-block">
+        <div class="main-content mt-3 ms-3 me-3 pt-4">
+            <table class="table-admin-view table table-bordered table-hover">
+                <thead class="table-th-admin-view">
+                    <tr class="">
+                        <th scope="col">
+                            <div class="d-flex justify-content-between" style="height: 1.5rem">
+                                <p class="ms-2">Название</p>
+                                <button id='sort-name' class="bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                <p>Дата начала</p>
+                                <button id='sort-start_date' class="ms-2 bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                <p>Дата окончания</p>
+                                <button id='sort-end_date' class="ms-2 bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                <p>%Выполнения</p>
+                                <button id='sort-total_percent' class="ms-2 bi bi-chevron-expand"></button>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+{#                    <tr id="id">#}
+{#                        <td><input class="checkbox w-100" type="checkbox"></td>#}
+{#                        <th style="width: 50%"><a href="" class="link-primary text-start">10 класс. Русский язык</a></th>#}
+{#                        <td>01.12.2022</td>#}
+{#                        <td>25.12.2022</td>#}
+{#                        <td>#}
+{#                            <div class="badge bg-danger text-dark fs-6">10%</div>#}
+{#                        </td>#}
+{#                    </tr>#}
+                </tbody>
+            </table>
+            <nav class="pt-3" aria-label="Page navigation example">
+                <ul class="pagination mb-0">
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="#" aria-label="Previous">#}
+{#                            <span aria-hidden="true">&laquo;</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                    <li class="page-item page-num-nav"><a class="page-link" href="#">1</a></li>#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="#" aria-label="Next">#}
+{#                            <span aria-hidden="true">&raquo;</span>#}
+{#                        </a>#}
+{#                    </li>#}
+                </ul>
+            </nav>
+        </div>
+    </main>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/pages/events_org.js' %}"></script>
+{% endblock %}

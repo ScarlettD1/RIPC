@@ -1,0 +1,210 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+{% block main_content %}
+    <div id="startData" style="display: none;">
+        <p id="event_id">
+            {{ event.id }}
+        </p>
+        <p id="organization_id">
+            {{ event_organizations.organization }}
+        </p>
+        <p id="number_participants">
+            {{ event_organizations.number_participants }}
+        </p>
+    </div>
+
+    <header>
+        <div class="row">
+            <div class="col-9">
+                <h2>{{ event.name }}</h2>
+                <h5>{{ event.start_date }} - {{ event.end_date }}</h5>
+            </div>
+            <div class="col-3">
+                <h4 id="number_participants">Кол-во участников: {{ event_organizations.number_participants }}</h4>
+                <h5 id="percent_status">Завершено на: {{ event_organizations.percent_status }}%</h5>
+            </div>
+         </div>
+        <hr>
+    </header>
+    <main class="page-block">
+        <div class="d-flex mb-3">
+            <a class="" href="/scanner/download"><button class="btn btn-success mt-3 ms-3">Скачать клиент сканирования</button></a>
+            <a class="" href="ripc://scanner/{{ event.id }}/{{ event_organizations.organization }}"><button class="btn btn-primary mt-3 ms-2">Открыть клиент сканирования</button></a>
+            <a class="ms-auto px-3" href="/complects/download/{{ event.id }}?organization_id={{ event_organizations.organization }}"><button class="btn btn-warning mt-3">Скачать комплекты</button></a>
+        </div>
+
+        <div class="not-recognized mt-3 ms-2">
+            <div class="head">
+                <button class="d-inline image-button btn btn-sm btn-light">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <h5 class="align-middle d-inline">Нераспознанные бланки: </h5>
+            </div>
+            <div class="ms-4" id="not-recognized">
+{#                {% for page in error_scanned_page %}#}
+{#                    <button class="blank btn btn-danger icon-button" href="#" id="{{ page.id }}">#}
+{#                        <i class="bi bi-file-earmark-text-fill"></i>#}
+{#                    </button>#}
+{#                {% endfor %}#}
+            </div>
+        </div>
+        <div class="additional mt-2 ms-2">
+            <div class="head">
+                <button class="d-inline image-button btn btn-sm btn-light">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <h5 class="align-middle d-inline">Дополнительные комплеткты</h5>
+            </div>
+            <div class="ms-4 row row-cols-4" id="additional">
+                <div class="complect-list col" id="additional-list-1">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="additional-list-2">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-secondary icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-secondary num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="additional-list-3">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-secondary icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-secondary num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
+                </div>
+            </div>
+        </div>
+        <div class="recognized mt-2 ms-2 pb-3">
+            <div class="head">
+                <button class="d-inline image-button btn btn-sm btn-light">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <h5 class="align-middle d-inline">Основные комплекты</h5>
+            </div>
+            <input class="ms-4" type="checkbox" id="only_not_scan" name="scales">
+            <label for="only_not_scan">Только неотсканированные</label>
+            <div class="ms-4 row row-cols-4" id="recognized">
+                <div class="complect-list col" id="recognized-list-1">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="recognized-list-2">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="recognized-list-3">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+                <div class="complect-list col" id="recognized-list-4">
+{#                    <div class="complect" id="1">#}
+{#                        <button class="btn btn-success icon-button" href="#">#}
+{#                            <i class="bi bi-justify-left"></i>#}
+{#                        </button>#}
+{#                        <button class="btn btn-success num-button" href="#">#}
+{#                            1#}
+{#                        </button>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </div>
+    </main>
+
+        <!-- Модальное окно -->
+    <div class="block-page" style="display: none;">
+        <div id="modal-view-cropping" class="modal-view-cropping p-3" style="display: none;">
+            <div class="d-flex align-items-center">
+                <h6 id="text"></h6>
+                <span class="spinner-border text-primary spinner-border-sm ms-3" role="status"></span>
+            </div>
+        </div>
+
+        <div id="modal-view-recognized" class="modal-view-recognized p-3" style="display: none;">
+            <div class="head"><button class="ms-1" id="close-modal"><i class="fa-solid fa-xmark"></i></button></div>
+            <iframe id='pdf' src='' width="100%" height="100%"></iframe>
+            <button class="btn btn-danger ms-3">Удалить</button>
+        </div>
+
+        <div id="modal-view-not-recognized" class="modal-view-not-recognized p-3" style="display: none;">
+            <div class="head"><button class="ms-1" id="close-modal"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="row" style="height: 100%">
+                <iframe class="col-9" id='pdf-0' src='' width="100%" height="100%"></iframe>
+                <div class="col-3 mt-2">
+                    <h5>Описание:</h5>
+                    <p>Если вы можете распознать номер бланка и страница является читаемой, заполните номер.</p>
+                    <form>
+                        <h6>Номер бланка:</h6>
+                        <input name="number" type="number" class="form-control event-input" min="0" placeholder="00000000000000000" style="width: 100%" required value="">
+                        <button type="submit" class="btn btn-primary mt-3">Подтвердить</button>
+                    </form>
+                    <p class="mt-4">Иначе, удалите отсканированную страницу и пересканируйте её.</p>
+                    <button class="btn btn-danger">Удалить</button>
+                </div>
+            </div>
+
+        </div>
+        <div id="modal-view-number-participants" class="modal-view-number-participants p-3" style="display: none;">
+            <div class="head">
+                <h4>Настройка</h4>
+            </div>
+            <div style="height: 100%">
+                <form class="mt-2" href="#">
+                    <h6>Количество участников:</h6>
+                    <input name="number_participants" class="form-control event-input" type="number" min="1" placeholder="0" style="width: 100%" required value="">
+                    <h6 class="mt-2">Количество доп.комплектов:</h6>
+                    <input name="number_additional" class="form-control event-input" type="number" min="0" placeholder="0" style="width: 100%" required value="">
+                    <button type="submit" class="btn btn-primary mt-3">Подтвердить</button>
+                </form>
+            </div>
+        </div>
+        <div class="block-page-2" style="display: none;">
+            <div id="modal-view-submit-del" class="modal-view-submit-del p-3" style="display: none;">
+                <div class="head" id="unexpected-modal">
+                    <h5>Действительно удалить страницу?</h5>
+                </div>
+                <div style="height: 100%">
+                    <div class="submit-btns mt-3" id="del-scan-0">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                        <button type="submit" class="btn btn-primary ms-3">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/pages/view_event.js' %}"></script>
+{% endblock %}

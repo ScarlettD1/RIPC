@@ -1,0 +1,114 @@
+{% extends "base_menu_generic.html" %}
+{% load static %}
+{% block head %}
+{% endblock %}
+{% block main_content %}
+    <header>
+        <h2 class="event-name"></h2>
+        <h5 class="event-datas"></h5>
+        <button class="btn btn-primary"><a href="/edit_event/{{ event.id }}">Редактировать</a></button>
+        <hr>
+    </header>
+    <main class="page-block">
+        <div class="organizations mt-3 ms-3 me-3">
+            <div class="head">
+            </div>
+            <div id="organizations-event" class="organizations-event-form">
+                <div class="btn-toolbar justify-content-end mt-2 py-2">
+                    <button type="button" class="btn btn-primary">Добавить</button>
+                    <button type="button" class="btn btn-danger ms-2">Удалить</button>
+                </div>
+                <table class="table table-bordered">
+                    <thead class="organizations-event-table">
+                        <tr class="text-center">
+                            <th scope="col"></th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-between" style="height: 1.5rem">
+                                    <p>Организация</p>
+                                    <button id='sort-organization' class="bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                    <p>Кол-во участников</p>
+                                    <button id='sort-number_participants' class="ms-2 bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                    <p>Статус</p>
+                                    <button id='sort-event_status' class="ms-2 bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-center" style="height: 1.5rem">
+                                    <p>%Выполнения</p>
+                                    <button id='sort-percent_status' class="ms-2 bi bi-chevron-expand"></button>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+{#                        {% for event_organization in event_organizations %}#}
+{#                            <tr id={{ event_organization.id }}>#}
+{#                                <td class="table-checkbox"><input class="checkbox w-100" type="checkbox"></td>#}
+{#                                <td class="organization text-start w-50">#}
+{#                                    <a class="link-primary fw-bold" href="/event/{{ event.id }}/?organization_id={{ event_organization.organization.id }}">{{ event_organization.organization.name }}</a>#}
+{#                                </td>#}
+{#                                <td class="number_participants">{{ event_organization.number_participants }}</td>#}
+{#                                <td class="event_status">#}
+{#                                    <div class="table-filed-color" style="background-color: {{ event_organization.event_status.color_hex }}">{{ event_organization.event_status.name }}</div>#}
+{#                                </td>#}
+{#                                <td class="percent_status">#}
+{#                                    <div class="table-filed-color" style="background-color:#}
+{#                                            {% if event_organization.percent_status|to_int <= 25 %} #ff2c40#}
+{#                                            {% elif event_organization.percent_status|to_int <= 50 %} #ffaa00#}
+{#                                            {% elif event_organization.percent_status|to_int <= 75 %} #ffd700#}
+{#                                            {% elif event_organization.percent_status|to_int <= 100 %} #b7ff00#}
+{#                                            {% endif %}">#}
+{#                                    {{ event_organization.percent_status }}%#}
+{#                                    </div>#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+                    </tbody>
+                </table>
+            <nav class="pt-3" aria-label="Page navigation example">
+                <ul class="pagination mb-0">
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="#" aria-label="Previous">#}
+{#                            <span aria-hidden="true">&laquo;</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                    <li class="page-item page-num-nav"><a class="page-link" href="#">1</a></li>#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="#" aria-label="Next">#}
+{#                            <span aria-hidden="true">&raquo;</span>#}
+{#                        </a>#}
+{#                    </li>#}
+                </ul>
+            </nav>
+        </div>
+            </div>
+    </main>
+
+    <!-- Модальное окно добавления-->
+    <div class="block-page" style="display: none;">
+        <div id="modal-add-organization" class="modal-add-organization p-3" style="display: none;">
+            <div class="head">
+                <h4>Добавление организации</h4>
+                <button id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="{{ event.id }}">
+                <p>Выберите организацию:</p>
+                <select name="organization" class="w-100" id="inputOrganization" required>
+                    <option disabled>Организация</option>
+                </select>
+                <input class="btn btn-primary mt-2" type="submit" value="Продолжить"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/pages/event_organization.js' %}"></script>
+{% endblock %}
