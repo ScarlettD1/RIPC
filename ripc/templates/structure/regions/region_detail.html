@@ -5,18 +5,18 @@
 {% block main_content %}
     <div class="container mt-3 pb-1">
         <div class="my-3">
-            <h3 class="display-6 my-4 fw-normal">{{ region.name }}</h3>
+            <h3 class="display-6 my-4 fw-normal">{{ region.name }} регион</h3>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="reps my-3">
                     <h3 class="fw-bold">Представители региона:</h3>
-                    {% if reps.count == 0 %}
-                        <div class="list-group w-25 my-2">
+                    {% if reps.count > 0 %}
+                        <div class="list-group my-2">
                             {% for rep in reps %}
                                 <a href="/users/{{ rep.id }}"
                                    class="list-group-item list-group-item-action d-flex gap-3 py-3"
                                    aria-current="true">
-                                    <div class="d-flex gap-2 w-75 justify-content-between">
-                                        <h6 class="mb-0">{{ rep }}</h6>
+                                    <div class="d-flex gap-2 justify-content-between">
+                                        <h6 class="mb-0">{{ rep.user.last_name }} {{ rep.user.first_name }} {{ rep.surname }}</h6>
                                     </div>
                                 </a>
                             {% endfor %}

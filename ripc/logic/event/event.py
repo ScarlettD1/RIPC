@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -11,10 +10,8 @@ from rest_framework.parsers import JSONParser
 from ripc.logic.check_who_auth import region_rep_authenticated, org_rep_authenticated
 from ripc.logic.required import some_resp_required, region_resp_required
 from ripc.logic.smtp.smtp import Smtp
-from ripc.models import Subject, Event, OrganizationEvent, ScannedPage, Complect, Variant, OrganizationRep, RegionRep, \
-    Organization, Region, PatternTask, Criteria
-from ripc.serializers import EventSerializer, OrganizationEventSerializer, ScannedPageSerializer, ComplectSerializer, \
-    PatternTaskSerializer, VariantSerializer, CriteriaSerializer, SubjectSerializer
+from ripc.models import *
+from ripc.serializers import *
 
 
 @login_required(login_url='/accounts/login/')
@@ -122,11 +119,16 @@ def view_event(request, event_id):
 
 
 @login_required(login_url='/accounts/login/')
-@some_resp_required(login_url='/accounts/login/')
+# @some_resp_required(login_url='/accounts/login/')
 def view_events(request):
     context = {}
 
     who_auth = None
+
+    if Expert.objects.filter(user=request.user.id).exists():
+        event_list = EventExperts.objects.filter(expert=request.user.id)
+        context['events'] = event_list
+        return render(request, 'main_pages/events_expert.html', context)
 
     if request.user.is_superuser:
         who_auth = "admin"

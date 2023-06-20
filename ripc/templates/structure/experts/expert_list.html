@@ -7,22 +7,22 @@
         <h3 class="display-6 my-4 fw-normal">Эксперты</h3>
         <div class="row align-items-start table-naming">
             <div class="col-1">№</div>
-            <div class="col-2">ФИО</div>
+            <div class="col-3">ФИО</div>
             <div class="col-2">Статус</div>
             <div class="col-2">Предмет</div>
             <div class="col-2">Организация</div>
-            <div class="col-3">Активные мероприятия</div>
+            <div class="col-2">Мероприятия</div>
         </div>
-        {% if orgs.count > 0 %}
+        {% if experts.count > 0 %}
             <div class="rounded-3">
                 {% for expert in experts %}
                     <div class="row align-items-start bg-light py-2">
                         <div class="col-1">{{ expert.id }}</div>
-                        <div class="col-2">{{ expert }}</div>
-                        <div class="col-2">{{ expert.status }}</div>
-                        <div class="col-2"><a href="/organizations/{{ expert.org.id }}">{{ expert.org.name }}</a></div>
-                        <div class="col-2">33</div>
-                        <div class="col-2">{{ expert.subject }}</div>
+                        <div class="col-3">
+                            {{ expert.user.first_name }} {{ expert.user.last_name }} {{ expert.surname }}</div>
+                        <div class="col-2">{{ expert.status.status }}</div>
+                        <div class="col-2">{{ expert.subject.name }}</div>
+                        <div class="col-2"><a href="/organizations/{{ expert.organization.id }}">{{ expert.organization.name }}</a></div>
                     </div>
                 {% endfor %}
             </div>

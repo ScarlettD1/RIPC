@@ -3,6 +3,7 @@ from django.contrib.auth import views as authViews
 
 from . import views
 from .logic.complect import complect
+from .logic.mark import mark
 from .logic.criteria import criteria
 from .logic.criteria_cropping import criteria_cropping
 from .logic.event_organization import event_organization
@@ -22,6 +23,8 @@ urlpatterns = [
     path('logout/', authViews.LogoutView.as_view(next_page='/accounts/login/'), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('create_event/', views.create_event, name='create_event'),
+
+    # Административная панель
     path('experts/', expert.experts, name='experts'),
     path('experts/<int:expert_id>', expert.experts_detail, name='experts_detail'),
     path('experts/reg/', expert.experts_reg, name='experts_reg'),
@@ -33,16 +36,8 @@ urlpatterns = [
     path('organizations/reg/', organization.organizations_registration, name='org_reg'),
     path('organizations/edit/<int:org_id>', organization.organizations_edit, name='orgs_edit'),
     path('organizations/<int:org_id>', organization.organizations_detail, name='orgs_detail'),
-    path('personnel/users/', views.users, name='users'),
-    path('personnel/users/<int:id>', views.user_detail, name='user_page'),
-    path('personnel/users/registration/', views.user_reg, name='user_reg'),
-    path('personnel/regions/', region.regions, name='regions'),
-    path('personnel/regions/edit/', region.regions_edit, name='regions_edit'),
-    path('personnel/regions/<int:id>', region.regions_detail, name='regions_detail'),
-    path('personnel/regions/reg', region.regions_reg, name='regions_reg'),
-    path('personnel/organizations/', organization.organizations, name='orgs'),
-    path('personnel/organizations/reg/', organization.organizations_registration, name='org_reg'),
-    path('personnel/organizations/<int:id>', organization.organizations_detail, name='orgs_detail'),
+
+    # API
     path('api/subject/', subject.subject_api, name='subject_api'),
     path('api/event/', event.event_api, name='event_api'),
     path('api/event/<int:id>', event.event_api, name='event_api'),
@@ -62,16 +57,20 @@ urlpatterns = [
     path('api/complects/generate', complect.complects_generate, name='complects_generate'),
     path('api/criteria/', criteria.criteria_api, name='criteria_api'),
     path('api/criteria/file/<int:id>', criteria.criteria_api_file, name='criteria_api_file'),
-    path('api/cropping_criteria/start/<int:id>', criteria_cropping.start_cropping_criteria, name='start_cropping_criteria'),
-    path('api/cropping_criteria/image/<int:id>', criteria_cropping.cropping_criteria_image, name='cropping_criteria_image'),
+    path('api/cropping_criteria/start/<int:id>', criteria_cropping.start_cropping_criteria,
+         name='start_cropping_criteria'),
+    path('api/cropping_criteria/image/<int:id>', criteria_cropping.cropping_criteria_image,
+         name='cropping_criteria_image'),
 
     # Страницы
     path('', views.index, name='index'),
     path('create_event', event.create_event, name='create_event'),
     path('edit_event/<int:event_id>/', event.edit_event, name='edit_event'),
     path('event/<int:event_id>/', event.view_event, name='view_event'),
-    path('event_organization/<int:event_id>', event_organization.view_event_organization, name='view_event_organization'),
+    path('event_organization/<int:event_id>', event_organization.view_event_organization,
+         name='view_event_organization'),
     path('events', event.view_events, name='view_events'),
+    path('marking/<int:event_id>/', mark.marking, name='marking'),
 
     # Скачивание Scanner
     path('scanner/download/', scanner.scanner_download, name='scanner_download'),

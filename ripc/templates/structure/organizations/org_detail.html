@@ -10,13 +10,13 @@
                 <div class="reps my-3">
                     <h3 class="fw-bold">Представители Организации:</h3>
                     {% if reps.count > 0 %}
-                        <div class="list-group w-25 my-2">
+                        <div class="list-group my-2">
                             {% for rep in reps %}
                                 <a href="/users/{{ rep.id }}"
                                    class="list-group-item list-group-item-action d-flex gap-3 py-3"
                                    aria-current="true">
-                                    <div class="d-flex gap-2 w-75 justify-content-between">
-                                        <h6 class="mb-0">{{ rep }}</h6>
+                                    <div class="d-flex gap-2 justify-content-between">
+                                        <h6 class="mb-0">{{ rep.user.last_name }} {{ rep.user.first_name }}</h6>
                                     </div>
                                 </a>
                             {% endfor %}
@@ -36,24 +36,27 @@
         </div>
 
         <div class="row align-items-start table-naming">
-            <div class="col-1">№</div>
-            <div class="col-4">Название организации</div>
-            <div class="col-3">Кол-во участников</div>
-            <div class="col-3">Активные мероприятия</div>
+       <div class="col-1">№</div>
+            <div class="col-3">ФИО</div>
+            <div class="col-2">Статус</div>
+            <div class="col-2">Предмет</div>
+            <div class="col-2">Мероприятия</div>
         </div>
-        {% if orgs.count > 0 %}
+       {% if experts.count > 0 %}
             <div class="rounded-3">
-                {% for org in orgs %}
-                    <div class="row align-items-start py-2">
-                        <div class="col-1">{{ org.id }}</div>
-                        <div class="col-4"><a href="/organizations/{{ org.id }}">{{ org.name }}</a></div>
-                        <div class="col-3">232</div>
-                        <div class="col-3">33</div>
+                {% for expert in experts %}
+                    <div class="row align-items-start bg-light py-2">
+                        <div class="col-1">{{ expert.id }}</div>
+                        <div class="col-3">
+                            {{ expert.user.first_name }} {{ expert.user.last_name }} {{ expert.surname }}</div>
+                        <div class="col-2">{{ expert.status.status }}</div>
+                        <div class="col-2">{{ expert.subject.name }}</div>
+                        <div class="col-2">2</div>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p class="mt-2">Нет доступных организаций</p>
+            <p class="mt-2">Нет доступных экспертов</p>
         {% endif %}
     </div>
 {% endblock %}

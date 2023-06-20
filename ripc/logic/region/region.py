@@ -16,8 +16,10 @@ def regions(request):
 @login_required(login_url='/accounts/login/')
 def regions_detail(request, reg_id):
     org_list = Organization.objects.filter(region=reg_id)
+    reps_list = RegionRep.objects.filter(region=reg_id)
     region = get_object_or_404(Region, pk=reg_id)
-    return render(request, 'structure/regions/region_detail.html', {'orgs': org_list, 'region': region})
+    return render(request, 'structure/regions/region_detail.html',
+                  {'orgs': org_list, 'region': region, 'reps': reps_list})
 
 
 @login_required(login_url='/accounts/login/')

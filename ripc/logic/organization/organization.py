@@ -3,13 +3,10 @@ from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DeleteView, DetailView, CreateView
-from django.urls import reverse_lazy
 
 from .orgForm import RegisterOrgForm
 from ..required import some_resp_required
 from ...models import *
-from ..autorization import *
 from ...serializers import OrganizationSerializer
 
 
@@ -23,7 +20,10 @@ def organizations(request):
 @login_required(login_url='/accounts/login/')
 def organizations_detail(request, org_id):
     org = get_object_or_404(Organization, pk=org_id)
-    return render(request, 'structure/organizations/org_detail.html', {'org': org})
+    reps = OrganizationRep.objects.filter(organization_id=org_id)
+    expert_list = Expert.objects.filter(organization_id=org_id)
+    return render(request, 'structure/organizations/org_detail.html',
+                  {'org': org, 'experts': expert_list, 'reps': reps})
 
 
 @login_required(login_url='/accounts/login/')
@@ -64,7 +64,6 @@ def organizations_api(request):
             organizations = Organization.objects.filter(**query)
             organizations_serializer = OrganizationSerializer(organizations, many=True)
             return JsonResponse(organizations_serializer.data, status=200, safe=False)
-
 
         # Если query нет
         organizations = Organization.objects.all()

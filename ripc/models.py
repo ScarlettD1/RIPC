@@ -53,7 +53,6 @@ class Expert(models.Model):
 
     @classmethod
     def create(cls, data):
-
         user = User.objects.create_user(data['username'], data['email'], data['password'])
         user.last_name = data['last_name']
         user.first_name = data['first_name']
@@ -151,6 +150,11 @@ class OrganizationEvent(models.Model):
     event_status = models.ForeignKey(EventStatus, on_delete=models.CASCADE)
     percent_status = models.TextField(max_length=4, null=True)
     number_participants = models.TextField(max_length=5, null=True)
+
+
+class EventExperts(models.Model):
+    expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
+    event = models.ForeignKey(OrganizationEvent, on_delete=models.CASCADE)
 
 
 class Complect(models.Model):
