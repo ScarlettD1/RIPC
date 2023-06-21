@@ -6,18 +6,20 @@ from ripc.logic.required import region_resp_required
 from ripc.models import VariantCropping
 from ripc.serializers import VariantCroppingSerializer
 
+from cropping import start_cropping
+
 
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
 @region_resp_required(login_url='/accounts/login/')
 def start_cropping_variant(request, id=0):
     if request.method == "GET":
+        file_path = ''
         if id:
-            result_ids = []
-            # Старт функции обрезки
-            result = [{"variant": id, "answer_coord": [0, 0, 1, 1], "task_num": 1},
-                      {"variant": id, "answer_coord": [0, 0, 1, 1], "task_num": 2},
-                      {"variant": id, "answer_coord": [0, 0, 1, 1], "task_num": 3}]
+            result_ids = start_cropping(file_path)
+            result = []
+            for variant in result_ids:
+                result = [{"variant": id, "answer_coord": variant['answer'], "task_num": variant['task_num']}]
 
             # Удаление старых данных
             if request.GET.get("update"):

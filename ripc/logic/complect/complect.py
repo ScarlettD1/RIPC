@@ -15,6 +15,8 @@ from ripc.serializers import ComplectSerializer, OrganizationEventSerializer
 from docx import Document
 from zipfile import ZipFile
 
+from generate_identificators import start_generate
+
 
 @csrf_exempt
 @xframe_options_exempt
@@ -113,8 +115,7 @@ def complects_generate(request, event_id=0):
         count_additional = int(settings_data.get('count_additional'))
         event_organization = OrganizationEvent.objects.filter(event=event_id, organization=organization_id)[0]
 
-        # Запуск генерации комплектов (Сёма)
-        result = []
+        result = start_generate(count_main)
         for i in range(count_main):
             result.append({
                 "organization_event": event_organization.id,

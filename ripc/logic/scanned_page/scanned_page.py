@@ -1,4 +1,3 @@
-import io
 import os
 import tempfile
 from time import time
@@ -13,6 +12,8 @@ from rest_framework.parsers import JSONParser
 from ripc.logic.required import some_resp_required
 from ripc.models import Complect, Variant, ScannedPage, OrganizationEvent
 from ripc.serializers import ComplectSerializer, ScannedPageSerializer, OrganizationEventSerializer
+
+from detect_information import start_detect
 
 
 @csrf_exempt
@@ -89,10 +90,16 @@ def file_from_scanner(request):
             new_file.write(byte_file)
         data['file_path'] = file_path
 
-        # Распознование страницы + перезапись файла с поворотом (либо подавать байты изображения и потом сохранять) (Сёма)
         data['organization_event'] = event_organization.id
-        data['complect'] = 1  # Заменить на распознанное
-        data['page_number'] = 3  # Заменить на распознанное
+        detect_result = start_detect(file_path)
+        if detect_result == '':
+            data['complect'] = None
+            data['page_number'] = None
+        else:
+            complect_number = detect_result[:-2]
+            page_number = detect_result[10:]
+            data['complect'] = complect_number
+            data['page_number'] = page_number
 
         scanned_page_serializer = ScannedPageSerializer(data=data, many=False)
         if not scanned_page_serializer.is_valid():
@@ -177,11 +184,10 @@ def scanned_api(request, id=0):
         event_organization = OrganizationEvent.objects.filter(event=request_data['event'], organization=request_data['organization'])[0]
 
         data = {}
-        # Поиск информации из номера бланка (Сёма)
         data['organization_event'] = event_organization.id
-        data['complect'] = request_data['number_blank'][0] # Заменить на распознанное
+        data['complect'] = request_data['number_blank'][:-2]
         data['file_path'] = scanned_page.file_path
-        data['page_number'] = request_data['number_blank'][1] # Заменить на распознанное
+        data['page_number'] = request_data['number_blank'][10:]
 
         scanned_page_serializer = ScannedPageSerializer(scanned_page, data=data)
         if not scanned_page_serializer.is_valid():
