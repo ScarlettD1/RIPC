@@ -8,6 +8,7 @@ from ripc.models import Subject
 from ripc.serializers import SubjectSerializer
 
 
+# API получения информации по предметам и их добавления
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
 @region_resp_required(login_url='/accounts/login/')

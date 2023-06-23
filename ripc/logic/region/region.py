@@ -6,6 +6,7 @@ from .regionForm import RegisterRegionForm
 from ...models import *
 
 
+# Функция отображения списка регионов с проверкой на авторизацию
 @login_required(login_url='/accounts/login/')
 def regions(request):
     region_list = Region.objects.all()
@@ -13,6 +14,7 @@ def regions(request):
     return render(request, 'structure/regions/region_list.html', {'regions': region_list, 'form': form})
 
 
+# Функция отображения детальной страницы региона
 @login_required(login_url='/accounts/login/')
 def regions_detail(request, reg_id):
     org_list = Organization.objects.filter(region=reg_id)
@@ -22,6 +24,7 @@ def regions_detail(request, reg_id):
                   {'orgs': org_list, 'region': region, 'reps': reps_list})
 
 
+# Функция отображения формы добавления региона
 @login_required(login_url='/accounts/login/')
 def regions_reg(request):
     if request.method == "POST":
@@ -34,6 +37,8 @@ def regions_reg(request):
             return JsonResponse({'errors': form.errors}, status=400)
 
 
+# Функция отображения страницы редактирования региона
 @login_required(login_url='/accounts/login/')
-def regions_edit(request):
-    return None
+def regions_edit(request, reg_id):
+    reg = get_object_or_404(Region, pk=reg_id)
+    return render(request, 'structure/regions/region_edit.html', {'reg': reg})

@@ -125,9 +125,10 @@ def view_events(request):
 
     who_auth = None
 
-    if Expert.objects.filter(user=request.user.id).exists():
-        event_list = EventExperts.objects.filter(expert=request.user.id)
-        context['events'] = event_list
+    if Expert.objects.filter(user=request.user.id).exists(): 
+        event_expert_list = EventExperts.objects.filter(expert=request.user.id)
+        # events = OrganizationEvent.objects.filter(player__name__in=)
+        context['event_expert'] = event_expert_list
         return render(request, 'main_pages/events_expert.html', context)
 
     if request.user.is_superuser:

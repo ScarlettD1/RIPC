@@ -7,18 +7,21 @@ from ..userForm import RegisterUserForm
 from ...models import *
 
 
+# Функция отображения списка экспертов с проверкой на авторизацию
 @login_required(login_url='/accounts/login/')
 def experts(request):
     expert_list = Expert.objects.all()
     return render(request, 'structure/experts/expert_list.html', {'experts': expert_list})
 
 
+# функция отображения детальной страницы эксперта
 @login_required(login_url='/accounts/login/')
 def experts_detail(request, expert_id):
     expert = get_object_or_404(Expert, pk=expert_id)
     return render(request, 'structure/regions/region_detail.html', {'expert': expert})
 
 
+# функция отображения страницы с формой добавления эксперта
 @login_required(login_url='/accounts/login/')
 def experts_reg(request):
     if request.method == "POST":

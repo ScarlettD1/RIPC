@@ -18,7 +18,7 @@ from .logic.subject import subject
 from .logic.task import task
 from .logic.variant import variant
 from .logic.variant_cropping import variant_cropping
-
+# Роутер-массив с путями и вызываемыми функциями по запросу
 urlpatterns = [
     path('logout/', authViews.LogoutView.as_view(next_page='/accounts/login/'), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),

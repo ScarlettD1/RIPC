@@ -187,3 +187,7 @@ class ScannedPage(models.Model):
     complect = models.ForeignKey(Complect, on_delete=models.CASCADE, null=True)
     page_number = models.CharField(max_length=2, null=True)
     file_path = models.TextField(null=True)
+
+
+class Monitor(models.Model):
+    date = models.DateField()

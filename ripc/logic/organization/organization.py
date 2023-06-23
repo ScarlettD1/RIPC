@@ -10,6 +10,7 @@ from ...models import *
 from ...serializers import OrganizationSerializer
 
 
+# функция отображения списка организаций с проверкой на авторизацию
 @login_required(login_url='/accounts/login/')
 def organizations(request):
     org_list = Organization.objects.all()
@@ -17,6 +18,7 @@ def organizations(request):
     return render(request, 'structure/organizations/org_list.html', {'orgs': org_list, 'form': form})
 
 
+# Функция отображения детальной страницы организации
 @login_required(login_url='/accounts/login/')
 def organizations_detail(request, org_id):
     org = get_object_or_404(Organization, pk=org_id)
@@ -26,6 +28,7 @@ def organizations_detail(request, org_id):
                   {'org': org, 'experts': expert_list, 'reps': reps})
 
 
+# функция отображения страницы с формой добавления организации
 @login_required(login_url='/accounts/login/')
 def organizations_registration(request):
     if request.method == "POST":
@@ -36,11 +39,14 @@ def organizations_registration(request):
             return HttpResponseRedirect('/organizations/')
 
 
+# Функция отображения страницы редактирования организации
 @login_required(login_url='/accounts/login/')
-def organizations_edit(request):
-    return None
+def organizations_edit(request, org_id):
+    org = get_object_or_404(Organization, pk=org_id)
+    return render(request, 'structure/organizations/org_edit.html', {'org': org})
 
 
+# Функция с апи получения данных организаций с проверкой на права доступа
 @csrf_exempt
 @login_required(login_url='/accounts/login/')
 @some_resp_required(login_url='/accounts/login/')

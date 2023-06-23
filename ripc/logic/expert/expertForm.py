@@ -3,11 +3,14 @@ from django.forms import ModelForm
 from ripc.models import Expert
 
 
+# Класс формы регистрации эксперта
 class RegisterExpertForm(ModelForm):
+    # класс с подключаемой моделью эксперта и необходимыми полями
     class Meta:
         model = Expert
         fields = ['surname', 'organization', 'referee', 'subject']
 
+    # Перегрузка информации полей формы, подтягиваемое с модели эксперта
     def __init__(self, *args, **kwargs):
         super(RegisterExpertForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
