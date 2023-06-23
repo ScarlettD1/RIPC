@@ -12,14 +12,15 @@ class Quota:
         temp = {}
         quota = []
         subject_time = []
-
+        self.quota = {}
+        self.quota_expert = {}
         for task in tasks:
             temp[task.subject] += task.norm_time * count[task.id]
         for subject in range(len(temp)):
             ex_count = len(experts[subject])
             quota_time = multiplicity * temp / ex_count * pow(1.05, multiplicity - 1)
-            self.quota = quota_time
-            self.quota_expert = quota_time / 8
+            self.quota[subject] = quota_time
+            self.quota_expert[subject] = quota_time / 8
             quota.append(quota_time)
             subject_time.append(max(quota))
         self.end_culc = max(subject_time)

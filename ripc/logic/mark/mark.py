@@ -8,6 +8,6 @@ from ...models import *
 @login_required(login_url='/accounts/login/')
 def marking(request, event_id):
     context = {}
-    answer_list = Answer.objects.order_by("task__number").all().order_by('task__variant')[:10]
+    answer_list = Answer.objects.order_by("task__number").all().order_by('task__variant').filter(mark=None)[:10]
     context['answers'] = answer_list
     return render(request, 'main_pages/marking.html', context)
