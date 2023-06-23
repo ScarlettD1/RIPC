@@ -261,7 +261,7 @@ def event_api(request, id=0):
                     total_percent = 0
                     for org in orgs_event_data:
                         # Расчёт общего процента
-                        total_percent += int(org['percent_status'])
+                        total_percent += float(org['percent_status'])
                     if orgs_count:
                         total_percent = int(total_percent / orgs_count)
 

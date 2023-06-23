@@ -193,7 +193,7 @@ def scanned_api(request, id=0):
         # Расчёт процента выполнения
         # Общее кол-во страниц
         total_pages = 0
-        complects = Complect.objects.filter(organization_event=event_organization.id)
+        complects = Complect.objects.filter(organization_event=event_organization.id, is_additional=False)
         for complect in complects:
             total_pages += int(Variant.objects.get(id=complect.variant.id).page_count)
 
@@ -233,7 +233,7 @@ def scanned_api(request, id=0):
         # Расчёт процента выполнения
         # Общее кол-во страниц
         total_pages = 0
-        complects = Complect.objects.filter(organization_event=event_organization.id)
+        complects = Complect.objects.filter(organization_event=event_organization.id, is_additional=False)
         for complect in complects:
             total_pages += int(Variant.objects.get(id=complect.variant.id).page_count)
 
